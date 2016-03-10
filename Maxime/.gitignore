@@ -1,0 +1,4 @@
+*.pdf
+*.tex
+.ipynb_checkpoints
+*_files
