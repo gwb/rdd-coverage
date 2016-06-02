@@ -6,6 +6,11 @@
 \documentclass[letter]{article}
 ((* endblock docclass *))
 
+((* block packages *))
+\usepackage{stix}
+((( super() )))
+((* endblock packages *))
+
 ((* block definitions *))
     ((( super() )))
     \newcommand{\hmt}{\bar{Y_t}}
@@ -59,20 +64,19 @@
     \newcommand{\abs}[1]{\genericdel||{#1}}
     \newcommand{\effect}{\mathrm{eff}}
     \newcommand{\xtilde}{\widetilde{X}}
-    \newcommand{\below}{\unicode{x25E7}}
-    \newcommand{\above}{\unicode{x25E8}}
-    \newcommand{\discont}{\unicode{x25EB}}
-    \newcommand{\jbelow}{\unicode{x21E5}}
-    \newcommand{\jabove}{\unicode{x21E4}}
+    \newcommand{\boxleft}{\squareleftblack}
+    \newcommand{\boxright}{\squarerightblack}
+    \newcommand{\discont}{\boxbar}
+    \newcommand{\jleft}{\unicode{x21E5}}
+    \newcommand{\jright}{\unicode{x21E4}}
+
+    \DeclareMathOperator{\ones}{\mathbf{1}}
+    \DeclareMathOperator{\V}{\mathbb{V}}
+    \DeclareUnicodeCharacter{9707}{$\boxbar$}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 ((* endblock definitions *))
-
-((* block packages *))
-	\usepackage{fixltx2e}
-    ((( super() )))
-((* endblock packages *))
 
 ((* block author *))\author{Maxime Rischard}((* endblock author *))
 
@@ -86,7 +90,10 @@
     ((* endif *))
 
 ((* endblock markdowncell *))
-
+((* block predoc *))
+    ((( super() )))
+	\tableofcontents
+((* endblock predoc *))
 ((*- block figure scoped -*))
     \begin{center}
     \adjustimage{max size={0.7\linewidth}{0.7\paperheight}}{((( filename )))}
