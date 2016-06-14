@@ -3,3 +3,7 @@
 .ipynb_checkpoints
 *_files
 geocoding_private.py
+Milwaukee_data/SAA1314/
+Milwaukee_data/tl_2013_55_unsd_elsd_harn/
+Milwaukee_data/tl_2013_55_unsd_scsd_harn/
+__pycache__/
