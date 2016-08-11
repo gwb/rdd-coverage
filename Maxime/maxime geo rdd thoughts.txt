@@ -1,0 +1,56 @@
+
+
+Thinking about covariates
+
+We have a bunch of houses on either side of a school district line. Some of the houses were built, presumably, before the school district line was laid down. Some of the houses were built after, and certainly improvements to houses and so forth have been happening throughout time. We are now looking at house price across the line, wondering what the impact on a house price of being in school district A versus B is.
+
+We have covariates such as size of house, garage, building quality.  How do we think about them?
+
+Our outcome should probably be log(price), but maybe not?  (Easier to think of additional bathroom and additional quality as having multiplicative effects, I think.)
+
+
+One possible causal mechanism for the school district is:
+The line was laid down more or less arbitrarily, we assume.  Then, early in time, people believe school district A is superior for whatever reasons. Some people therefore attempt to move into the neighborhood of A, driving up house prices. They also tend to be more wealthy, so they spend more time improving the houses (e.g. they buy a small house and then remodel it so they can have the house they want in the district they want). This induces a correlation of house quality and district – in fact we could look to see if there were a treatment effect on the covariates as a check.
+
+Handling noise: 
+House prices are going to vary a lot by, say, number of rooms. This means if we fit a gaussian process without covariates, we will have a huge amount of noise due to this unexplained variation. So we want to include this covariate, even if it might be post treatment.
+
+
+First, let's assume we are willing to believe the covariate is pretreatment.  How to estimate?
+
+One thought is to borrow intuition from the model-assisted estimation from survey research. In particular, if we had a large pool of "useless" interior houses away from the boundary, we can fit a model regressing log(price) onto covariates. If we do it only within one district, we even protect ourselves from inadvertently contaminating this model with treatment effects.
+
+Next, calculate residual prices for all of the houses in the data set after dropping, potentially, these interior houses.
+
+We then do the spatial process on the residuals. This model would also allow for the treatment discontinuity at the boundary.
+
+
+Commentary: 
+If we believed all of our covariates were pretreatment, then the treatment effect on the residuals is the same as the treatment effect and we are in business. We even get our uncertainty with the posterior (there is still uncertainty from the original model – let's ignore it for the moment, which is reasonable if we have a lot of useless interior houses giving a high degree of certainty on the adjustment model).  Overall, we have removed noise from our estimation problem so we can see the treatment effect with high resolution.
+
+
+Post-treatment covariates:
+If the covariates were thought to be post treatment, things get more complicated. Some further thoughts to potentially address this:
+
+Take the model, and then for each house we can calculate expected price by adding in the predicted price from the original model to the expected residual price.
+
+To generate uncertainty, repeat this for several draws of the posterior of the Gaussian process to get posterior intervals for the expected price for all our houses along the boundary.
+
+But then how do we get an average treatment effect?  We need to have a model for how the post-treatment covariates differ across the boundary in expectation, and then we can generate synthetic houses from the covariate distribution and price model to get our estimates.
+
+
+
+
+Another sketch of an approach:
+Rubin’s view of causality is to predict the missing potential outcome for each unit, and then calculate treatment effects on the completed data.
+
+For us, the easiest way to do (something like) this is to "move" the house to just across the boundary, and then predicting price. Another way of doing this is as follows:
+
+Generate a list of hypothetical houses by using the covariates of houses along the boundary, with fake spatial locations just on the boundary (take the nearest point).
+
+For each hypothetical house, predict outcome given the two values of district possible. The difference is then the treatment effect for that house. We can then average houses along the boundary.  This does not take into account the posttreatment variable issue.  This also brings up the “what are we estimating” debate again.
+
+
+1D case:
+The idea of covariates to remove variation, and building the model to do this with points far from the boundary, carries over to the 1D case, I think.
+
