@@ -31,24 +31,8 @@ field11 = "Latitude"
 field12 = "Longitude"
 
 def request_geojson(address):
-   address_full = ",".join([address, "Milwaukee", "Wisconsin", "USA"])
-   #decode the private key into its binary format
-   decodeKey = base64.urlsafe_b64decode(privateKey)
-   urltosign = geocoding_endpoint + encodedParams
-   #create a signature using the private key and the url encoded, string using HMAC SHA1. This signature will be binary.
-   signature = hmac.new(decodeKey, urltosign, hashlib.sha1)
-   #encode the binary signature into base64 for use within a URL
-   encodedsignature = base64.urlsafe_b64encode(signature.digest())
-   signedurl = google_url + geocoding_endpoint + encodedParams + "&signature=" + encodedsignature
-   payload = {"address": address, "client": client, "signature": encodedsignature}
-   r = requests.get(signedurl, params=payload)
-   data_json = r.json()
-   return data_json
-
-def request_geojson(address):
-   address_full = ",".join([address, "Milwaukee", "Wisconsin", "USA"])
    #Generate valid signature
-   encodedParams = urllib.parse.urlencode({"address":address_full, "client": client}
+   encodedParams = urllib.parse.urlencode({"address":address, "client": client}
            ).encode("ascii","ignore")
    #decode the private key into its binary format
    decodeKey = base64.urlsafe_b64decode(privateKey)

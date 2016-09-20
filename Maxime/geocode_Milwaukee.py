@@ -47,7 +47,8 @@ for raw_filename in raw_csv_files:
                     print("Address in cache: %s" % address)
                     csv_writer.writerow([row_dict["Taxkey"], address, cache[address]["lat"], cache[address]["lng"]])
                     continue
-                latlng = geocode_address(address)
+                address_full = ",".join([address, "Milwaukee", "Wisconsin", "USA"])
+                latlng = geocode_address(address_full)
                 print("%s: %f,%f" % (address, latlng["lat"], latlng["lng"]))
                 csv_writer.writerow([row_dict["Taxkey"], address, latlng["lat"], latlng["lng"]])
                 cache[address] = latlng
