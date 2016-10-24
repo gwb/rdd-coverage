@@ -74,15 +74,20 @@ simulateCateData = function(n, c = 1, gapSize = 0, sig = 0.1295){
 
 ##GENERATE DATASETS##
 set.seed(123)
-leeDatasets = replicate(1000, simulateLeeData(n=10000), simplify = FALSE)
+leeDatasets = replicate(1000, simulateLeeData(n=500), simplify = FALSE)
+save(leeDatasets, file="saved_simData/lee.RData")
 set.seed(123)
 quadDatasets = replicate(1000, simulateQuadData(n=500), simplify = FALSE)
+save(quadDatasets, file="saved_simData/quad.RData")
 set.seed(123)
 cubicDatasets = replicate(1000, simulateCubicData(n=500), simplify = FALSE)
+save(cubicDatasets, file="saved_simData/cubic.RData")
 set.seed(123)
 cate1Datasets = replicate(1000, simulateCateData(n=500, c = 1), simplify = FALSE)
+save(cate1Datasets, file="saved_simData/cate1.RData")
 set.seed(123)
 cate2Datasets = replicate(1000, simulateCateData(n=500, c = 2), simplify = FALSE)
+save(cate2Datasets, file="saved_simData/cate2.RData")
 
 ##PERFORM KRIGING##
 performKrigingSameParams = function(n = 1, data, stanFit, boundary = 0, length = 50){
