@@ -1,5 +1,3 @@
-*.pdf
-*.tex
 .ipynb_checkpoints
 *_files
 geocoding_private.py
