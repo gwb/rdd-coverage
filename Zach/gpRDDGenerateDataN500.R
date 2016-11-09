@@ -9,25 +9,25 @@ get.x <- function(n=500){
 m.lee <- function(x, sig=0.1295){
     m <- ifelse(x < 0,
                 0.48 + 1.27 * x + 7.18*x^2 + 20.21*x^3 + 21.54*x^4 + 7.33*x^5,
-                0.98 + 0.84 * x - 3.00*x^2 + 7.99*x^3  - 9.01*x^4 + 3.56*x^5)
+                0.52 + 0.84 * x - 3.00*x^2 + 7.99*x^3  - 9.01*x^4 + 3.56*x^5)
     return(rnorm(length(x), m, sd=sig))
 }
 m.quad <- function(x, sig=0.1295){
-    m <- ifelse(x < 0, 3*x^2, 0.5 + 4*x^2)
+    m <- ifelse(x < 0, 3*x^2, 4*x^2)
     return(rnorm(length(x), m, sd=sig))
 }
 m.cubic <- function(x, sig=0.1295){
-    m <- ifelse(x < 0, 3*x^3, 0.5 + 4*x^3)
+    m <- ifelse(x < 0, 3*x^3, 4*x^3)
     return(rnorm(length(x), m, sd=sig))
 }
 m.cate.1 <- function(x, sig=0.1295){
     m <- 0.42 + 0.84 * x - 3.00 * x^2 + 7.99 * x^3 - 9.01 * x^4 + 3.56 * x^5 +
-        ifelse(x < 0, 0, 0.5)
+        ifelse(x < 0, 0, 0.1)
     return(rnorm(length(x), m, sd=sig))
 }
 m.cate.2 <- function(x, sig=0.1295){
     m <- 0.42 + 0.84 * x + 7.99 * x^3 - 9.01 * x^4 + 3.56 * x^5 +
-        ifelse(x < 0, 0, 0.5)
+        ifelse(x < 0, 0, 0.1)
     return(rnorm(length(x), m, sd=sig))
 }
 m.ludwig <- function(x, sig=0.1295){
@@ -103,20 +103,42 @@ simulateCurvatureData = function(n, gapSize = 0){
 }
 
 ##GENERATE DATASETS##
+nsims=1000
 set.seed(123)
-leeDatasets = replicate(1000, simulateLeeData(n=500), simplify = FALSE)
+leeDatasets = replicate(nsims, simulateLeeData(n=500), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(leeDatasets[i], file=sprintf("saved_simData/lee_%d.csv", i))
+}
 set.seed(123)
-ludwigDatasets = replicate(1000, simulateLudwigData(n=500), simplify = FALSE)
+quadDatasets = replicate(nsims, simulateQuadData(n=500), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(quadDatasets[i], file=sprintf("saved_simData/quad_%d.csv", i))
+}
 set.seed(123)
-curvatureDatasets = replicate(1000, simulateCurvatureData(n=500), simplify = FALSE)
+cubicDatasets = replicate(nsims, simulateCubicData(n=500), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(cubicDatasets[i], file=sprintf("saved_simData/cubic_%d.csv", i))
+}
 set.seed(123)
-quadDatasets = replicate(1000, simulateQuadData(n=500), simplify = FALSE)
+cate1Datasets = replicate(nsims, simulateCateData(n=500, c = 1), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(cate1Datasets[i], file=sprintf("saved_simData/cate1_%d.csv", i))
+}
 set.seed(123)
-cubicDatasets = replicate(1000, simulateCubicData(n=500), simplify = FALSE)
+cate2Datasets = replicate(nsims, simulateCateData(n=500, c = 2), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(cate2Datasets[i], file=sprintf("saved_simData/cate2_%d.csv", i))
+}
 set.seed(123)
-cate1Datasets = replicate(1000, simulateCateData(n=500, c = 1), simplify = FALSE)
+ludwigDatasets = replicate(nsims, simulateLudwigData(n=500), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(ludwigDatasets[i], file=sprintf("saved_simData/ludwig_%d.csv", i))
+}
 set.seed(123)
-cate2Datasets = replicate(1000, simulateCateData(n=500, c = 2), simplify = FALSE)
+curvatureDatasets = replicate(nsims, simulateCurvatureData(n=500), simplify = FALSE)
+for (i in 1:nsims){
+    write.csv(curvatureDatasets[i], file=sprintf("saved_simData/ludwig_%d.csv", i))
+}
 
 ##PERFORM KRIGING##
 performKrigingSameParams = function(n = 1, data, stanFit, boundary = 0, length = 50){
