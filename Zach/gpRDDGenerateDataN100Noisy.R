@@ -31,6 +31,19 @@ m.cate.2 <- function(x, sig=5){
         ifelse(x < 0, 0, 0.5)
     return(rnorm(length(x), m, sd=sig))
 }
+m.ludwig <- function(x, sig=0.1295){
+    m <- ifelse(x < 0,
+                3.71 + 2.30*x + 3.28*x^2 + 1.45*x^3 + 0.23*x^4 + 0.03*x^5,
+                0.36 + 18.49*x - 54.81*x^2 + 74.30*x^3 - 45.02*x^4 + 9.83*x^5)
+    return(rnorm(length(x), m, sd=sig))
+}
+m.curvature <- function(x, sig=0.1295){
+    m <- ifelse(x < 0,
+                0.48 + 1.27 * x - 0.5*7.18*x^2 + 0.7*20.21*x^3 + 1.1*21.54*x^4 + 1.5*7.33*x^5,
+                0.52 + 0.84 * x - 0.1*3.00*x^2 - 0.3*7.99*x^3  - 0.1*9.01*x^4 + 3.56*x^5)
+    return(rnorm(length(x), m, sd=sig))
+}
+
 
 #simulate quadratic data
 simulateQuadData = function(n, gapSize = 0, sig = 0.1295){
@@ -72,8 +85,31 @@ simulateCateData = function(n, c = 1, gapSize = 0, sig = 0.1295){
   data = data.frame(x = xs, y = ys)
   return(data)
 }
+#simulate ludwig data
+simulateLudwigData = function(n, gapSize = 0){
+  xs = get.x(n=n)
+  ys = m.ludwig(x = xs)
+  sortIndex = sort.int(xs,index.return=TRUE)$ix
+  xs = xs[sortIndex]; ys = ys[sortIndex]
+  data = data.frame(x = xs, y = ys)
+  return(data)
+}
+#simulate curvature data
+simulateCurvatureData = function(n, gapSize = 0){
+  xs = get.x(n=n)
+  ys = m.curvature(x = xs)
+  sortIndex = sort.int(xs,index.return=TRUE)$ix
+  xs = xs[sortIndex]; ys = ys[sortIndex]
+  data = data.frame(x = xs, y = ys)
+  return(data)
+}
+
 set.seed(123)
 leeDatasetsN100 = replicate(1000, simulateLeeData(n=100), simplify = FALSE)
+set.seed(123)
+ludwigDatasets = replicate(1000, simulateLudwigData(n=100), simplify = FALSE)
+set.seed(123)
+curvatureDatasets = replicate(1000, simulateCurvatureData(n=100), simplify = FALSE)
 set.seed(123)
 quadDatasetsN100 = replicate(1000, simulateQuadData(n=100, sig = 0.75), simplify = FALSE)
 set.seed(123)

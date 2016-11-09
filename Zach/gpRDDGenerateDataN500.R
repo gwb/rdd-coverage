@@ -9,25 +9,37 @@ get.x <- function(n=500){
 m.lee <- function(x, sig=0.1295){
     m <- ifelse(x < 0,
                 0.48 + 1.27 * x + 7.18*x^2 + 20.21*x^3 + 21.54*x^4 + 7.33*x^5,
-                0.52 + 0.84 * x - 3.00*x^2 + 7.99*x^3  - 9.01*x^4 + 3.56*x^5)
+                0.98 + 0.84 * x - 3.00*x^2 + 7.99*x^3  - 9.01*x^4 + 3.56*x^5)
     return(rnorm(length(x), m, sd=sig))
 }
 m.quad <- function(x, sig=0.1295){
-    m <- ifelse(x < 0, 3*x^2, 4*x^2)
+    m <- ifelse(x < 0, 3*x^2, 0.5 + 4*x^2)
     return(rnorm(length(x), m, sd=sig))
 }
 m.cubic <- function(x, sig=0.1295){
-    m <- ifelse(x < 0, 3*x^3, 4*x^3)
+    m <- ifelse(x < 0, 3*x^3, 0.5 + 4*x^3)
     return(rnorm(length(x), m, sd=sig))
 }
 m.cate.1 <- function(x, sig=0.1295){
     m <- 0.42 + 0.84 * x - 3.00 * x^2 + 7.99 * x^3 - 9.01 * x^4 + 3.56 * x^5 +
-        ifelse(x < 0, 0, 0.1)
+        ifelse(x < 0, 0, 0.5)
     return(rnorm(length(x), m, sd=sig))
 }
 m.cate.2 <- function(x, sig=0.1295){
     m <- 0.42 + 0.84 * x + 7.99 * x^3 - 9.01 * x^4 + 3.56 * x^5 +
-        ifelse(x < 0, 0, 0.1)
+        ifelse(x < 0, 0, 0.5)
+    return(rnorm(length(x), m, sd=sig))
+}
+m.ludwig <- function(x, sig=0.1295){
+    m <- ifelse(x < 0,
+                3.71 + 2.30*x + 3.28*x^2 + 1.45*x^3 + 0.23*x^4 + 0.03*x^5,
+                0.36 + 18.49*x - 54.81*x^2 + 74.30*x^3 - 45.02*x^4 + 9.83*x^5)
+    return(rnorm(length(x), m, sd=sig))
+}
+m.curvature <- function(x, sig=0.1295){
+    m <- ifelse(x < 0,
+                0.48 + 1.27 * x - 0.5*7.18*x^2 + 0.7*20.21*x^3 + 1.1*21.54*x^4 + 1.5*7.33*x^5,
+                0.52 + 0.84 * x - 0.1*3.00*x^2 - 0.3*7.99*x^3  - 0.1*9.01*x^4 + 3.56*x^5)
     return(rnorm(length(x), m, sd=sig))
 }
 
@@ -71,34 +83,40 @@ simulateCateData = function(n, c = 1, gapSize = 0, sig = 0.1295){
 	data = data.frame(x = xs, y = ys)
 	return(data)
 }
+#simulate ludwig data
+simulateLudwigData = function(n, gapSize = 0){
+  xs = get.x(n=n)
+  ys = m.ludwig(x = xs)
+  sortIndex = sort.int(xs,index.return=TRUE)$ix
+  xs = xs[sortIndex]; ys = ys[sortIndex]
+  data = data.frame(x = xs, y = ys)
+  return(data)
+}
+#simulate curvature data
+simulateCurvatureData = function(n, gapSize = 0){
+  xs = get.x(n=n)
+  ys = m.curvature(x = xs)
+  sortIndex = sort.int(xs,index.return=TRUE)$ix
+  xs = xs[sortIndex]; ys = ys[sortIndex]
+  data = data.frame(x = xs, y = ys)
+  return(data)
+}
 
 ##GENERATE DATASETS##
-nsims=1000
 set.seed(123)
-leeDatasets = replicate(nsims, simulateLeeData(n=500), simplify = FALSE)
-for (i in 1:nsims){
-    write.csv(leeDatasets[i], file=sprintf("saved_simData/lee_%d.csv", i))
-}
+leeDatasets = replicate(1000, simulateLeeData(n=500), simplify = FALSE)
 set.seed(123)
-quadDatasets = replicate(nsims, simulateQuadData(n=500), simplify = FALSE)
-for (i in 1:nsims){
-    write.csv(quadDatasets[i], file=sprintf("saved_simData/quad_%d.csv", i))
-}
+ludwigDatasets = replicate(1000, simulateLudwigData(n=500), simplify = FALSE)
 set.seed(123)
-cubicDatasets = replicate(nsims, simulateCubicData(n=500), simplify = FALSE)
-for (i in 1:nsims){
-    write.csv(cubicDatasets[i], file=sprintf("saved_simData/cubic_%d.csv", i))
-}
+curvatureDatasets = replicate(1000, simulateCurvatureData(n=500), simplify = FALSE)
 set.seed(123)
-cate1Datasets = replicate(nsims, simulateCateData(n=500, c = 1), simplify = FALSE)
-for (i in 1:nsims){
-    write.csv(cate1Datasets[i], file=sprintf("saved_simData/cate1_%d.csv", i))
-}
+quadDatasets = replicate(1000, simulateQuadData(n=500), simplify = FALSE)
 set.seed(123)
-cate2Datasets = replicate(nsims, simulateCateData(n=500, c = 2), simplify = FALSE)
-for (i in 1:nsims){
-    write.csv(cate2Datasets[i], file=sprintf("saved_simData/cate2_%d.csv", i))
-}
+cubicDatasets = replicate(1000, simulateCubicData(n=500), simplify = FALSE)
+set.seed(123)
+cate1Datasets = replicate(1000, simulateCateData(n=500, c = 1), simplify = FALSE)
+set.seed(123)
+cate2Datasets = replicate(1000, simulateCateData(n=500, c = 2), simplify = FALSE)
 
 ##PERFORM KRIGING##
 performKrigingSameParams = function(n = 1, data, stanFit, boundary = 0, length = 50){
