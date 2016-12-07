@@ -7,7 +7,9 @@
 ((* endblock docclass *))
 
 ((* block packages *))
-\usepackage{stix}
+% \usepackage{stix}
+\usepackage[scr]{rsfso}
+\usepackage{bm}
 ((( super() )))
 ((* endblock packages *))
 
@@ -27,7 +29,7 @@
     \DeclareMathOperator{\V}{\mathbb{V}}
     \DeclareMathOperator{\cov}{{cov}}
     \DeclareMathOperator{\var}{{var}}
-    \DeclareMathOperator{\Ind}{\mathbf{I}}
+    \DeclareMathOperator{\Ind}{\mathbb{I}}
 	\DeclareMathOperator*{\sgn}{{sgn}}
 
     \DeclareMathOperator{\normal}{\mathcal{N}}
@@ -42,7 +44,6 @@
     \newcommand{\discont}{\boxbar}
     \newcommand{\jleft}{\unicode{x21E5}}
     \newcommand{\jright}{\unicode{x21E4}}
-    \newcommand{\gp}{\mathcal{GP}}
 
     \DeclareMathOperator{\ones}{\mathbf{1}}
     \DeclareUnicodeCharacter{9707}{$\boxbar$}
@@ -54,7 +55,26 @@
     \newcommand{\xvec}{\mathbf{x}}
     \newcommand{\tax}{\mathtt{TaxClass}}
     \newcommand{\building}{\mathtt{BuildingClass}}
+
+    \newcommand{\gp}{\mathcal{GP}}
     \newcommand{\trans}{^{\intercal}}
+    \newcommand{\scrS}{\mathscr{S}}
+    \newcommand{\sigmaf}{\sigma_{\mathrm{GP}}}
+    \newcommand{\sigman}{\sigma_{\epsilon}}
+    \newcommand{\sigmatau}{\sigma_{\tau}}
+    \newcommand{\sigmabeta}{\sigma_{\beta}}
+    \newcommand{\sigmamu}{\sigma_{\mu}}
+    \newcommand{\sigmagamma}{\sigma_{\gamma}}
+    \newcommand{\svec}{\mathbf{s}}
+    \newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
+	\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
+    \newcommand{\iid}{iid}
+    \newcommand{\vectreat}{\Ind_{T}}
+
+    \newcommand{\boundary}{\partial}
+    \newcommand{\sentinels}{\bm{\boundary}}
+    \newcommand{\eye}{\mathbf{I}}
+    \newcommand{\K}{\mathbf{K}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
