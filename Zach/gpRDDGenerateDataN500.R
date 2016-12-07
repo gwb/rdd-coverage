@@ -137,7 +137,7 @@ for (i in 1:nsims){
 set.seed(123)
 curvatureDatasets = replicate(nsims, simulateCurvatureData(n=500), simplify = FALSE)
 for (i in 1:nsims){
-    write.csv(curvatureDatasets[i], file=sprintf("saved_simData/ludwig_%d.csv", i))
+    write.csv(curvatureDatasets[i], file=sprintf("saved_simData/curvature_%d.csv", i))
 }
 
 ##PERFORM KRIGING##
