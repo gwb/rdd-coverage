@@ -3,6 +3,7 @@ using GaussianProcesses: Mean, Kernel, evaluate, metric
 import GaussianProcesses: optimize!, get_optim_target
 import GaussianProcesses: num_params, set_params!, get_params
 import GaussianProcesses: update_mll_and_dmll!, update_mll!
+using NLopt
 
 type GPRealisations
     reals::Vector{GP}
@@ -137,25 +138,25 @@ function get_optim_target(gpr::GPRealisations; noise::Bool=true, mean::Bool=true
     end
 
     function mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
-        try
+        #=try=#
             set_params!(gpr, hyp; noise=noise, mean=mean, kern=kern)
             update_mll_and_dmll!(gpr, Kgrads, ααinvcKIs; noise=noise, mean=mean, kern=kern)
             grad[:] = -gpr.dmLL
             return -gpr.mLL
-        catch err
-             if !all(isfinite(hyp))
-                println(err)
-                return Inf
-            elseif isa(err, ArgumentError)
-                println(err)
-                return Inf
-            elseif isa(err, Base.LinAlg.PosDefException)
-                println(err)
-                return Inf
-            else
-                throw(err)
-            end
-        end 
+        #=catch err=#
+        #=     if !all(isfinite(hyp))=#
+        #=        println(err)=#
+        #=        return Inf=#
+        #=    elseif isa(err, ArgumentError)=#
+        #=        println(err)=#
+        #=        return Inf=#
+        #=    elseif isa(err, Base.LinAlg.PosDefException)=#
+        #=        println(err)=#
+        #=        return Inf=#
+        #=    else=#
+        #=        throw(err)=#
+        #=    end=#
+        #=end =#
     end
     function dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
         mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
@@ -164,12 +165,72 @@ function get_optim_target(gpr::GPRealisations; noise::Bool=true, mean::Bool=true
     func = DifferentiableFunction(mll, dmll!, mll_and_dmll!)
     return func
 end
-function optimize!(gpr::GPRealisations; noise::Bool=true, mean::Bool=true, kern::Bool=true,
-                    method=ConjugateGradient(), kwargs...)
+#=function optimize!(gpr::GPRealisations; noise::Bool=true, mean::Bool=true, kern::Bool=true,=#
+#=                    method=ConjugateGradient(), kwargs...)=#
+#=    func = get_optim_target(gpr, noise=noise, mean=mean, kern=kern)=#
+#=    init = get_params(gpr;  noise=noise, mean=mean, kern=kern)  # Initial hyperparameter values=#
+#=    results=optimize(func,init; method=method, kwargs...)                     # Run optimizer=#
+#=    set_params!(gpr, Optim.minimizer(results), noise=noise,mean=mean,kern=kern)=#
+#=    update_mll!(gpr)=#
+#=    return results=#
+#=end=#
+function optimize!(gpr::GPRealisations; noise::Bool=true, mean::Bool=true, kern::Bool=true)
     func = get_optim_target(gpr, noise=noise, mean=mean, kern=kern)
     init = get_params(gpr;  noise=noise, mean=mean, kern=kern)  # Initial hyperparameter values
-    results=optimize(func,init; method=method, kwargs...)                     # Run optimizer
-    set_params!(gpr, Optim.minimizer(results), noise=noise,mean=mean,kern=kern)
-    update_mll!(gpr)
-    return results
+    nparams = length(init)
+    lower = -Inf*ones(nparams)
+    upper = Inf*ones(nparams)
+    ikernstart=1
+    if noise
+        ikernstart+=1
+        lower[1]=-10.0
+    end
+    upper[ikernstart:ikernstart+num_params(gpr.k)-1]=7.0
+    best_x = copy(init)
+    best_y = Inf
+    function myfunc(x::Vector, grad::Vector)
+        if length(grad) > 0
+            y = func.fg!(x, grad)
+            if y < best_y
+                best_x[:] = x
+            end
+            return y
+        else
+            try
+                y = func.f(x)
+                if y < best_y
+                    best_x[:] = x
+                end
+                return y
+            catch
+                return Inf
+            end
+        end
+    end     
+
+    opt = Opt(:LD_LBFGS, nparams)
+    lower_bounds!(opt, lower)
+    upper_bounds!(opt, upper)
+    min_objective!(opt, myfunc)
+    xtol_rel!(opt,1e-4)
+
+    try
+        (minf,minx,ret) = NLopt.optimize(opt, init)
+    catch
+        try
+            # LD_MMA seems to be slower
+            # but maybe more reliable
+            opt = Opt(:LD_MMA, nparams)
+            lower_bounds!(opt, lower)
+            upper_bounds!(opt, upper)
+            min_objective!(opt, myfunc)
+            xtol_rel!(opt,1e-4)
+            (minf,minx,ret) = NLopt.optimize(opt, init)
+        catch
+            _ = myfunc(best_x, [])
+            return best_x
+        end
+    end
+    _ = myfunc(best_x, [])
+    return best_x
 end
