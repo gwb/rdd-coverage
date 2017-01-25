@@ -17,58 +17,60 @@
     
     
 % \usepackage{stix}
+\usepackage[scr]{rsfso}
 \usepackage{bm}
-\usepackage[T1]{fontenc}
-% Nicer default font than Computer Modern for most use cases
-\usepackage{palatino}
 
-% Basic figure setup, for now with no caption control since it's done
-% automatically by Pandoc (which extracts ![](path) syntax from Markdown).
-\usepackage{graphicx}
-% We will generate all images so they have a width \maxwidth. This means
-% that they will get their normal width if they fit onto the page, but
-% are scaled down if they would overflow the margins.
-\makeatletter
-\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
-\else\Gin@nat@width\fi}
-\makeatother
-\let\Oldincludegraphics\includegraphics
-% Set max figure width to be 80% of text width, for now hardcoded.
-\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
-% Ensure that by default, figures have no caption (until we provide a
-% proper Figure object with a Caption API and a way to capture that
-% in the conversion process - todo).
-\usepackage{caption}
-\DeclareCaptionLabelFormat{nolabel}{}
-\captionsetup{labelformat=nolabel}
+    \usepackage[T1]{fontenc}
+    % Nicer default font than Computer Modern for most use cases
+    \usepackage{palatino}
 
-\usepackage{adjustbox} % Used to constrain images to a maximum size 
-\usepackage{xcolor} % Allow colors to be defined
-\usepackage{enumerate} % Needed for markdown enumerations to work
-\usepackage{geometry} % Used to adjust the document margins
-\usepackage{amsmath} % Equations
-\usepackage{amssymb} % Equations
-\usepackage{textcomp} % defines textquotesingle
-% Hack from http://tex.stackexchange.com/a/47451/13684:
-\AtBeginDocument{%
-    \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
-}
-\usepackage{upquote} % Upright quotes for verbatim code
-\usepackage{eurosym} % defines \euro
-\usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
-\usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
-\usepackage{fancyvrb} % verbatim replacement that allows latex
-\usepackage{grffile} % extends the file name processing of package graphics 
-                     % to support a larger range 
-% The hyperref package gives us a pdf with properly built
-% internal navigation ('pdf bookmarks' for the table of contents,
-% internal cross-reference links, web links for URLs, etc.)
-\usepackage{hyperref}
-\usepackage{longtable} % longtable support required by pandoc >1.10
-\usepackage{booktabs}  % table support for pandoc > 1.12.2
-\usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
-                            % normalem makes italics be italics, not underlines
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
 
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
 
 
     
@@ -164,69 +166,69 @@
     \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
 \def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
 
-\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
-\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
-\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
-\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
-\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
-\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
-\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
-\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
-\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
-\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
-\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
 \expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
-\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
-\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
-\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
-\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
-\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
-\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
 \expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
 
 \def\PYZbs{\char`\\}
 \def\PYZus{\char`\_}
@@ -269,7 +271,7 @@
     \DeclareMathOperator{\V}{\mathbb{V}}
     \DeclareMathOperator{\cov}{{cov}}
     \DeclareMathOperator{\var}{{var}}
-    \DeclareMathOperator{\Ind}{\mathbf{I}}
+    \DeclareMathOperator{\Ind}{\mathbb{I}}
 	\DeclareMathOperator*{\sgn}{{sgn}}
 
     \DeclareMathOperator{\normal}{\mathcal{N}}
@@ -306,7 +308,8 @@
     \newcommand{\sigmamu}{\sigma_{\mu}}
     \newcommand{\sigmagamma}{\sigma_{\gamma}}
     \newcommand{\svec}{\mathbf{s}}
-    \newcommand{\indep}{\perp}
+    \newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
+	\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
     \newcommand{\iid}{iid}
     \newcommand{\vectreat}{\Ind_{T}}
 
@@ -314,6 +317,10 @@
     \newcommand{\sentinels}{\bm{\boundary}}
     \newcommand{\eye}{\mathbf{I}}
     \newcommand{\K}{\mathbf{K}}
+
+    \DeclareMathOperator{\trace}{trace}
+    \newcommand{\linavg}{\bar{\tau}}
+    \newcommand{\invvar}{\tau^{IV}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -347,6 +354,7 @@
 
 
     
+
 
 
 
@@ -412,19 +420,20 @@ spatially, an alternative is to specify two independent Gaussian
 processes for the treatment response and the control response.
 
 \begin{align}
-Y_{T,i}(\svec) &= \mu_T + \svec\trans\beta_T + f_T(\svec) + \epsilon_i \\
-Y_{C,i}(\svec) &= \mu_C + \svec\trans\beta_C + f_C(\svec) + \epsilon_i \\
+Y_{T,i}(\svec) &= \underbrace{\mu_T + \svec\trans\beta_T + f_T(\svec)}_{g_T(\svec)} + \epsilon_i \\
+Y_{C,i}(\svec) &= \underbrace{\mu_C + \svec\trans\beta_C + f_C(\svec)}_{g_C(\svec)} + \epsilon_i \\
 f_T(S), f_C(S) &\overset{\indep}{\sim} \gp\del{0, k(\svec, \svec')} \\
 k(\svec,\svec') &= \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \\
 \end{align}
 
 Here, the treatment effect \(\tau\) is no longer included explicitly in
 the model. Instead, the treatment effect at a location \(\svec\) is
-derived as the difference between the two (noise-free) surfaces.
+derived as the difference between the two (noise-free) surfaces \(g_T\)
+and \(g_C\).
 
-\[
+\begin{equation}
 \tau(\svec) = \sbr{\mu_T + \svec\trans\beta_T + f_T(\svec)} - \sbr{\mu_C + \svec\trans\beta_C + f_C(\svec)}
-\]
+\end{equation}
 
 In this specification, the kernel parameters \(\ell\) and \(\sigmaf\)
 are the same in the treatment and control regions, so we assume that the
@@ -475,20 +484,22 @@ normal with variance-covariance given by
 
 Multi-variate theory then allows us to condition any of these objects on
 the others. We are particularly interested in the posterior distribution
-\(\tau \mid Y, \ell, \sigmaf\) which is given by \[
+\(\tau \mid Y, \ell, \sigmaf\) which is given by
+
+\begin{equation}
     \tau \mid Y, \ell, \sigmaf \sim \normal\del{\cov\del{Y,\tau}\trans \cov\del{Y}^{-1} Y, \sigma_\tau^2 - \cov\del{Y,\tau}\trans \cov\del{Y}^{-1} \cov\del{Y,\tau}}
-\]
+\end{equation}
 
 To proceed computationally, we define the treatment indicator vector
 \(\vectreat\) with \(i\)th entry equal to 0 when \(\svec_i\) is in the
 control region, and 1 in the treatment region, and the \(n \times n\)
 kernel covariance matrix \(\K\) having entries
-\(K_{ij}=k(\svec_i, \svec_j)\). The posterior mean and variance are then
-easily computed.
+\(\K_{ij}=k(\svec_i, \svec_j)\). The posterior mean and variance are
+then easily computed.
 
 \begin{align}
-    \E \del{\tau \mid Y, \ell, \sigmaf} &= \sigmatau^2 \vectreat\trans \cbr{\sigmamu^2 + \sigmatau^2 \vectreat \vectreat\trans + \sigmabeta^2 S S\trans + \K + \sigman^2 \eye }^{-1} Y \\
-    \var \del{\tau \mid Y, \ell, \sigmaf} &= \sigma_\tau^2 - \sigma_\tau^2 \vectreat\trans \cbr{\sigmamu^2 + \sigmatau^2 \vectreat \vectreat\trans + \sigmabeta^2 S S\trans + \K + \sigman^2 \eye }^{-1} \vectreat
+    \E \del{\tau \mid Y, \ell, \sigmaf, \sigman} &= \sigmatau^2 \vectreat\trans \cbr{\sigmamu^2 + \sigmatau^2 \vectreat \vectreat\trans + \sigmabeta^2 S S\trans + \K + \sigman^2 \eye }^{-1} Y \\
+    \var \del{\tau \mid Y, \ell, \sigmaf, \sigman} &= \sigma_\tau^2 - \sigma_\tau^2 \vectreat\trans \cbr{\sigmamu^2 + \sigmatau^2 \vectreat \vectreat\trans + \sigmabeta^2 S S\trans + \K + \sigman^2 \eye }^{-1} \vectreat
 \end{align}
 
 What remains is the inference on the hyperparameters
@@ -514,7 +525,11 @@ Because the treatment and control regions do not overlap, inference on
 the treatment effect is only measurable near the boundary. In the
 classical one-dimensional regression discontinuity design, the estimand
 is therefore defined at the boundary \(x=b\):
-\[\tau = \lim_{x \downarrow b} \E\sbr{y \mid X=s} - \lim_{x \uparrow b} \E\sbr{y \mid X=x} = \E\sbr{Y_T \mid X=b} - \E\sbr{Y_C \mid X=b}\]
+
+\begin{equation}
+\tau = \lim_{x \downarrow b} \E\sbr{y \mid X=s} - \lim_{x \uparrow b} \E\sbr{y \mid X=x} = \E\sbr{Y_T \mid X=b} - \E\sbr{Y_C \mid X=b}
+\end{equation}
+
 Analogously, we focus on the treatment effect at the boundary
 \(\boundary\) between the treatment and control regions. \(\boundary\)
 is therefore a one-dimensional subset of \(\scrS\). We will proceed by
@@ -523,6 +538,29 @@ subtracting the predictions to obtain the estimated treatment effect.
 Computationally, we need to represent this boundary as a set of \(k\)
 ``sentinel'' units distributed along the boundary
 \(\sentinels=\cbr{\boundary_1,\ldots,\boundary_k},~\partial_i \in \partial\).
+The extrapolation step then proceeds mechanically through
+multivariate-normal theory.
+
+\begin{align}
+    g_T(\sentinels) \mid Y_T, S_T, \ell, \sigmaf, \sigman &\sim \normal\del{\mu_{\sentinels \mid T}, \Sigma_{\sentinels \mid T}} \\
+    \mu_{\sentinels \mid T} &\equiv \cov\del{g_T(\sentinels), Y_T} \cov\del{Y_T}^{-1}  Y_T \\
+    \Sigma_{\sentinels \mid T} &\equiv \cov \del{g_T(\sentinels)} - \cov\del{g_T(\sentinels), Y_T} \cov\del{Y_T}^{-1} \cov\del{Y_T,g_T(\sentinels) \label{eq:postvarT2gp}
+    }
+\end{align}
+
+All the covariance terms can be derived from the model similarly to what
+we saw in the 1GP procedure. Analogously, we also generate predictions
+for \(g_C(\sentinels)\) using the data in the control region, and denote
+their posterior mean and covariance as \(\mu_{\sentinels \mid C}\) and
+\(\Sigma_{\sentinels \mid C}\). Since the two surfaces are modeled as
+independent, the treatment effect
+\(\tau(\sentinels)=g_T(\sentinels)-g_C(\sentinels)\) along the boundary
+is also multivariate normal with posterior mean and covariance
+
+\begin{align}
+    \mu_{\boundary \mid Y} &= \E \del{\tau(\sentinels) \mid Y_T, Y_C} = \mu_{\sentinels \mid T} - \mu_{\sentinels \mid C} \\
+    \Sigma_{\boundary \mid Y} &= \cov\del{\tau(\sentinels) \mid Y_T, Y_C} = \Sigma_{\sentinels \mid T} + \Sigma_{\sentinels \mid C}\label{eq:postvar2gp}\,.
+\end{align}
     
 
 
@@ -547,13 +585,132 @@ additional cost, except that the additional hyperparameter
     	\section{2GP: Testing for non-zero
 effect}\label{gp-testing-for-non-zero-effect}
 
-\section{Average treatment effect}\label{average-treatment-effect}
+Following the 2GP procedure, we are now equipped with the posterior
+treatment effect along the boundary, approximated by its mean vector
+\(\mu_{\boundary \mid Y} = \E \del{\tau(\sentinels) \mid Y}\) and
+covariance matrix
+\(\Sigma_{\boundary \mid Y} = \cov \del{\tau(\sentinels) \mid Y}\) at
+the sentinel positions \(\sentinels\). Naturally, we wonder whether
+there is a significant treatment effect anywhere along the boundary, by
+setting up a hypothesis test where the null hypothesis is that
+\(\tau(\boundary)=0\) everywhere along the boundary. Benavoli and
+Mangili 2015 develop a Chi-squared test for equality of two functions
+fitted by Gaussian processes, which can be adapted for our purposes.
+They compare the statistic
+\(\mu_{\boundary \mid Y}\trans \Sigma_{\boundary \mid Y}^{-1} \mu_{\boundary \mid Y}\)
+to a \(\chi^2\) distribution with \(\nu\) degrees of freedom, where
+\(\nu\) is the rank of the posterior covariance
+\(\Sigma_{\boundary \mid Y}\). However, because small eigenvalues can
+destabilize the \(\chi^2\) statistic, they suggest eliminating the
+covariance matrix's eigenvalues \(\lambda_i\) lower than
+\(\epsilon \sum_{j=1}^k \lambda_j\), with \(\epsilon\) a small number
+(they use 0.01). Benavoli and Mangili's simulations under the null
+hypothesis of function equality show the test to reject the null
+hypothesis less than 5\% of the time. Our simulations drawing from a
+single Gaussian process with known covariance hyperparameters exhibit
+the same conservatism.
 
-\subsection{Linear average}\label{linear-average}
+That conservatism arises because if \(Y_T\) and \(Y_C\) come from a
+single Gaussian process with no discontinuity at the boundary, then the
+sampling distribution of \(\mu_{\tau \mid Y}\) is not, as the test
+implicitly assumes, \(\normal\del{0, \Sigma_{\boundary \mid Y}}\).
+Because \(\mu\) is a linear transformation of the data, it is indeed
+normally distributed with mean zero, but with covariance
 
-\subsection{Inverse variance}\label{inverse-variance}
+\begin{equation}
+    \Sigma_\mu = K_{\boundary T} \tilde{K}^{-1}_{TT} K_{T \boundary} + K_{\boundary C} \tilde{K}^{-1}_{CC} K\trans_{\boundary C} + K_{\boundary C} \tilde{K}^{-1}_{CC} K_{CT} \tilde{K}^{-1}_{TT} K_{T \boundary} + \del{K_{\boundary C} \tilde{K}^{-1}_{CC} K_{CT} \tilde{K}^{-1}_{TT} K_{T \boundary}}\trans
+\end{equation}
 
-\section{Spatial advantage}\label{spatial-advantage}
+A test with better frequentist properties can therefore be obtained by
+substitituing \(\Sigma_\mu\) for \(\Sigma_{\boundary \mid Y}\) in
+Benavoli and Mangili's procedure.
+    
+
+
+    	\section{Average treatment effect}\label{average-treatment-effect}
+
+Once we obtain the posterior on the treatment effect function
+\(\tau(\boundary)\), estimating the average treatment effect along the
+boundary will often be of interest. Most straightforwardly, if the
+sentinels are evenly spaced, we can estimate \(\linavg\), the mean of
+\(\tau(\svec)\) along the boundary, by averaging the entries of the mean
+posterior at the sentinels. If the sentinels are not evenly spaced, then
+each entry needs to be re-weighted by the length of the border that the
+sentinel occupies.
+
+\begin{align}
+    \linavg &\equiv \frac{\oint_\boundary \left. \tau(x) dx \right.}{\oint_\boundary \left. dx \right.} \\
+    \linavg \mid Y_T, Y_C, \sigmaf, \sigman, \ell &\sim \normal\del{\mu_{\linavg \mid Y}, \Sigma_{\linavg \mid Y}} \\
+    \mu_{\linavg \mid Y} &\approx \del{\ones\trans \mu_{\sentinels \mid Y}} / n_\sentinels
+\end{align}
+
+This procedure is mathematically sound, but the choice of the
+\(\linavg\) estimand raises two problems. Firstly, parts of the border
+adjoining dense populations are given equal weights to those in sparsely
+populated areas. If the border goes through an unpopulated area, like a
+lake or a public park, then the treatment effect there has little
+meaning and importance. Furthermore, \(\tau(\svec)\) in those areas will
+have large posterior variances, which will dominate the posterior
+variance of \(\linavg\), making otherwise large treatment effects
+difficult to detect.
+
+\begin{figure}
+\centering
+\includegraphics{figures/mississippi_counts.png}
+\caption{mississippi counts}
+\end{figure}
+
+Secondly, the unweighted mean treatment estimand is affected by the
+shape of the border between the treatment and control regions. We
+illustrate this with the border separating two American States:
+Louisiana and Mississippi. From North to South, the border follows the
+meandering Mississippi river, then takes a sharp turn to the East and
+becomes a straight line, until it meets the even more sinuous Pearl
+river, which it then follows until it reaches the Gulf of Mexico.
+Sentinels placed at constant intervals along this interval will
+therefore be most densely packed along the Pearl River, and sparsest
+along the straight segment of the border (see Figure X). When averaging
+a function over the border, those sections will therefore be
+overrepresented. Troublingly, the sinuousness of the border therefore
+determines the estimand, and the resolution of our map can drastically
+change our estimate, even though the outcomes of the treatment we are
+studying might have nothing to do with river topographies.
+
+Weighing the treatment effect at each sentinel location by a local
+density estimate would address the first issue, but not the second. We
+view the unwelcome dependence of the \(\linavg\) estimand on the border
+topography as a side effect of ignoring the fact that the 1-dimensional
+treatment function \(\tau(\boundary)\) is embedded in a Euclidean
+2-dimensional space. This fact is captured by the covariance structure:
+sentinels in the straight segment of the border will be less strongly
+correlated than in the sinuous segments. The more correlated sentinels
+individually carry less information about the local treatment effect.
+This suggests that instead of averaging the treatment effect evenly
+along the border, we wish to average evenly the information contained
+therein. This motivates the use of the inverse-variance weighted mean
+\(\invvar\), which efficiently extracts the information from the
+posterior to produce the weighted avereage with minimum variance.
+
+\begin{align}
+    \invvar \mid Y_T, Y_C, \sigmaf, \sigman, \ell &\sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} \\
+    \mu_{\invvar \mid Y} &\approx \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \mu_{\sentinels \mid Y}} \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones}  \\
+    \Sigma_{\invvar \mid Y} &\approx 1 \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones} 
+    \label{eq:invvar}
+\end{align}
+
+This estimator will automatically give more weight to sentinels in dense
+areas (as the variance will be lower there), and to sentinels in
+straight sections of the border. While the estimand is less clear, the
+approach is in keeping with the philosophy of regression discontinuity
+designs. We let information be our guide when averaging over our
+boundary, just like it guided the analysis of regression discontinuity
+designs to only focus on the treatment effect at the boundary. The
+estimand isn't chosen by the scientist, but it is dictated by the
+limitations of the data.
+    
+
+
+    	\section{Spatial advantage}\label{spatial-advantage}
 
 \begin{itemize}
 \tightlist
@@ -563,7 +720,35 @@ effect}\label{gp-testing-for-non-zero-effect}
   multiple experiments interpretation
 \end{itemize}
 
-\section{Example: NYC school
+Classical regression discontinuity designs often suffer from low power,
+requiring many units near the boundary for inference to be possible. In
+the spatial RDD setting, we might worry that the situation is worse, as
+geographical datasets with many units packed along the boundary are
+uncommon. In geographical settings, each unit (e.g.~household or
+counties) normally takes up space, so there is a limit to how densely
+packed units can be near the boundary. And boundaries often include
+sparsely populated segments, e.g.~running through parks, industrial
+areas, or farmland. The intuition that spatial RDDs will therefore
+suffer from low power is correct, inasmuch as at any given point along
+the boundary, the posterior variance of \(\tau(\boundary)\) will
+typically be high. But once we pool the information into an average
+treatment effect, or perform a sharp test, spatial RDDs can be more
+powerful than classical RDDs, with the same number of units at the same
+distance from the boundary.
+
+We illustrate this statement with an example. Considering once more the
+example of the boundary between Louisiana and Mississippi, we imagine an
+experiment where the unit of analysis is the county. For simplicity, we
+fix each hyperparameter to an arbitrary value: \(\sigman=\sigmaf=1.0\)
+and \(\ell=50\,\mathrm{km}\). The variance of the inverse-variance
+weighted treatment effect \(\invvar\) is now only a function of the
+positions of the units, plugging the posterior variance
+\eqref{eq:postvar2gp} into the inverse-variance estimator
+\eqref{eq:invvar}.
+    
+
+
+    	\section{Example: NYC school
 districts}\label{example-nyc-school-districts}
 
 \section{Conclusion}\label{conclusion}
