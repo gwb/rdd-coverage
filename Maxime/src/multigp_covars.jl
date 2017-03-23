@@ -244,7 +244,7 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
         mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
     end
 
-    func = DifferentiableFunction(mll, dmll!, mll_and_dmll!)
+    func = OnceDifferentiable(mll, dmll!, mll_and_dmll!)
     init = get_params(mgpcv;  noise=noise, mean=mean, kern=kern, beta=beta)  # Initial hyperparameter values
     results=optimize(func,init; method=method, kwargs...)                     # Run optimizer
     set_params!(mgpcv, Optim.minimizer(results); noise=noise, mean=mean, kern=kern, beta=beta)

@@ -54,12 +54,7 @@ end
 
 function boot_chi2test(gpT::GP, gpC::GP, X∂::MatF64, nsim::Int; update_mean::Bool=false)
     chi_obs = chistat(gpT, gpC, gpT.k, gpT.m, gpC.m, X∂)
-
-    yNull = [gpT.y; gpC.y]
-    gpNull = GP([gpT.X gpC.X], yNull, MeanConst(mean(yNull)), gpT.k, gpT.logNoise)
-    
     chi_sims = GeoRDD.nsim_chi(gpT, gpC, X∂, nsim; update_mean=update_mean)
-    
     return mean(chi_sims .> chi_obs)
 end
 

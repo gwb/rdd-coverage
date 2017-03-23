@@ -51,98 +51,6 @@ function data_logP(gpT::GP, gpC::GP)
     update_mll!(gpNull)
     return gpNull.mLL, gpT.mLL+gpC.mLL
 end
-immutable Point
-    x::Float64
-    y::Float64
-end
-function isLeft(a::Point, b::Point, c::Point)
-     return ((b.x - a.x)*(c.y - a.y) - (b.y - a.y)*(c.x - a.x)) > 0
-end
-function left_points(angle::Float64, shift::Float64, X::Matrix{Float64})
-    dydx=tand(angle)
-    perp=tand(angle+90)
-    meanx = mean(X[1,:])
-    meany = mean(X[2,:])
-    direction=sign(cosd(angle+90))
-    if direction==0.0
-        direction=1.0
-    end
-    shift_x = shift*cosd(angle+90)*direction
-    shift_y = shift*sind(angle+90)*direction
-    a = Point(meanx+shift_x,meany+shift_y)
-    if abs(dydx)<1.0
-        dx=1.0
-        dy=dydx
-    else
-        dx=1.0/dydx
-        dy=1.0
-    end
-    b = Point(meanx+shift_x+dx,meany+dy+shift_y)
-    
-    n = size(X,2)
-    points = [Point(X[1,i],X[2,i]) for i in 1:n]
-    are_left = [isLeft(a,b,p) for p in points]
-end
-
-function plot_line(angle::Float64, shift::Float64, X::Matrix; kwargs...)
-    meanx=mean(X[1,:])
-    meany=mean(X[2,:])
-    dydx=tand(angle)
-    direction=sign(cosd(angle+90))
-    if direction==0.0
-        direction=1.0
-    end
-    shift_x = shift*cosd(angle+90)*direction
-    shift_y = shift*sind(angle+90)*direction
-    
-    xlim=plt.xlim()
-    ylim=plt.ylim()
-    xlim_arr = Float64[xlim[1],xlim[2]]
-    ylim_arr = Float64[ylim[1],ylim[2]]
-    if dydx > 1e3
-        plt.axvline(meanx+shift_x, color="red"; kwargs...)
-    elseif dydx > 10
-        plt.plot(meanx+(ylim_arr.-meany.-shift_y)./dydx+shift_x,ylim_arr; color="red", kwargs...)
-    else
-        plt.plot(xlim_arr,meany+(xlim_arr.-shift_x.-meanx).*dydx+shift_y; color="red", kwargs...)
-    end
-    plt.xlim(xlim)
-    plt.ylim(ylim)
-end
-
-function prop_left(angle::Float64, shift::Float64, X::Matrix{Float64})
-    are_left = left_points(angle, shift, X)
-    return mean(are_left)
-end
-
-#copy-pasted from http://blog.mmast.net/bisection-method-julia
-function bisection(f::Function, a::Number, b::Number;
-                   tol::AbstractFloat=1e-5, maxiter::Integer=100)
-    fa = f(a)
-    fa*f(b) <= 0 || error("No real root in [a,b]")
-    i = 0
-    local c
-    while b-a > tol
-        i += 1
-        i != maxiter || error("Max iteration exceeded")
-        c = (a+b)/2
-        fc = f(c)
-        if fc == 0
-            break
-        elseif fa*fc > 0
-            a = c  # Root is in the right half of [a,b].
-            fa = fc
-        else
-            b = c  # Root is in the left half of [a,b].
-        end
-    end
-    return c
-end
-
-function shift_for_even_split(angle::Float64, X::Matrix)
-    minx,maxx = extrema(X[1,:])
-    return bisection(shift -> prop_left(angle,shift,X)-0.5, minx,maxx)
-end
 
 function boot_mLLtest(gpT::GP, gpC::GP, nsim::Int; update_mean::Bool=false)
     mLL_alt = gpT.mLL + gpC.mLL
@@ -161,13 +69,13 @@ function boot_mLLtest(gpT::GP, gpC::GP, nsim::Int; update_mean::Bool=false)
     return mean(ΔmLL_sim .> ΔmLL_obs)
 end
 
-function placebo(angle::Float64, X::Matrix, Y::Vector, 
+function placebo_mLL(angle::Float64, X::Matrix, Y::Vector, 
                  kern::Kernel, logNoise::Float64, 
                  nsim::Int; update_mean::Bool=false)
     shift = shift_for_even_split(angle, X)
-    are_left = left_points(angle, shift, X)
-    gp_left  = GP(X[:,are_left],  Y[are_left],  MeanConst(mean(Y[are_left])),  kern, logNoise)
-    gp_right = GP(X[:,!are_left], Y[!are_left], MeanConst(mean(Y[!are_left])), kern, logNoise)
+    left = left_points(angle, shift, X)
+    gp_left  = GP(X[:,left],  Y[left],  MeanConst(mean(Y[left])),  kern, logNoise)
+    gp_right = GP(X[:,!left], Y[!left], MeanConst(mean(Y[!left])), kern, logNoise)
     pval = boot_mLLtest(gp_left, gp_right, nsim; update_mean=update_mean)
     return pval
 end
