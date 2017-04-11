@@ -10,6 +10,7 @@
 % \usepackage{stix}
 \usepackage[scr]{rsfso}
 \usepackage{bm}
+\usepackage{eulervm}
 ((( super() )))
 ((* endblock packages *))
 
@@ -53,6 +54,7 @@
     \newcommand{\saleprice}{\mathtt{SalePrice}}
     \newcommand{\sqft}{\mathtt{SQFT}}
     \newcommand{\xvec}{\mathbf{x}}
+
     \newcommand{\tax}{\mathtt{TaxClass}}
     \newcommand{\building}{\mathtt{BuildingClass}}
 
@@ -65,7 +67,9 @@
     \newcommand{\sigmabeta}{\sigma_{\beta}}
     \newcommand{\sigmamu}{\sigma_{\mu}}
     \newcommand{\sigmagamma}{\sigma_{\gamma}}
-    \newcommand{\svec}{\mathbf{s}}
+    \newcommand{\svec}{\mathbold{s}}
+    \newcommand{\yvec}{\mathbold{y}}
+    \newcommand{\muvec}{\mathbold{\mu}}
     \newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
 	\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
     \newcommand{\iid}{iid}
@@ -75,6 +79,13 @@
     \newcommand{\sentinels}{\bm{\boundary}}
     \newcommand{\eye}{\mathbf{I}}
     \newcommand{\K}{\mathbf{K}}
+
+    \DeclareMathOperator{\trace}{trace}
+    \newcommand{\linavg}{\bar{\tau}}
+    \newcommand{\invvar}{\tau^{IV}}
+    \newcommand{\modnull}{\mathscr{M}_0}
+    \newcommand{\modalt}{\mathscr{M}_1}
+    \newcommand{\degree}{{\,^\circ}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
