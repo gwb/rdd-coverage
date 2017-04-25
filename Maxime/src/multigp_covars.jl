@@ -3,6 +3,7 @@ using GaussianProcesses: grad_stack, grad_stack!, grad_slice!, get_ααinvcKI!
 using GaussianProcesses: MatF64, cov!, addcov!, KernelData
 import GaussianProcesses: get_params, set_params!, optimize!
 import GaussianProcesses: update_mll_and_dmll!, update_mll!
+import Base: mean
 
 typealias MultiGP Vector{GP}
 
@@ -195,7 +196,7 @@ function set_params!(mgpcv::MultiGPCovars, hyp::Vector{Float64};
 end
 
 function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern::Bool=true, beta::Bool=true, 
-                    method=ConjugateGradient(), kwargs...)
+                    method=ConjugateGradient(), options=Optim.Options())
     cK_buffer = Array(Float64, mgpcv.nobsv, mgpcv.nobsv)
     Kgrad_buffer = Array(Float64, mgpcv.nobsv, mgpcv.nobsv)
     function mll(hyp::Vector{Float64})
@@ -244,9 +245,74 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
         mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
     end
 
-    func = OnceDifferentiable(mll, dmll!, mll_and_dmll!)
     init = get_params(mgpcv;  noise=noise, mean=mean, kern=kern, beta=beta)  # Initial hyperparameter values
-    results=optimize(func,init; method=method, kwargs...)                     # Run optimizer
+    func = OnceDifferentiable(mll, dmll!, mll_and_dmll!, init)
+    results=optimize(func,init, method, options)
     set_params!(mgpcv, Optim.minimizer(results); noise=noise, mean=mean, kern=kern, beta=beta)
     return results
+end
+
+"""
+    Obtain the full (block diagonal) spatial covariance matrix
+"""
+function spatial_cov(mgpcv::MultiGPCovars)
+    cK = zeros(mgpcv.nobsv, mgpcv.nobsv)
+    istart=0
+    for gp in mgpcv.mgp
+        addcov!(view(cK, istart+1:istart+gp.nobsv, istart+1:istart+gp.nobsv), mgpcv.k, gp.X, gp.data)
+        istart += gp.nobsv
+    end
+    return cK
+end
+
+"""
+    Obtain the covariance matrix of the outcome conditional
+    on the β coefficients.
+    cov(Y ∣ β)
+"""
+function get_ΣYβ(mgpcv::MultiGPCovars)
+    cK = spatial_cov(mgpcv)
+    for i in 1:mgpcv.nobsv
+        cK[i,i] += max(exp(2*mgpcv.logNoise),1e-8)
+    end
+    return PDMats.PDMat(cK)
+end
+
+"""
+    Evaluate the mean function.
+"""
+function mean(mgpcv::MultiGPCovars)
+    μ = Array(Float64, mgpcv.nobsv)
+    istart=0
+    for gp in mgpcv.mgp
+        μ[istart+1:istart+gp.nobsv] = mean(mgpcv.m,gp.X)
+        istart += gp.nobsv
+    end
+    return μ
+end    
+
+"""
+    Get the posterior mean coefficient value E(β ∣ Y)
+    Notation:
+        ΣYβ = cov(Y ∣ β)
+        Σβ = cov(β) = σβ² I # prior variance for β
+
+
+    precision = Dᵀ ΣYβ⁻¹ D + Σβ⁻¹
+    βhat = precision-weighted average
+         = (precision⁻¹ D) (ΣYβ⁻¹ (Y-μ))
+    
+    See:
+        Notes on “Analytical covariates”
+        BDA3 equation 14.4
+"""
+function postmean_β(mgpcv::MultiGPCovars)
+    ΣY_β = get_ΣYβ(mgpcv)
+    precision = PDMats.X_invA_Xt(ΣY_β, mgpcv.D')
+    for i in 1:mgpcv.p
+        precision[i,i] += mgpcv.βkern.ℓ2
+    end
+    m = mean(mgpcv)
+    βhat = (precision \ mgpcv.D') * (ΣY_β \ (mgpcv.y.-m))
+    return βhat
 end

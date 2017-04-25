@@ -39,7 +39,7 @@ function nsim_invvar_pval(gpT::GP, gpC::GP, X∂::MatF64, nsim::Int; update_mean
     return pval_sims
 end
 
-function boot_chi2test(gpT::GP, gpC::GP, X∂::MatF64, nsim::Int; update_mean::Bool=false)
+function boot_invvar(gpT::GP, gpC::GP, X∂::MatF64, nsim::Int; update_mean::Bool=false)
     pval_obs = pval_invvar(gpT, gpC, X∂)
     pval_sims = sim_invvar(gpT, gpC, X∂, nsim; update_mean=update_mean)
     return mean(pval_obs .< pval_sims)
@@ -68,9 +68,8 @@ function pval_invvar_calib(gpT::GP, gpC::GP, X∂::Matrix)
     AC_c = KCC \ KC∂
     AT = AT_c'
     AC = AC_c'
-    cov_μδ = AT*full(KTT)*AT_c + AC*full(KCC)*AC_c - 2*AC*full(KCT)*AT_c
+    cov_μδ = AT*full(KTT)*AT_c + AC*full(KCC)*AC_c - AC*full(KCT)*AT_c - AT*full(KCT)'*AC_c
     
-#     denom = sum(Σ \ ones(n))
     cov_μτ= sum((Σ∂ \ cov_μδ) * (Σ∂ \ ones(n)))
     null = Normal(0.0, √cov_μτ)
     
@@ -110,4 +109,15 @@ function nsim_invvar_calib(gpT::GP, gpC::GP, X∂::MatF64, nsim::Int; update_mea
         update_mean=update_mean) 
         for _ in 1:nsim];
     return pval_sims
+end
+
+function placebo_invvar(angle::Float64, X::MatF64, Y::Vector,
+                 kern::Kernel, logNoise::Float64)
+    shift = shift_for_even_split(angle, X)
+    left = left_points(angle, shift, X)
+    gp_left  = GP(X[:,left],  Y[left],  MeanConst(mean(Y[left])),  kern, logNoise)
+    gp_right = GP(X[:,!left], Y[!left], MeanConst(mean(Y[!left])), kern, logNoise)
+    X∂ = placebo_sentinels(angle, shift, X, 100)
+    pval = pval_invvar_calib(gp_left, gp_right, X∂)
+    return pval
 end

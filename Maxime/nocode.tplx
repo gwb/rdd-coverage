@@ -53,10 +53,10 @@
     \DeclareMathOperator{\scrl}{\mathscr{l}}
     \newcommand{\saleprice}{\mathtt{SalePrice}}
     \newcommand{\sqft}{\mathtt{SQFT}}
-    \newcommand{\xvec}{\mathbf{x}}
-
+    
     \newcommand{\tax}{\mathtt{TaxClass}}
     \newcommand{\building}{\mathtt{BuildingClass}}
+    \newcommand{\district}{\mathtt{District}}
 
     \newcommand{\gp}{\mathcal{GP}}
     \newcommand{\trans}{^{\intercal}}
@@ -68,7 +68,9 @@
     \newcommand{\sigmamu}{\sigma_{\mu}}
     \newcommand{\sigmagamma}{\sigma_{\gamma}}
     \newcommand{\svec}{\mathbold{s}}
+    \newcommand{\xvec}{\mathbold{x}}
     \newcommand{\yvec}{\mathbold{y}}
+    \newcommand{\vvec}{\mathbold{v}}
     \newcommand{\muvec}{\mathbold{\mu}}
     \newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
 	\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
