@@ -155,7 +155,7 @@
     ((*- if "DeclareMathOperator" in cell.source -*))
     ((*- elif "Table of Contents" in cell.source -*))
     ((* else *))
-    	((( cell.source | citation2latex | strip_files_prefix | markdown2latex )))
+    	((( cell.source | citation2latex | strip_files_prefix | markdown2latex(extra_args=['--wrap', 'preserve']) )))
     ((* endif *))
 
 ((* endblock markdowncell *))
