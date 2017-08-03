@@ -5,7 +5,7 @@ import GaussianProcesses: get_params, set_params!, optimize!
 import GaussianProcesses: update_mll_and_dmll!, update_mll!
 import Base: mean
 
-typealias MultiGP Vector{GP}
+typealias MultiGP Vector{GPE}
 
 type MultiGPCovars{MT<:Mean, KT1<:Kernel, KT2<:Kernel}
     D::Array{Float64,2}

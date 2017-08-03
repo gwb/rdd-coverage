@@ -1,6 +1,6 @@
 import Distributions: cdf, ccdf
 
-function sim_power!(gpT::GP, gpC::GP, gpNull::GP, τ::Float64, 
+function sim_power!(gpT::GPE, gpC::GPE, gpNull::GPE, τ::Float64, 
             treat::BitVector, X∂::MatF64,
                 chi_null::Vector{Float64}, 
                 mLL_null::Vector{Float64}, 
@@ -51,7 +51,7 @@ function sim_power!(gpT::GP, gpC::GP, gpNull::GP, τ::Float64,
     return (pval_mLL,pval_χ2,pval_invvar_obs,invvar_bootcalib,invvar_calib)
 end
 
-function nsim_power(gpT::GP, gpC::GP, τ::Float64, 
+function nsim_power(gpT::GPE, gpC::GPE, τ::Float64, 
                 X∂::MatF64,
                 chi_null::Vector{Float64}, 
                 mLL_null::Vector{Float64}, 
@@ -62,7 +62,7 @@ function nsim_power(gpT::GP, gpC::GP, τ::Float64,
     gpT_mod = modifiable(gpT)
     gpC_mod = modifiable(gpC)
     yNull = [gpT.y; gpC.y]
-    gpNull = GP([gpT.X gpC.X], yNull, MeanConst(mean(yNull)), gpT.k, gpT.logNoise)
+    gpNull = GPE([gpT.X gpC.X], yNull, MeanConst(mean(yNull)), gpT.k, gpT.logNoise)
     treat = BitVector(gpNull.nobsv)
     treat[:] = false
     treat[1:gpT.nobsv] = true

@@ -6,14 +6,14 @@ import GaussianProcesses: update_mll_and_dmll!, update_mll!
 using NLopt
 
 type GPRealisations
-    reals::Vector{GP}
+    reals::Vector{GPE}
     k::Kernel
     logNoise::Float64
     mLL::Float64
     dmLL::Vector{Float64}
 end
 
-function GPRealisations(reals::Vector{GP})
+function GPRealisations(reals::Vector{GPE})
     first = reals[1]
     gpr = GPRealisations(reals, first.k, first.logNoise, NaN, [])
 end

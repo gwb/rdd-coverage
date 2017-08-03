@@ -1,6 +1,6 @@
 using Distributions: Normal, MultivariateNormal
 using PDMats: AbstractPDMat
-using GaussianProcesses: GP, MatF64, mean, update_mll!, Mean
+using GaussianProcesses: GPE, MatF64, mean, update_mll!, Mean
 
 function inverse_variance(μ::AbstractVector, Σ::AbstractMatrix)
     n = size(μ)
@@ -34,6 +34,16 @@ function unweighted_mean(μ::AbstractVector, Σ::AbstractPDMat)
     return unweighted_mean(μ, full(Σ))
 end
 
+function weighted_mean(μ::AbstractVector, Σ::AbstractMatrix, w::AbstractVector)
+    τhat = sum(μ .* w) / sum(w)
+    Vτhat = dot(w, Σ*w) / sum(w)^2
+    τpost=Normal(τhat, √Vτhat)
+    return τpost
+end
+function weighted_mean(μ::AbstractVector, Σ::AbstractPDMat, w)
+    return weighted_mean(μ, full(Σ), w)
+end
+
 # Benavoli and Mangili 2015
 function get_pval(μ::Vector{Float64}, Σ::Matrix{Float64}, ϵ::Float64)    
     Σsvd = svdfact(Σ)
@@ -49,7 +59,7 @@ function get_pval(μ::Vector{Float64}, Σ::Matrix{Float64}, ϵ::Float64)
     return pval
 end
 
-function chisquare(gpT::GP, gpC::GP, X∂::Matrix, ϵ; verbose=false)
+function chisquare(gpT::GPE, gpC::GPE, X∂::Matrix, ϵ; verbose=false)
     extrap_T = predict(gpT, X∂; full_cov=true)
     extrap_C = predict(gpC, X∂; full_cov=true)
     μpost = extrap_T[1].-extrap_C[1]
@@ -83,15 +93,15 @@ function chisquare(gpT::GP, gpC::GP, X∂::Matrix, ϵ; verbose=false)
     return get_pval(μpost, chi2cov, ϵ)
 end
 
-function modifiable(gp::GP)
-    gp_copy = GP(gp.m, gp.k, gp.logNoise, gp.nobsv,
+function modifiable(gp::GPE)
+    gp_copy = GPE(gp.m, gp.k, gp.logNoise, gp.nobsv,
         gp.X, copy(gp.y), gp.data,
         gp.dim, gp.cK, copy(gp.alpha),
         gp.mLL, Float64[])
     return gp_copy
 end
 
-function update_alpha!(gp::GP)
+function update_alpha!(gp::GPE)
     m = mean(gp.m,gp.X)
     gp.alpha = gp.cK \ (gp.y - m)
 end

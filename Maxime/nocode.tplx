@@ -136,8 +136,12 @@
     \newcommand{\K}{\mathbf{K}}
 
     \DeclareMathOperator{\trace}{trace}
-    \newcommand{\linavg}{\bar{\tau}}
-    \newcommand{\invvar}{\tau^{IV}}
+    \newcommand{\tauw}{\tau^{w}}
+    \newcommand{\unifavg}{\tau^{\mathrm{UNIF}}}
+    \newcommand{\invvar}{\tau^{\mathrm{IV}}}
+    \newcommand{\taurho}{\tau^{\rho}}
+    \newcommand{\tauproj}{\tau^{\mathrm{PROJ}}}
+
     \newcommand{\modnull}{\mathscr{M}_0}
     \newcommand{\modalt}{\mathscr{M}_1}
     \newcommand{\degree}{{\,^\circ}}
