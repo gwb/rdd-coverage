@@ -3,7 +3,8 @@ import GaussianProcesses: cov, cov!, addcov!, kernel_data_key, get_params, set_p
 
 type ConstantKernel <: Stationary
     σ2::Float64
-    ConstantKernel(lσ::Float64) = new(exp(2*lσ))
+    priors::Array
+    ConstantKernel(lσ::Float64) = new(exp(2*lσ), [])
 end
 function set_params!(k::ConstantKernel, hyp::Vector{Float64})
     k.σ2 = exp(2*hyp[1])

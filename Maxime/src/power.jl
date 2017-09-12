@@ -3,7 +3,7 @@ import Distributions: cdf, ccdf
 function sim_power!(gpT::GPE, gpC::GPE, gpNull::GPE, τ::Float64, 
             treat::BitVector, X∂::MatF64,
                 chi_null::Vector{Float64}, 
-                mLL_null::Vector{Float64}, 
+                mll_null::Vector{Float64}, 
                 pval_invvar_null::Vector{Float64}
                 ;
                 update_mean=true)
@@ -25,13 +25,13 @@ function sim_power!(gpT::GPE, gpC::GPE, gpNull::GPE, τ::Float64,
     update_alpha!(gpC)
     update_alpha!(gpNull)
 
-    gpT.mLL = mLL(gpT)
-    gpC.mLL = mLL(gpC)
-    gpNull.mLL = mLL(gpNull)
+    gpT.mll = mll(gpT)
+    gpC.mll = mll(gpC)
+    gpNull.mll = mll(gpNull)
     
-    # mLL
-    ΔmLL = gpT.mLL + gpC.mLL - gpNull.mLL
-    pval_mLL = mean(mLL_null .> ΔmLL)
+    # mll
+    Δmll = gpT.mll + gpC.mll - gpNull.mll
+    pval_mll = mean(mll_null .> Δmll)
     
     # χ2
     pred_T = _predict_raw(gpT, gpT.k, gpT.m, X∂)
@@ -48,13 +48,13 @@ function sim_power!(gpT::GPE, gpC::GPE, gpNull::GPE, τ::Float64,
     invvar_calib = pval_invvar_calib(gpT, gpC, X∂)
 
 
-    return (pval_mLL,pval_χ2,pval_invvar_obs,invvar_bootcalib,invvar_calib)
+    return (pval_mll,pval_χ2,pval_invvar_obs,invvar_bootcalib,invvar_calib)
 end
 
 function nsim_power(gpT::GPE, gpC::GPE, τ::Float64, 
                 X∂::MatF64,
                 chi_null::Vector{Float64}, 
-                mLL_null::Vector{Float64}, 
+                mll_null::Vector{Float64}, 
                 pval_invvar_null::Vector{Float64},
                 nsim::Int
                 ;
@@ -67,7 +67,7 @@ function nsim_power(gpT::GPE, gpC::GPE, τ::Float64,
     treat[:] = false
     treat[1:gpT.nobsv] = true
     power_sims = [sim_power!(gpT_mod, gpC_mod, gpNull, τ, treat, X∂, 
-                            chi_null, mLL_null, pval_invvar_null
+                            chi_null, mll_null, pval_invvar_null
                             ;update_mean=update_mean) 
                   for _ in 1:nsim];
     return power_sims

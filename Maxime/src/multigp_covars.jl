@@ -5,7 +5,7 @@ import GaussianProcesses: get_params, set_params!, optimize!
 import GaussianProcesses: update_mll_and_dmll!, update_mll!
 import Base: mean
 
-typealias MultiGP Vector{GPE}
+const MultiGP = Vector{GPE}
 
 type MultiGPCovars{MT<:Mean, KT1<:Kernel, KT2<:Kernel}
     D::Array{Float64,2}
@@ -22,8 +22,8 @@ type MultiGPCovars{MT<:Mean, KT1<:Kernel, KT2<:Kernel}
     # Auxiliary data
     cK::PDMats.PDMat        # (k + obsNoise)
     alpha::Vector{Float64}  # (k + obsNoise)⁻¹y
-    mLL::Float64            # Marginal log-likelihood
-    dmLL::Vector{Float64}   # Gradient marginal log-likelihood
+    mll::Float64            # Marginal log-likelihood
+    dmll::Vector{Float64}   # Gradient marginal log-likelihood
     function MultiGPCovars(D::Array{Float64,2}, 
         y::Vector{Float64},
         mgp::MultiGP, 
@@ -88,7 +88,7 @@ function update_mll!(mgpcv::MultiGPCovars)
     chol = cholfact!(Symmetric(chol_buffer))
     mgpcv.cK = PDMats.PDMat(cK, chol)
     mgpcv.alpha = mgpcv.cK \ (mgpcv.y - μ)
-    mgpcv.mLL = -dot((mgpcv.y - μ),mgpcv.alpha)/2.0 - logdet(mgpcv.cK)/2.0 - mgpcv.nobsv*log(2π)/2.0 # Marginal log-likelihood
+    mgpcv.mll = -dot((mgpcv.y - μ),mgpcv.alpha)/2.0 - logdet(mgpcv.cK)/2.0 - mgpcv.nobsv*log(2π)/2.0 # Marginal log-likelihood
 end
 
 function initialise_mll!(mgpcv::MultiGPCovars)
@@ -107,7 +107,7 @@ function initialise_mll!(mgpcv::MultiGPCovars)
     end
     mgpcv.cK = PDMats.PDMat(cK)
     mgpcv.alpha = mgpcv.cK \ (mgpcv.y .- μ)
-    mgpcv.mLL = -dot((mgpcv.y-μ),mgpcv.alpha)/2.0 - logdet(mgpcv.cK)/2.0 - mgpcv.nobsv*log(2π)/2.0
+    mgpcv.mll = -dot((mgpcv.y-μ),mgpcv.alpha)/2.0 - logdet(mgpcv.cK)/2.0 - mgpcv.nobsv*log(2π)/2.0
 end
 
 
@@ -124,25 +124,25 @@ function update_mll_and_dmll!(mgpcv::MultiGPCovars,
     n_mean_params = num_params(mgpcv.m)
     n_kern_params = num_params(mgpcv.k)
     n_beta_params = num_params(mgpcv.βkern)
-    dmLL = Array(Float64, noise + mean*n_mean_params + kern*n_kern_params + beta*n_beta_params)
+    dmll = Array(Float64, noise + mean*n_mean_params + kern*n_kern_params + beta*n_beta_params)
     logNoise = mgpcv.logNoise
     get_ααinvcKI!(ααinvcKI, mgpcv.cK, mgpcv.alpha)
     i=1
     if noise
-        dmLL[i] = exp(2*logNoise)*trace(ααinvcKI)
+        dmll[i] = exp(2*logNoise)*trace(ααinvcKI)
         i+=1
     end
     if mean
         Mgrads = vcat([grad_stack(gp.m, gp.X) for gp in mgpcv.mgp]...)
         for j in 1:n_mean_params
-            dmLL[i] = dot(Mgrads[:,j],α)
+            dmll[i] = dot(Mgrads[:,j],α)
             i+=1
         end
     end
     if kern
         Kgrad[:,:] = 0.0
         for j in i:i+n_kern_params-1
-            dmLL[j] = 0.0
+            dmll[j] = 0.0
         end
         for iparam in 1:n_kern_params
             istart=0
@@ -150,7 +150,7 @@ function update_mll_and_dmll!(mgpcv::MultiGPCovars,
                 Kview = view(Kgrad, istart+1:istart+gp.nobsv, istart+1:istart+gp.nobsv)
                 ααview = view(ααinvcKI, istart+1:istart+gp.nobsv, istart+1:istart+gp.nobsv)
                 grad_slice!(Kview, mgpcv.k, gp.X, gp.data, iparam)
-                dmLL[i] += vecdot(Kview, ααview)/2
+                dmll[i] += vecdot(Kview, ααview)/2
                 istart += gp.nobsv
             end
             i+=1
@@ -159,11 +159,11 @@ function update_mll_and_dmll!(mgpcv::MultiGPCovars,
     if beta
         for iparam in 1:num_params(mgpcv.βkern)
             grad_slice!(Kgrad, mgpcv.βkern, mgpcv.D', mgpcv.βdata, iparam)
-            dmLL[i] = dot(ααinvcKI,Kgrad)/2.0
+            dmll[i] = dot(ααinvcKI,Kgrad)/2.0
             i+=1
         end
     end
-    mgpcv.dmLL = dmLL
+    mgpcv.dmll = dmll
 end
 function get_params(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern::Bool=true, beta::Bool=true)
     params = Float64[]
@@ -203,7 +203,7 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
         try
             set_params!(mgpcv, hyp; noise=noise, mean=mean, kern=kern, beta=beta)
             update_mll!(mgpcv)
-            return -mgpcv.mLL
+            return -mgpcv.mll
         catch err
              if !all(isfinite(hyp))
                 println(err)
@@ -224,8 +224,8 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
         try
             set_params!(mgpcv, hyp; noise=noise, mean=mean, kern=kern, beta=beta)
             update_mll_and_dmll!(mgpcv, cK_buffer, Kgrad_buffer; noise=noise, mean=mean, kern=kern, beta=beta)
-            grad[:] = -mgpcv.dmLL
-            return -mgpcv.mLL
+            grad[:] = -mgpcv.dmll
+            return -mgpcv.mll
         catch err
              if !all(isfinite(hyp))
                 println(err)

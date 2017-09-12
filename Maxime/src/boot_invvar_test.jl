@@ -49,8 +49,8 @@ end
     ANALYTIC INSTEAD OF BOOTSTRAP CALIBRATION
 =============================================#
 function pval_invvar_calib(gpT::GPE, gpC::GPE, X∂::Matrix)
-    extrap◫_T = GaussianProcesses.predict(gpT, X∂; full_cov=true)
-    extrap◫_C = GaussianProcesses.predict(gpC, X∂; full_cov=true)
+    extrap◫_T = GaussianProcesses.predict_f(gpT, X∂; full_cov=true)
+    extrap◫_C = GaussianProcesses.predict_f(gpC, X∂; full_cov=true)
     μ∂ = extrap◫_T[1].-extrap◫_C[1]
     n = size(μ∂)
     Σ∂ = extrap◫_T[2]+extrap◫_C[2]

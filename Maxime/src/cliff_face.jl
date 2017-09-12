@@ -1,4 +1,4 @@
-using GaussianProcesses: GPE, MatF64, predict
+import GaussianProcesses: GPE, MatF64, predict_f
 
 function cliff_face(gpT::GPE, gpC::GPE, sentinels::MatF64)
     pred_T = predict_f(gpT, sentinels; full_cov=true)

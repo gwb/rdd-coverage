@@ -97,7 +97,7 @@ function modifiable(gp::GPE)
     gp_copy = GPE(gp.m, gp.k, gp.logNoise, gp.nobsv,
         gp.X, copy(gp.y), gp.data,
         gp.dim, gp.cK, copy(gp.alpha),
-        gp.mLL, Float64[])
+        gp.mll, gp.mll, Float64[], Float64[])
     return gp_copy
 end
 

@@ -141,10 +141,13 @@
     \newcommand{\invvar}{\tau^{\mathrm{IV}}}
     \newcommand{\taurho}{\tau^{\rho}}
     \newcommand{\tauproj}{\tau^{\mathrm{PROJ}}}
+    \newcommand{\taugeo}{\tau^{\mathrm{GEO}}}
+    \newcommand{\taupop}{\tau^{\mathrm{POP}}}
 
     \newcommand{\modnull}{\mathscr{M}_0}
     \newcommand{\modalt}{\mathscr{M}_1}
     \newcommand{\degree}{{\,^\circ}}
+    \newcommand{\eqlabel}[1]{\label{#1}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -170,7 +173,7 @@
 ((*- block figure scoped -*))
     \begin{figure}[tbh]
     \begin{center}
-    \adjustimage{max size={0.8\linewidth}{0.5\paperheight}}{((( filename )))}
+    \adjustimage{max size={0.9\linewidth}{0.7\paperheight}}{((( filename )))}
     \end{center}
     { \hspace*{\fill} \\}
     \end{figure}
