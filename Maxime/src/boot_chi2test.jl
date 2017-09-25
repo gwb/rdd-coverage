@@ -24,7 +24,7 @@ function sim_chi_null{K<:Kernel,MF<:Mean}(gpT::GPE, gpC::GPE, gpNull::GPE, k::K,
     Ysim = rand(null)
 
     gpT.y = Ysim[treat]
-    gpC.y = Ysim[!treat]
+    gpC.y = Ysim[.!treat]
 
     if update_mean
         gpT.m = mT = MeanConst(mean(gpT.y))
@@ -64,8 +64,16 @@ function placebo_chi(angle::Float64, X::MatF64, Y::Vector,
                  nsim::Int; update_mean::Bool=false)
     shift = shift_for_even_split(angle, X)
     left = left_points(angle, shift, X)
-    gp_left  = GPE(X[:,left],  Y[left],  MeanConst(mean(Y[left])),  kern, logNoise)
-    gp_right = GPE(X[:,!left], Y[!left], MeanConst(mean(Y[!left])), kern, logNoise)
+    gp_left  = GPE(X[:,left],
+                   Y[left],
+                   MeanConst(mean(Y[left])),
+                   kern,
+                   logNoise)
+    gp_right = GPE(X[:, .!left],
+                   Y[.!left],
+                   MeanConst(mean(Y[.!left])),
+                   kern,
+                   logNoise)
     X∂ = placebo_sentinels(angle, shift, X, 100)
     pval = boot_chi2test(gp_left, gp_right, X∂, nsim; update_mean=update_mean)
     return pval

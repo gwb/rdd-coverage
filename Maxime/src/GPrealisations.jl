@@ -141,7 +141,7 @@ function get_optim_target(gpr::GPRealisations;
         end        
     end
 
-    function mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
+    function mll_and_dmll!(grad::Vector{Float64}, hyp::Vector{Float64})
         #=try=#
             set_params!(gpr, hyp; noise=noise, mean=mean, kern=kern)
             update_mll_and_dmll!(gpr, Kgrads, ααinvcKIs; noise=noise, mean=mean, kern=kern)
@@ -162,8 +162,8 @@ function get_optim_target(gpr::GPRealisations;
         #=    end=#
         #=end =#
     end
-    function dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
-        mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
+    function dmll!(grad::Vector{Float64}, hyp::Vector{Float64})
+        mll_and_dmll!(grad, hyp)
     end
 
     func = OnceDifferentiable(mll, dmll!, mll_and_dmll!,

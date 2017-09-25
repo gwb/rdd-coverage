@@ -1,8 +1,9 @@
-import GeoInterface: coordinates
+import GeoInterface: coordinates, xcoord, ycoord
 import LibGEOS
 import IterTools
 import DataStructures
 import LibGEOS: nearestPoints, interpolate, distance
+import LibGEOS: MultiPolygon, envelope
 import GaussianProcesses: GPE
 
 function projection_points(gp::GPE, border::BorderType; maxdist::Float64=Inf)
@@ -13,7 +14,7 @@ function projection_points(gp::GPE, border::BorderType; maxdist::Float64=Inf)
         x,y = gp.X[:,i]
         point = LibGEOS.Point(x,y)
         # projection onto border (as distance along border)
-        distances[i] = distance(border, point)
+        distances[i] = LibGEOS.distance(border, point)
         proj_point = nearestPoints(border, point)[1]
         # get border point from distance
         # proj_point = interpolate(border, proj_dist)
@@ -25,46 +26,57 @@ function projection_points(gp::GPE, border::BorderType; maxdist::Float64=Inf)
     return X∂[:, distances .<= maxdist]
 end
 
-function proj_estimator(gpT::GPE, gpC::GPE, border::BorderType)
-    X∂_treat = projection_points(gpT, border)
-    X∂_ctrol = projection_points(gpC, border)
+function proj_estimator(gpT::GPE, gpC::GPE, border::BorderType; maxdist::Float64=Inf)
+    X∂_treat = projection_points(gpT, border; maxdist=maxdist)
+    X∂_ctrol = projection_points(gpC, border; maxdist=maxdist)
     X∂ = [X∂_treat X∂_ctrol]
     
     μpost, Σpost = cliff_face(gpT, gpC, X∂)
     return unweighted_mean(μpost, Σpost)
 end
 
-function buffer_infinite_proj_sentinels(gpT::GPE, gpC::GPE, border::BorderType,
-                                    buffer::Float64, gridspace::Float64;
-                                    density = ((s1,s2) -> 1.0))
-    # Add a buffer around the border, returns a "border area".
-    #=buffer_polygon = LibGEOS.buffer(border, buffer)=#
-
+function data_hull(gpT::GPE, gpC::GPE)
     # Obtain a convex hull containing all the data.
     X_multi_treat = LibGEOS.MultiPoint([gpT.X[:, i] for i in 1:gpT.nobsv])
     X_multi_ctrol = LibGEOS.MultiPoint([gpC.X[:, i] for i in 1:gpC.nobsv])
     convexhull_treat = LibGEOS.convexhull(X_multi_treat)
     convexhull_ctrol = LibGEOS.convexhull(X_multi_ctrol)
-    data_hull = LibGEOS.union(convexhull_treat, convexhull_ctrol)
+    hull = LibGEOS.union(convexhull_treat, convexhull_ctrol)
+    return hull
+end
 
-    # Obtain grid of points in bounding box for all data.
-    X1_min = min(minimum(gpT.X[1,:]), minimum(gpC.X[1,:]))
-    X1_max = max(maximum(gpT.X[1,:]), maximum(gpC.X[1,:]))
+function infinite_proj_sentinels(gpT::GPE, gpC::GPE, border::BorderType,
+                                    region::MultiPolygon,
+                                    maxdist::Float64, gridspace::Float64;
+                                    density = ((s1,s2) -> 1.0))
+    # Add a buffer around the border, returns a "border area".
+    #=buffer_polygon = LibGEOS.buffer(border, buffer)=#
+
+    # Get the minimum and maximum of X1 and X2 within the region
+    env = envelope(region)
+    env_coord = coordinates(env)[1]
+    X1_min = minimum(xcoord(p) for p in env_coord)
+    X1_max = maximum(xcoord(p) for p in env_coord)
+    X2_min = minimum(ycoord(p) for p in env_coord)
+    X2_max = maximum(ycoord(p) for p in env_coord)
+
+    # Obtain grid of points that covers the region
     X1_grid = X1_min:gridspace:X1_max
-
-    X2_min = min(minimum(gpT.X[2,:]), minimum(gpC.X[2,:]))
-    X2_max = max(maximum(gpT.X[2,:]), maximum(gpC.X[2,:]))
     X2_grid = X2_min:gridspace:X2_max
+
+    border_envelope = envelope(border)
 
     projected_weights = Dict{Vector{Float64}, Float64}()
     for (s1,s2) in IterTools.product(X1_grid, X2_grid)
         # convert to a point obejct
         p = LibGEOS.Point(s1,s2)
-        # Only keep points that are both within `buffer` of
+        # Only keep points that are both within `maxdist` of
         # the border, and are in the convex hull of the data.
-        if LibGEOS.distance(p, border) > buffer
+        if LibGEOS.distance(p, border_envelope) > maxdist
             continue
-        elseif !LibGEOS.within(p, data_hull)
+        elseif LibGEOS.distance(p, border) > maxdist
+            continue
+        elseif !LibGEOS.within(p, region)
             continue
         end
         # compute the population density at this location
@@ -91,11 +103,12 @@ function buffer_infinite_proj_sentinels(gpT::GPE, gpC::GPE, border::BorderType,
     return X∂_projected, weights
 end
 
-function buffer_infinite_proj_estim(gpT::GPE, gpC::GPE, border::BorderType,
-                                    buffer::Float64, gridspace::Float64;
+function infinite_proj_estim(gpT::GPE, gpC::GPE, border::BorderType,
+                                    region::MultiPolygon,
+                                    maxdist::Float64, gridspace::Float64;
                                     density = ((s1,s2) -> 1.0))
-    X∂_projected, weights = buffer_infinite_proj_sentinels(
-            gpT, gpC, border, buffer, gridspace; density=density
+    X∂_projected, weights = infinite_proj_sentinels(
+            gpT, gpC, border, region, maxdist, gridspace; density=density
             )
             
     # Obtain the cliff face for these sentinels...

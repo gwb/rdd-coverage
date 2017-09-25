@@ -9,7 +9,7 @@ function sim_logP(gpT::GPE, gpC::GPE, gpNull::GPE, treat::BitVector; update_mean
     Ysim = rand(null)
     
     gpT.y = Ysim[treat]
-    gpC.y = Ysim[!treat]
+    gpC.y = Ysim[.!treat]
     gpNull.y = Ysim
     
     if update_mean
@@ -75,7 +75,7 @@ function placebo_mll(angle::Float64, X::Matrix, Y::Vector,
     shift = shift_for_even_split(angle, X)
     left = left_points(angle, shift, X)
     gp_left  = GPE(X[:,left],  Y[left],  MeanConst(mean(Y[left])),  kern, logNoise)
-    gp_right = GPE(X[:,!left], Y[!left], MeanConst(mean(Y[!left])), kern, logNoise)
+    gp_right = GPE(X[:,.!left], Y[.!left], MeanConst(mean(Y[.!left])), kern, logNoise)
     pval = boot_mlltest(gp_left, gp_right, nsim; update_mean=update_mean)
     return pval
 end

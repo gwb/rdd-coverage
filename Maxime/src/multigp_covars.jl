@@ -73,7 +73,7 @@ function update_mll!(mgpcv::MultiGPCovars)
     propagate_params!(mgpcv)
     cK = mgpcv.cK.mat
     cov!(cK, mgpcv.βkern, mgpcv.D', mgpcv.βdata)
-    μ = Array(Float64, mgpcv.nobsv)
+    μ = Array{Float64}(mgpcv.nobsv)
     istart=0
     for gp in mgpcv.mgp
         μ[istart+1:istart+gp.nobsv] = mean(mgpcv.m,gp.X)
@@ -92,10 +92,10 @@ function update_mll!(mgpcv::MultiGPCovars)
 end
 
 function initialise_mll!(mgpcv::MultiGPCovars)
-    cK = Array(Float64, mgpcv.nobsv, mgpcv.nobsv)
+    cK = Array{Float64}(mgpcv.nobsv, mgpcv.nobsv)
     propagate_params!(mgpcv)
     cov!(cK, mgpcv.βkern, mgpcv.D', mgpcv.βdata)
-    μ = Array(Float64, mgpcv.nobsv)
+    μ = Array{Float64}(mgpcv.nobsv)
     istart=0
     for gp in mgpcv.mgp
         μ[istart+1:istart+gp.nobsv] = mean(mgpcv.m,gp.X)
@@ -124,7 +124,7 @@ function update_mll_and_dmll!(mgpcv::MultiGPCovars,
     n_mean_params = num_params(mgpcv.m)
     n_kern_params = num_params(mgpcv.k)
     n_beta_params = num_params(mgpcv.βkern)
-    dmll = Array(Float64, noise + mean*n_mean_params + kern*n_kern_params + beta*n_beta_params)
+    dmll = Array{Float64}(noise + mean*n_mean_params + kern*n_kern_params + beta*n_beta_params)
     logNoise = mgpcv.logNoise
     get_ααinvcKI!(ααinvcKI, mgpcv.cK, mgpcv.alpha)
     i=1
@@ -197,8 +197,8 @@ end
 
 function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern::Bool=true, beta::Bool=true, 
                     method=ConjugateGradient(), options=Optim.Options())
-    cK_buffer = Array(Float64, mgpcv.nobsv, mgpcv.nobsv)
-    Kgrad_buffer = Array(Float64, mgpcv.nobsv, mgpcv.nobsv)
+    cK_buffer = Array{Float64}(mgpcv.nobsv, mgpcv.nobsv)
+    Kgrad_buffer = Array{Float64}(mgpcv.nobsv, mgpcv.nobsv)
     function mll(hyp::Vector{Float64})
         try
             set_params!(mgpcv, hyp; noise=noise, mean=mean, kern=kern, beta=beta)
@@ -220,7 +220,7 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
         end        
     end
 
-    function mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
+    function mll_and_dmll!(grad::Vector{Float64}, hyp::Vector{Float64})
         try
             set_params!(mgpcv, hyp; noise=noise, mean=mean, kern=kern, beta=beta)
             update_mll_and_dmll!(mgpcv, cK_buffer, Kgrad_buffer; noise=noise, mean=mean, kern=kern, beta=beta)
@@ -241,8 +241,8 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
             end
         end 
     end
-    function dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
-        mll_and_dmll!(hyp::Vector{Float64}, grad::Vector{Float64})
+    function dmll!(grad::Vector{Float64}, hyp::Vector{Float64})
+        mll_and_dmll!(grad, hyp)
     end
 
     init = get_params(mgpcv;  noise=noise, mean=mean, kern=kern, beta=beta)  # Initial hyperparameter values
@@ -282,7 +282,7 @@ end
     Evaluate the mean function.
 """
 function mean(mgpcv::MultiGPCovars)
-    μ = Array(Float64, mgpcv.nobsv)
+    μ = Array{Float64}(mgpcv.nobsv)
     istart=0
     for gp in mgpcv.mgp
         μ[istart+1:istart+gp.nobsv] = mean(mgpcv.m,gp.X)

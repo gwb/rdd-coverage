@@ -73,6 +73,8 @@
 \usepackage{bm}
 \usepackage{eulervm}
 \usepackage{lineno}
+\usepackage{commath}
+\usepackage{pdflscape}
 
 
     
@@ -168,73 +170,73 @@
     \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
 \def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
 
-\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
-\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
-\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
-\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
-\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
-\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
-\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
-\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
-\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
-\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
-\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
-\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
 \expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
-\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
-\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
 \expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
 \expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
 \expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
-\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
 \expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
-\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
 \expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
 \expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
-\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
-\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
 \expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
-\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
-\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
-\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
 \expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
-\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
 \expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
 
 \def\PYZbs{\char`\\}
 \def\PYZus{\char`\_}
@@ -263,12 +265,13 @@
     \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
 
 
-    \newcommand{\genericdel}[3]{%
-      \left#1#3\right#2
-    }
-    \newcommand{\del}[1]{\genericdel(){#1}}
-    \newcommand{\sbr}[1]{\genericdel[]{#1}}
-    \newcommand{\cbr}[1]{\genericdel\{\}{#1}}
+    % \newcommand{\genericdel}[3]{%
+    %   \left#1#3\right#2
+    % }
+    % \newcommand{\del}[1]{\genericdel(){#1}}
+    % \newcommand{\sbr}[1]{\genericdel[]{#1}}
+    % \newcommand{\cbr}[1]{\genericdel\{\}{#1}}
+    % \newcommand{\abs}[1]{\genericdel||{#1}}
     \DeclareMathOperator*{\argmin}{arg\,min}
     \DeclareMathOperator*{\argmax}{arg\,max}
 	\let\Pr\relax
@@ -284,7 +287,7 @@
     \DeclareMathOperator{\unif}{Uniform}
     \DeclareMathOperator{\invchi}{\mathrm{Inv-\chi}^2}
 
-    \newcommand{\abs}[1]{\genericdel||{#1}}
+    
     \newcommand{\effect}{\mathrm{eff}}
     \newcommand{\xtilde}{\widetilde{X}}
     \newcommand{\boxleft}{\squareleftblack}
@@ -325,15 +328,15 @@
     \newcommand{\iid}{iid}
     \newcommand{\vectreat}{\Ind_{T}}
 
-    \newcommand{\boundary}{\partial}
-    \newcommand{\sentinels}{\bm{\boundary}}
+    \newcommand{\boundary}{\mathcal{B}}
+    \newcommand{\sentinels}{\bm{b}}
     \newcommand{\eye}{\mathbf{I}}
     \newcommand{\K}{\mathbf{K}}
 
     \DeclareMathOperator{\trace}{trace}
     \newcommand{\tauw}{\tau^{w}}
     \newcommand{\unifavg}{\tau^{\mathrm{UNIF}}}
-    \newcommand{\invvar}{\tau^{\mathrm{IV}}}
+    \newcommand{\invvar}{\tau^{\mathrm{INV}}}
     \newcommand{\taurho}{\tau^{\rho}}
     \newcommand{\tauproj}{\tau^{\mathrm{PROJ}}}
     \newcommand{\taugeo}{\tau^{\mathrm{GEO}}}
@@ -343,6 +346,8 @@
     \newcommand{\modalt}{\mathscr{M}_1}
     \newcommand{\degree}{{\,^\circ}}
     \newcommand{\eqlabel}[1]{\label{#1}}
+    \DeclareMathOperator{\proj}{proj}
+    \newcommand{\taubold}{\bm{\tau}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -594,11 +599,13 @@ Reusing the same conceptual skeleton and applying it to geographical RDDs, our f
 \item
   2-dimensional coordinate space \(\scrS\)
 \item
-  treatment units are in region \(\scrS_T \subset \scrS\) and control units are in non-overlapping \(\scrS_C\) outside of the treatment region, so that \(\scrS_C = \scrS_T^c\) and \(\scrS_T \cup \scrS_C = \scrS\)
+  \(n_T\) treatment units are in region \(\scrS_T \subset \scrS\) and \(n_C\) control units are in non-overlapping \(\scrS_C\) outside of the treatment region, so that \(\scrS_C = \scrS_T^c\) and \(\scrS_T \cup \scrS_C = \scrS\)
 \item
   Observed outcomes for units in treatment region are labeled \(Y_i = Y_T(\svec_i)\), and units in control region \(Y_i = Y_C(\svec_i)\).
 \item
   Potential outcomes framework: Each unit has a potential outcome under treatment \(Y_T(\svec)\) and a potential outcome under control \(Y_C(\svec)\). If \(\svec \in \scrS_T\), then \(Y_T(\svec)\) is observed, otherwise \(Y_C(\svec)\) is observed.
+\item
+  Border is denoted \(\boundary\), and sentinels (point along the border) are \(\sentinels\).
 \end{itemize}
 
 \subsection{1GP solution}\label{gp-solution}
@@ -758,14 +765,17 @@ the overall complexity of the model fitting increases fourfold.
 
 
     	\section{Average Treatment Effect}\label{average-treatment-effect}
+    
 
-Once we obtain the posterior on the treatment effect function \(\tau(\boundary)\), estimating the average treatment effect along the boundary will often be of interest.
-We consider the class of weighted means of the functional treatment effect \(\tau\del{\svec}\),
-with weight function \(w(\svec)\) defined and approximated at the sentinels.
-The weighted mean is defined over the boundary \(\boundary\) and approximated over the sentinels \(\sentinels\):
+\label{sec:ate}
+    	Once we obtain the posterior on the treatment effect function \(\tau(\boundary)\), estimating the average treatment effect (ATE) along the border will often be of interest.
+We consider the estimand class of weighted means of the functional treatment effect \(\tau\del{\svec}\),
+with weight function \(w(\svec)\) defined everywhere on the border \(\boundary\).
+The weighted mean integral can be approximated as a sum at the sentinels \(\sentinels_{1:K}\).
 
 \begin{equation}\begin{split}
-    \tauw &= \frac{\oint_\boundary \left. w(\svec) \tau(\svec) dx \right.}{\oint_\boundary \left. w(\svec) d\svec \right.}\,,\\
+    \tauw &= \frac{\oint_\boundary \left. w(\svec) \tau(\svec) \dif \svec \right.}
+                  {\oint_\boundary \left. w(\svec) \dif \svec \right.}\,,\\
           &\approx \frac{\sum_{i=0}^K w(\sentinels_i) \tau(\sentinels_i)}
                        {\sum_{i=0}^K w(\sentinels_i) } \,.
 \end{split}
@@ -776,9 +786,9 @@ We have shown the posterior distribution of \(\tau(\svec)\) at the sentinels to 
 Since \(\tauw\) is approximated as a linear transformation of \(\tau(\sentinels)\), its posterior is also multivariate normal, with mean \(\mu_{\tauw \mid Y}\) and covariance \(\Sigma_{\tauw \mid Y}\) given by
 
 \begin{equation}\begin{split}
-    \mu_{\tauw \mid Y} &\approx \frac{w(\sentinels)\trans \mu_{\sentinels \mid Y}}
+    \mu_{\tauw \mid Y} &= \frac{w(\sentinels)\trans \mu_{\sentinels \mid Y}}
                                {w(\sentinels)\trans  \ones_K} \\
-    \Sigma_{\tauw \mid Y} &\approx \frac{w(\sentinels)\trans \Sigma_{\sentinels \mid Y} w(\sentinels)}
+    \Sigma_{\tauw \mid Y} &= \frac{w(\sentinels)\trans \Sigma_{\sentinels \mid Y} w(\sentinels)}
                                   { \del{w(\sentinels)\trans  \ones_K }^2 }\\
 \end{split}
 \eqlabel{eq:weighted_estimator}
@@ -796,11 +806,14 @@ We estimate \(\unifavg\), the uniformly weighted mean of \(\tau(\svec)\) along t
 Following \eqref{eq:weighted_estimand} and \eqref{eq:weighted_estimator}:
 
 \begin{equation}\begin{split}
-    \unifavg &\equiv \frac{\oint_\boundary \left. \tau(x) dx \right.}{\oint_\boundary \left. dx \right.} \\
+    \unifavg &\equiv \frac{\oint_\boundary \left. \tau(x) \dif \svec \right.}
+                          {\oint_\boundary \left. \dif x \right.} \\
     \unifavg \mid Y_T, Y_C, \sigmaf, \sigman, \ell &\sim \normal\del{\mu_{\unifavg \mid Y}, \Sigma_{\unifavg \mid Y}} \\
-    \mu_{\unifavg \mid Y} &\approx \del{\ones\trans \mu_{\sentinels \mid Y}} / n_{\sentinels} \\
-    \Sigma_{\unifavg \mid Y} &\approx \del{\ones\trans \Sigma_{\sentinels \mid Y} \ones} / n_{\sentinels}^2
-\end{split}\end{equation}
+    \mu_{\unifavg \mid Y} &= \del{\ones\trans \mu_{\sentinels \mid Y}} / n_{\sentinels} \\
+    \Sigma_{\unifavg \mid Y} &= \del{\ones\trans \Sigma_{\sentinels \mid Y} \ones} / n_{\sentinels}^2
+\end{split}
+\eqlabel{eq:unifavg}
+\end{equation}
 
 Note that if the sentinels are not evenly spaced, then each entry needs to be re-weighted by the length of the border that the sentinel occupies.
 This estimand takes on a geometric interpretation, as we average over the length of the boundary.
@@ -848,7 +861,7 @@ and the resolution of our map can drastically change our estimate,
 even though the outcomes of interest will generally have nothing to do with river topologies.
 In the previous section, we claimed that the density-weighted estimand gives equal weight to units near the boundary, but now we must amend that statment: units near wigglier borders receive more weight.
 
-The (often) unwelcome dependence of the \(\unifavg\) estimand on the border topology is a symptom of the geometry of the problem: the 1-dimensional treatment function \(\tau(\boundary)\) is embedded in a Euclidean 2-dimensional space.
+This unwelcome dependence of the \(\unifavg\) estimand on the border topology is a symptom of the geometry of the problem: the 1-dimensional treatment function \(\tau(\boundary)\) is embedded in a Euclidean 2-dimensional space.
 The dependencies induced by this geometric fact are reflected in the covariance \(\Sigma_{\sentinels \mid Y}\): sentinels in the straight segment of the border will be less strongly correlated than in the sinuous segments.
 The more correlated sentinels individually carry less information about the local treatment effect.
 Instead of averaging the posterior treatment effect along the border based on geometry or population, we consider averaging the information contained therein.
@@ -857,8 +870,8 @@ This motivates the use of the inverse-variance weighted mean \(\invvar\)
 \begin{equation}
 \begin{split}
     \left. \invvar \mid Y_T, Y_C, \sigmaf, \sigman, \ell \right. &\sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} \,, \\
-    \mu_{\invvar \mid Y} &\approx \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \mu_{\sentinels \mid Y}} \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones} \,, \\
-    \Sigma_{\invvar \mid Y} &\approx 1 \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \,. \ones}
+    \mu_{\invvar \mid Y} &= \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \mu_{\sentinels \mid Y}} \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones} \,, \\
+    \Sigma_{\invvar \mid Y} &= 1 \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \,. \ones}
 \end{split}
 \eqlabel{eq:invvar}
 \end{equation}
@@ -876,14 +889,49 @@ This estimand isn't chosen by the scientist, but rather it is dictated by the li
 All average treatment effect estimators considered so far presuppose evenly spaced sentinel points, which are then given weights.
 Alternatively, we can project the positions of treatment and control units onto the border, and use those projected sentinel positions without weights.
 In the spirit of a finite-population estimate, each unit figuratively gets one vote, though instead of a direct vote, it has a representative at the border.
-We then follow the same procedure as for the uniformly weighted mean, using the projected sentinels instead of the evenly spaced sentinels.
-The resulting estimator \(\tauproj\) has desirable properties: densely populated regions receive proportionately more sentinels, but wigglier segments of the border do not.
+For any points \(\svec\), we use the notation \(\proj_{\boundary}\del{\svec}\) to give the coordinates of the point on the border \(\boundary\) that is closest to \(\svec\) (assuming uniqueness).
+The projected finite-population \(\tauproj\) is then the uniformly weighted mean applied with the projected sentinels instead of the evenly spaced sentinels.
+We can therefore modify \eqref{eq:unifavg}, replacing the cliff-face mean vector \(\mu_{\sentinels \mid Y}\)
+and covariance matrix \(\Sigma_{\sentinels \mid Y}\)
+with equivalent quantities obtained at the projected sentinels,
+to obtain the posterior mean and covariance of \(\tauproj\):
+
+\begin{equation}\begin{split}
+    \tauproj \mid Y_T, Y_C, \sigmaf, \sigman, \ell &\sim \normal\del{\mu_{\tauproj \mid Y}, \Sigma_{\tauproj \mid Y}}\,, \\
+    \mu_{\tauproj \mid Y} &= \frac{1}{n_C + n_T} \sum_{i=1}^{n_T+n_C} 
+        \E\sbr{
+            \tau\del{
+                \proj_{\boundary}\del{\svec_i}
+            }
+            \mid Y_T, Y_C, \sigmaf, \sigman, \ell
+         } \,,\\
+    \Sigma_{\tauproj \mid Y} &= \frac{1}{\del{n_C + n_T}^2}
+        \sum_{i=1}^{n_T+n_C} 
+        \sum_{j=1}^{n_T+n_C} 
+        \cov\sbr{
+            \tau\del{
+                \proj_{\boundary}\del{\svec_i}
+            },
+            \tau\del{
+                \proj_{\boundary}\del{\svec_j}
+            }
+            \mid Y_T, Y_C, \sigmaf, \sigman, \ell
+        }\,.
+\end{split}
+\eqlabel{eq:tauproj}
+\end{equation}
+
+The posterior expectations and covariances in \eqref{eq:tauproj} can be obtained as in \eqref{eq:postvar2gp}, but using the projected sentinels.
+Note that \(\tauproj\) is still within the class of weighted mean estimands \eqref{eq:weighted_estimand},
+with weight function \(w(\svec) = \sum_{i=1}^{n_T+n_C} \delta\del{ \svec - \proj_\boundary(\svec_i)}\), where \(\delta\) is the Dirac delta function.
+
+The resulting estimator has desirable properties: densely populated regions receive proportionately more sentinels, but wigglier segments of the border do not.
 While it lacks the information efficiency of the inverse-variance estimator,
 the projected estimand is much easier to understand and interpret,
 and may feel more familiar to practicioners used to finite-population inference.
 
 If there are units very far away from the border,
-they may be deemed irrelevant for the purposes of the analysis of a regression discontinuity design. In that case, only those units within a certain distance of the border (e.g.~a few lengthscales of the fitted Gaussian process) should be projected onto the border to become sentinels.
+they may be deemed irrelevant for the purposes of the analysis of a regression discontinuity design. In that case, only those units within a certain distance of the border (e.g.~one or two lengthscales of the fitted Gaussian process) should be projected onto the border to become sentinels.
     
 
 
@@ -891,14 +939,20 @@ they may be deemed irrelevant for the purposes of the analysis of a regression d
 
 In certain applications, estimands that depend on the position of measurements are undesirable, and geography-weighted estimands are more natural. \textbf{{[}LukeB: Citation? Better sentence?{]}}
 The ``geometry-based'' unweighted estimand \(\unifavg\) has the property that each segment of the border has equal weight.
-If instead, we desire each patch of land to have equal weight, we can borrow the projection method from \(\tauproj\) and apply it to an infinite population of uniform density near the border.
-This gives the geography-based projected land ATE \(\taugeo\).
+If instead, we desire each patch of land to have equal weight, we can borrow the projection method from \(\tauproj\) and apply it to an infinite population of uniform density on both sides of the border.
+This yields the geography-based projected land ATE \(\taugeo\).
 To estimate \(\taugeo\), a tight grid of evenly spaced points is first generated within \(\scrS_T\) and \(\scrS_C\).
 Each point on this grid is then projected onto the border and becomes a sentinel.
 The 2GP procedure applied to these unevenly spaced sentinels then yields a mean vector and covariance matrix for the treatment effect at these positions.
 The mean of the mean vector then gives an estimate of \(\taugeo\).
 In other words, \(\taugeo\) is estimated by applying the \(\unifavg\) estimator with sentinels obtained by projecting the grid points, instead of equispaced sentinels.
-\(\taugeo\) remains in the category of weighted-mean estimands, with the weight function \(w(\svec)\) in \eqref{eq:weighted_estimand} proportional to the area of \(\scrS_T\) and \(\scrS_C\) that \(\svec\) is nearest to.
+\(\taugeo\) remains in the category of weighted-mean estimands, with the weight function \(w(\svec)\) in \eqref{eq:weighted_estimand} proportional to the area of \(\scrS_T\) and \(\scrS_C\) that \(\svec\) is nearest to:
+
+\begin{equation}
+w(\svec) = \int_{\scrS} \left. \Ind \cbr{\svec = \proj_{\boundary}\del{\svec'}} \dif \svec' \right.
+\end{equation}
+
+{[}\textbf{Note:} this integral is not strictly correct, since the area closest to a point on the border can be infinitesimal (for example in the case of a straight border. Suggestions for better notation welcome.{]}
 
 Again, if land far away from the border is deemed irrelevant to the analysis, the grid should be restricted to within a certain distance of the border.
 This can be achieved in GIS software by obtaining a buffer around the border, then intersecting the resulting polygon with the grid points.
@@ -917,9 +971,9 @@ Strictly speaking, the uncertaining in the estimate of \(\rho\) should be propag
     	\subsection{Wiggly Border Simulation}\label{wiggly-border-simulation}
 
 We illustrate the differences between the four average treatment effect estimators with a simulation study.
-A thousand are placed in a square area delimited by spatial coordinates \(S_1 \in \cbr{0,2}\) and \(S_2 \in \cbr{-1, 1}\).
-A border at \(S_2=0\) horizontally evenly divides units into a control and treatment region,
-which are then further divided at \(S_1=0.5\) and \(S_1=1.5\) into three vertical bands:
+1000 units are placed in a square area delimited by spatial coordinates \(S_1 \in \cbr{0,2}\) and \(S_2 \in \cbr{-1, 1}\).
+A border at \(S_2=0\) divides units vertically into a control and treatment region,
+which are then further divided horizontally at \(S_1=0.5\) and \(S_1=1.5\) into three bands:
 
 \begin{itemize}
 \tightlist
@@ -933,9 +987,9 @@ which are then further divided at \(S_1=0.5\) and \(S_1=1.5\) into three vertica
 
 Furthermore, the border in the leftmost band is a triangular wave, to create ``wiggliness.''
 We increase the number of wiggles from 0 to 1000 to observe the effect on the estimates.
-The details of the simulation setting are given in the table below.
+The simulation setting is summarized in the table below.
 The outcomes \(Y\) are simulated from a Gaussian process with squared exponential kernel
-(\(\ell=0.4\), \(\sigma=0.5\)), to which we add the respective constant treatment effects within each band.
+(\(\ell=0.4\), \(\sigma=0.5\)), to which we add a treatment effect \(\tau(S_1, S_2) = S_1\).
     
 
 
@@ -946,7 +1000,7 @@ The outcomes \(Y\) are simulated from a Gaussian process with squared exponentia
 \endhead
 \textbf{Border} & wiggly & straight & straight\tabularnewline
 \textbf{Density} & low \(\rho=1.0\) & very low \(\rho=0.1\) & high \(\rho=2.8\)\tabularnewline
-\(\mathbf{\tau}\) & weak & medium & strong\tabularnewline
+\(\taubold\) & weak & medium & strong\tabularnewline
 \bottomrule
 \end{longtable}
     
@@ -955,7 +1009,7 @@ The outcomes \(Y\) are simulated from a Gaussian process with squared exponentia
     	\begin{figure}
 \centering
 \includegraphics{figures/wiggly_boundaries.png}
-\caption{\label{fig:wiggly_boundaries} (a) Positions of units and border; (b) Density of units along the \(X_1\) units; (c) Simulated outcomes; (d) Estimator and estimand behavior as left border gets wigglier.}
+\caption{\label{fig:wiggly_boundaries} (a) Spatial positions of units and border; (b) Density of units along \(S_1\); (c) Simulated outcomes and true treatment effect; (d) Estimator (posterior mean \(\pm 1 \sigma\)) and estimand (dotted lines) behavior as left border gets wigglier.}
 \end{figure}
     
 
@@ -963,19 +1017,26 @@ The outcomes \(Y\) are simulated from a Gaussian process with squared exponentia
     	We fit Gaussian processes on each side of the boundary,
 using the known hyperparameters and constant mean equal to the empirical mean,
 and estimate the average treatment effect using the six methods proposed above.
+The simulation setting is illustrated in Figure~\ref{fig:wiggly_boundaries} (a), (b), and (c),
+and the resulting estimand and estimator behavior as the number of wiggles increases is shown in Figure~\ref{fig:wiggly_boundaries}(d).
 
-When the border is a straight line,
+When the border is a straight line and \(\scrS_T\) and \(\scrS_C\) are rectangles,
 and because the treatment effect does not depend on the vertical axis \(S_2\),
 the density-weighted estimand \(\taurho\) equals the projected superpopulation estimand \(\taupop\),
 and they are in fact both equal to the infinite-population average treatment effect \(\E\sbr{Y(1)-Y(0)}\).
-Correspondingly, the posteriors of \(\taurho\) and \(\taupop\) closely match, \(\tauproj\) and \(\taupop\) are therefore very similar, and estimate the true \(\taurho\) well.
-The geometry- and geography-based ATE \(\unifavg\) and \(\taugeo\) are equivalent when the border is a straight line.
-They give equal weight to the sparsely populated middle band, which produces a lower estimate with higher variance.
-The information-based ATE \(\invvar\) is different, and the estimand does not coincide with any others.
+Correspondingly, the posteriors of \(\taurho\) and \(\taupop\) are identical.
+With 1000 units, the finite-population and the infinite-population projected estimands are similar, though the difference can be more pronounced with smaller sample populations.
+
+The geometry- and geography-based ATE \(\unifavg\) and \(\taugeo\) are also equivalent when the border is a straight line.
+They give equal weight to the sparsely populated middle band, which produces a lower estimate with higher variance than the posteriors of \(\taurho\) and \(\taupop\).
+
+Lastly, the information-based inverse-variance estimand \(\invvar\) does not coincide with any others.
+The estimand here is between the population-based and the geography-based estimators, but that need not be true in the general case.
+However, \(\invvar\) is guaranteed to have the lowest posterior variance within the class of ATEs under consideration, and here we indeed see that it has the narrowest band.
 
 As we introduce wiggles into the leftmost band,
 \(\taurho\) and \(\unifavg\) show their susceptibility to the border topology.
-More sentinels are packed into the leftmost section of the border,
+Proportionally more sentinels are packed into the leftmost section of the border,
 upweighting the lower treatment effect of that band,
 and resulting in a drop of the two estimates and estimands.
 Meanwhile, \(\invvar\) remains stable despite the wiggles,
@@ -984,6 +1045,8 @@ band get automatically downweighted as their correlation rises.
 The estimators that rely on projection
 \(\tauproj\), \(\taugeo\), and \(\taupop\) also remain stable,
 because the projected sentinels hardly move.
+These robust estimands show only a slight displacement when the first wiggles are introduced,
+caused by the presence of some sentinels nearer to the observed units.
 
 In most applications, we recommend the use of the finite population or inverse-variance-weighted estimators, to prevent the undesirable influence of border topology.
 The projected finite population method is simplest to understand and interpret in the tradition of finite population estimators, and unlike the projected superpopulation estimator \(\taupop\) it does not require estimating population density.
@@ -1042,7 +1105,7 @@ Low\strut
 \end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
 Inverse-variance weighted ATE\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-Insensitive\strut
+Robust\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 Equispaced\strut
 \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
@@ -1055,7 +1118,7 @@ Lowest\strut
 \end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
 Projected finite population ATE\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-Insensitive\strut
+Robust\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 Projected Units\strut
 \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
@@ -1068,7 +1131,7 @@ Low\strut
 \end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
 Projected land ATE\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-Insensitive\strut
+Robust\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 Projected Grid\strut
 \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
@@ -1081,7 +1144,7 @@ High\strut
 \end{minipage} & \begin{minipage}[t]{0.25\columnwidth}\raggedright\strut
 Projected superpopulation ATE\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
-Insensitive\strut
+Robust\strut
 \end{minipage} & \begin{minipage}[t]{0.13\columnwidth}\raggedright\strut
 Projected Grid\strut
 \end{minipage} & \begin{minipage}[t]{0.15\columnwidth}\raggedright\strut
@@ -1381,12 +1444,12 @@ The treatment effect can also be visualized directly in Figure~XX as the differe
 
     	\subsection{Average Log-Price Increase}\label{average-log-price-increase}
 
-The cliff-face plot shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in section~XX. The most obvious approach is to take an unweighted mean at each equispaced sentinel, which has posterior distribution
+The cliff-face plot shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in section~\ref{sec:ate}. The most obvious approach is to take an unweighted mean at each equispaced sentinel, which has posterior distribution
 
 \begin{equation}
 \begin{split}
-    \unifavg \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell &\sim \normal\del{-0.198, 0.091^2}\,\text{and tail probability} \\
-    \Pr\del{\unifavg > 0 \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell} &= 1.515\% \,.
+    \unifavg \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell &\sim \normal\del{-0.20, 0.09^2}\,\text{and tail probability} \\
+    \Pr\del{\unifavg > 0 \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell} &= 1.48\% \,.
 \end{split}
 \end{equation}
 
@@ -1394,12 +1457,29 @@ The inverse-variance weighted mean estimator is robust to changes in the border 
 
 \begin{equation}
 \begin{split}
-    \invvar \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell &\sim \normal\del{-0.192, 0.054^2}\,\text{and reduced tail probability} \\
-    \Pr\del{\invvar > 0 \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell} &= 0.017\% \,.
+    \invvar \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell &\sim \normal\del{-0.20, 0.05^2}\,\text{and reduced tail probability} \\
+    \Pr\del{\invvar > 0 \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell} &= 0.01\% \,.
 \end{split}
 \end{equation}
 
-This estimate corresponds to a 21\% increase in price per square foot from district 19 to district 27.
+The posterior mean estimate corresponds to a 21\% increase in price per square foot from district 19 to district 27.
+
+All estimators {[}except \(\taurho\) for now{]} are shown in Table~XX. For each estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr\del{\tau > 0 \mid Y_T, Y_C, \sigmaf, \sigman, \hat{\beta}, \ell}\) of the average treatment being greater than zero.
+    
+
+
+    	\begin{longtable}[]{@{}cccc@{}}
+\toprule
+Estimand & Posterior Mean & Posterior Standard Deviation & Posterior Tail Prob\tabularnewline
+\midrule
+\endhead
+\(\unifavg\) & -0.20 & 0.09 & 1.48\%\tabularnewline
+\(\invvar\) & -0.20 & 0.05 & 0.01\%\tabularnewline
+\(\tauproj\) & -0.21 & 0.08 & 0.46\%\tabularnewline
+\(\taugeo\) & -0.19 & 0.10 & 2.54\%\tabularnewline
+\(\taupop\) & -0.19 & 0.06 & 0.04\%\tabularnewline
+\bottomrule
+\end{longtable}
     
 
 
@@ -1604,7 +1684,35 @@ For a weight vector \(\vvec\), its variance is given by
 Our calibrated inverse-variance test is the special case of this final step where the weights are chosen to be \(\vvec = \Sigma^{-1}_{\boundary \mid Y} \ones_{n_{\sentinels}}\).
     
 
+\newgeometry{margin=5cm} % modify this if you need even more space
+\begin{landscape}
 
+\begin{table}
+\begin{tabular}{r|ccccccccccccc}
+	& $n_{\mathrm{wiggles}}$ & $\widehat{\unifavg}$ & $\unifavg$ & $\widehat{\invvar}$ & $\invvar$ & $\widehat{\taurho}$ & $\taurho$ & $\widehat{\tauproj}$ & $\tauproj$ & $\widehat{\taugeo}$ & $\taugeo$ & $\widehat{\taupop}$ & $\taupop$\\
+		\hline
+		1 & 0 & 0.85 (0.08) & 1.00 & 1.16 (0.05) & 1.20 & 1.30 (0.05) & 1.34 & 1.28 (0.05) & 1.33 & 0.85 (0.08) & 1.00 & 1.30 (0.05) & 1.34 \\
+		2 & 1 & 0.84 (0.08) & 0.99 & 1.06 (0.04) & 1.13 & 1.28 (0.05) & 1.32 & 1.28 (0.05) & 1.32 & 0.84 (0.08) & 0.98 & 1.27 (0.05) & 1.31 \\
+		3 & 1 & 0.84 (0.08) & 0.99 & 1.06 (0.04) & 1.13 & 1.28 (0.05) & 1.32 & 1.28 (0.05) & 1.32 & 0.84 (0.08) & 0.98 & 1.27 (0.05) & 1.31 \\
+		4 & 2 & 0.81 (0.07) & 0.95 & 1.05 (0.04) & 1.12 & 1.23 (0.05) & 1.27 & 1.29 (0.05) & 1.33 & 0.82 (0.07) & 0.96 & 1.24 (0.05) & 1.28 \\
+		5 & 3 & 0.78 (0.07) & 0.91 & 1.05 (0.04) & 1.12 & 1.17 (0.05) & 1.20 & 1.29 (0.05) & 1.33 & 0.81 (0.07) & 0.95 & 1.23 (0.05) & 1.26 \\
+		6 & 6 & 0.69 (0.07) & 0.79 & 1.05 (0.04) & 1.12 & 1.01 (0.05) & 1.03 & 1.29 (0.05) & 1.33 & 0.81 (0.07) & 0.94 & 1.22 (0.05) & 1.25 \\
+		7 & 10 & 0.61 (0.06) & 0.67 & 1.05 (0.04) & 1.12 & 0.86 (0.05) & 0.86 & 1.29 (0.05) & 1.33 & 0.81 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		8 & 15 & 0.54 (0.07) & 0.58 & 1.05 (0.04) & 1.12 & 0.74 (0.06) & 0.73 & 1.29 (0.05) & 1.33 & 0.81 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		9 & 25 & 0.47 (0.07) & 0.48 & 1.05 (0.04) & 1.12 & 0.60 (0.06) & 0.58 & 1.29 (0.05) & 1.33 & 0.81 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		10 & 39 & 0.42 (0.07) & 0.41 & 1.05 (0.04) & 1.12 & 0.51 (0.07) & 0.49 & 1.29 (0.05) & 1.33 & 0.81 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		11 & 63 & 0.38 (0.07) & 0.36 & 1.05 (0.04) & 1.12 & 0.44 (0.07) & 0.41 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		12 & 100 & 0.35 (0.08) & 0.32 & 1.05 (0.04) & 1.12 & 0.39 (0.08) & 0.35 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		13 & 158 & 0.33 (0.08) & 0.30 & 1.05 (0.04) & 1.12 & 0.36 (0.08) & 0.32 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		14 & 251 & 0.32 (0.08) & 0.28 & 1.05 (0.04) & 1.12 & 0.34 (0.08) & 0.29 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		15 & 398 & 0.31 (0.08) & 0.27 & 1.05 (0.04) & 1.12 & 0.32 (0.08) & 0.28 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		16 & 630 & 0.31 (0.08) & 0.26 & 1.05 (0.04) & 1.12 & 0.31 (0.08) & 0.27 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+		17 & 1000 & 0.30 (0.08) & 0.26 & 1.05 (0.04) & 1.12 & 0.31 (0.08) & 0.26 & 1.29 (0.05) & 1.33 & 0.80 (0.07) & 0.93 & 1.22 (0.05) & 1.25 \\
+	\end{tabular}
+	\caption{Table of posterior mean, posterior standard deviation and true value for each average treatment effect estimand as the wiggliness of the boundary is increased.}
+\end{table}
+\end{landscape}
+\restoregeometry
 
     % Add a bibliography block to the postdoc
     

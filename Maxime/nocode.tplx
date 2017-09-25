@@ -64,16 +64,19 @@
 \usepackage{bm}
 \usepackage{eulervm}
 \usepackage{lineno}
+\usepackage{commath}
+\usepackage{pdflscape}
 ((* endblock packages *))
 
 ((* block definitions *))
     ((( super() )))
-    \newcommand{\genericdel}[3]{%
-      \left#1#3\right#2
-    }
-    \newcommand{\del}[1]{\genericdel(){#1}}
-    \newcommand{\sbr}[1]{\genericdel[]{#1}}
-    \newcommand{\cbr}[1]{\genericdel\{\}{#1}}
+    % \newcommand{\genericdel}[3]{%
+    %   \left#1#3\right#2
+    % }
+    % \newcommand{\del}[1]{\genericdel(){#1}}
+    % \newcommand{\sbr}[1]{\genericdel[]{#1}}
+    % \newcommand{\cbr}[1]{\genericdel\{\}{#1}}
+    % \newcommand{\abs}[1]{\genericdel||{#1}}
     \DeclareMathOperator*{\argmin}{arg\,min}
     \DeclareMathOperator*{\argmax}{arg\,max}
 	\let\Pr\relax
@@ -89,7 +92,7 @@
     \DeclareMathOperator{\unif}{Uniform}
     \DeclareMathOperator{\invchi}{\mathrm{Inv-\chi}^2}
 
-    \newcommand{\abs}[1]{\genericdel||{#1}}
+    
     \newcommand{\effect}{\mathrm{eff}}
     \newcommand{\xtilde}{\widetilde{X}}
     \newcommand{\boxleft}{\squareleftblack}
@@ -130,15 +133,15 @@
     \newcommand{\iid}{iid}
     \newcommand{\vectreat}{\Ind_{T}}
 
-    \newcommand{\boundary}{\partial}
-    \newcommand{\sentinels}{\bm{\boundary}}
+    \newcommand{\boundary}{\mathcal{B}}
+    \newcommand{\sentinels}{\bm{b}}
     \newcommand{\eye}{\mathbf{I}}
     \newcommand{\K}{\mathbf{K}}
 
     \DeclareMathOperator{\trace}{trace}
     \newcommand{\tauw}{\tau^{w}}
     \newcommand{\unifavg}{\tau^{\mathrm{UNIF}}}
-    \newcommand{\invvar}{\tau^{\mathrm{IV}}}
+    \newcommand{\invvar}{\tau^{\mathrm{INV}}}
     \newcommand{\taurho}{\tau^{\rho}}
     \newcommand{\tauproj}{\tau^{\mathrm{PROJ}}}
     \newcommand{\taugeo}{\tau^{\mathrm{GEO}}}
@@ -148,6 +151,8 @@
     \newcommand{\modalt}{\mathscr{M}_1}
     \newcommand{\degree}{{\,^\circ}}
     \newcommand{\eqlabel}[1]{\label{#1}}
+    \DeclareMathOperator{\proj}{proj}
+    \newcommand{\taubold}{\bm{\tau}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -173,7 +178,7 @@
 ((*- block figure scoped -*))
     \begin{figure}[tbh]
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.7\paperheight}}{((( filename )))}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{((( filename )))}
     \end{center}
     { \hspace*{\fill} \\}
     \end{figure}

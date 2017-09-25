@@ -60,8 +60,8 @@ function get_pval(μ::Vector{Float64}, Σ::Matrix{Float64}, ϵ::Float64)
 end
 
 function chisquare(gpT::GPE, gpC::GPE, X∂::Matrix, ϵ; verbose=false)
-    extrap_T = predict(gpT, X∂; full_cov=true)
-    extrap_C = predict(gpC, X∂; full_cov=true)
+    extrap_T = predict_f(gpT, X∂; full_cov=true)
+    extrap_C = predict_f(gpC, X∂; full_cov=true)
     μpost = extrap_T[1].-extrap_C[1]
     
     K∂C = cov(gpC.k, X∂, gpC.X)
