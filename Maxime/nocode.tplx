@@ -115,7 +115,14 @@
 
     \newcommand{\gp}{\mathcal{GP}}
     \newcommand{\trans}{^{\intercal}}
-    \newcommand{\scrS}{\mathscr{S}}
+
+    \newcommand{\area}{\mathcal{A}}
+    \newcommand{\treat}{\mathrm{T}}
+    \newcommand{\ctrol}{\mathrm{C}}
+    \newcommand{\treatind}{Z}
+    \newcommand{\treatarea}{\area{}^{\treat}}
+    \newcommand{\ctrolarea}{\area{}^{\ctrol}}
+
     \newcommand{\sigmaf}{\sigma_{\mathrm{GP}}}
     \newcommand{\sigman}{\sigma_{\epsilon}}
     \newcommand{\sigmatau}{\sigma_{\tau}}
@@ -153,6 +160,8 @@
     \newcommand{\eqlabel}[1]{\label{#1}}
     \DeclareMathOperator{\proj}{proj}
     \newcommand{\taubold}{\bm{\tau}}
+    \DeclareMathOperator{\Forall}{\forall}
+    \newcommand{\numsent}{n_{\sentinels}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
