@@ -23,9 +23,9 @@ cov{V1<:VecF64,V2<:VecF64}(k::ConstantKernel, x::V1, y::V2) = k.σ2
         return NaN
     end
 end
-distance{M<:MatF64}(k::ConstantKernel, X::M) = ones(Float64, size(X,2), size(X,2))
-distance{M1<:MatF64,M2<:MatF64}(k::ConstantKernel, X::M1, Y::M2) = ones(Float64, size(X,2), size(Y,2))
-distance{V1<:VecF64,V2<:VecF64}(k::ConstantKernel, x::V1, y::V2) = 1.0
+# distance{M<:MatF64}(k::ConstantKernel, X::M) = ones(Float64, size(X,2), size(X,2))
+# distance{M1<:MatF64,M2<:MatF64}(k::ConstantKernel, X::M1, Y::M2) = ones(Float64, size(X,2), size(Y,2))
+# distance{V1<:VecF64,V2<:VecF64}(k::ConstantKernel, x::V1, y::V2) = 1.0
 function cov!{M<:MatF64}(cK::MatF64, k::ConstantKernel, X::M, data::EmptyData)
     fill!(cK, k.σ2)
 end
