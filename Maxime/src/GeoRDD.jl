@@ -3,6 +3,7 @@ module GeoRDD
     using PDMats
     using Optim
     include("geometry.jl")
+    include("gp_utils.jl")
     include("constant_kernel.jl")
     include("multigp_covars.jl")
     include("GPrealisations.jl")

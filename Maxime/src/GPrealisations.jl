@@ -103,8 +103,8 @@ function update_mll_and_dmll!(gpr::GPRealisations; kwargs...)
         if haskey(Kgrads, gp.nobsv)
             continue
         end
-        Kgrads[gp.nobsv] = Array(Float64, gp.nobsv, gp.nobsv)
-        ααinvcKIs[gp.nobsv] = Array(Float64, gp.nobsv, gp.nobsv)
+        Kgrads[gp.nobsv] = Array{Float64}(gp.nobsv, gp.nobsv)
+        ααinvcKIs[gp.nobsv] = Array{Float64}(gp.nobsv, gp.nobsv)
     end
     return update_mll_and_dmll!(gpr, Kgrads, ααinvcKIs)
 end
@@ -117,8 +117,8 @@ function get_optim_target(gpr::GPRealisations;
         if haskey(Kgrads, gp.nobsv)
             continue
         end
-        Kgrads[gp.nobsv] = Array(Float64, gp.nobsv, gp.nobsv)
-        ααinvcKIs[gp.nobsv] = Array(Float64, gp.nobsv, gp.nobsv)
+        Kgrads[gp.nobsv] = Array{Float64}(gp.nobsv, gp.nobsv)
+        ααinvcKIs[gp.nobsv] = Array{Float64}(gp.nobsv, gp.nobsv)
     end
     function mll(hyp::Vector{Float64})
         try
@@ -191,12 +191,14 @@ function optimize!(gpr::GPRealisations;
         ikernstart+=1
         lower[1]=-10.0
     end
-    upper[ikernstart:ikernstart+num_params(gpr.k)-1]=7.0
+    upper[ikernstart:ikernstart+num_params(gpr.k)-1]=20.0
     best_x = copy(init)
     best_y = Inf
+    count = 0
     function myfunc(x::Vector, grad::Vector)
+        count += 1
         if length(grad) > 0
-            y = func.fg!(x, grad)
+            y = func.fg!(grad, x)
             if y < best_y
                 best_x[:] = x
             end
@@ -219,24 +221,27 @@ function optimize!(gpr::GPRealisations;
     upper_bounds!(opt, upper)
     min_objective!(opt, myfunc)
     xtol_rel!(opt,1e-4)
+    ftol_rel!(opt, 1e-20)
 
-    try
-        (minf,minx,ret) = NLopt.optimize(opt, init)
-    catch
-        try
-            # LD_MMA seems to be slower
-            # but maybe more reliable
-            opt = Opt(:LD_MMA, nparams)
-            lower_bounds!(opt, lower)
-            upper_bounds!(opt, upper)
-            min_objective!(opt, myfunc)
-            xtol_rel!(opt,1e-4)
-            (minf,minx,ret) = NLopt.optimize(opt, init)
-        catch
-            _ = myfunc(best_x, [])
-            return best_x
-        end
-    end
+    # try
+    (minf,minx,ret) = NLopt.optimize(opt, init)
+    # catch
+        # try
+            # # LD_MMA seems to be slower
+            # # but maybe more reliable
+            # println("trying LD_MMA")
+            # opt = Opt(:LD_MMA, nparams)
+            # lower_bounds!(opt, lower)
+            # upper_bounds!(opt, upper)
+            # min_objective!(opt, myfunc)
+            # xtol_rel!(opt, 1e-4)
+            # ftol_rel!(opt, 1e-8)
+            # (minf,minx,ret) = NLopt.optimize(opt, init)
+        # catch
+            # _ = myfunc(best_x, [])
+            # return best_x, count
+        # end
+    # end
     _ = myfunc(best_x, [])
-    return best_x
+    return best_x, count
 end
