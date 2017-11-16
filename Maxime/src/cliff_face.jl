@@ -14,7 +14,7 @@ function sim_cliff(gpT::GPE, gpC::GPE, gpNull::GPE, treat::BitVector, X∂::MatF
     Ysim = rand(null)
 
     gpT.y = Ysim[treat]
-    gpC.y = Ysim[!treat]
+    gpC.y = Ysim[.!treat]
 
     if update_mean
         gpT.m = mT = MeanConst(mean(gpT.y))

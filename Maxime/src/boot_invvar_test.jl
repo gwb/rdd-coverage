@@ -181,7 +181,7 @@ function placebo_invvar(angle::Float64, X::MatF64, Y::Vector,
     shift = shift_for_even_split(angle, X)
     left = left_points(angle, shift, X)
     gp_left  = GPE(X[:,left],  Y[left],  MeanConst(mean(Y[left])),  kern, logNoise)
-    gp_right = GPE(X[:,!left], Y[.!left], MeanConst(mean(Y[.!left])), kern, logNoise)
+    gp_right = GPE(X[:,.!left], Y[.!left], MeanConst(mean(Y[.!left])), kern, logNoise)
     Xb = placebo_sentinels(angle, shift, X, 100)
     pval = pval_invvar_calib(gp_left, gp_right, Xb)
     return pval

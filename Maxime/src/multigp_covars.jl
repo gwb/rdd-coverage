@@ -249,6 +249,7 @@ function optimize!(mgpcv::MultiGPCovars; noise::Bool=true, mean::Bool=true, kern
     func = OnceDifferentiable(mll, dmll!, mll_and_dmll!, init)
     results=optimize(func,init, method, options)
     set_params!(mgpcv, Optim.minimizer(results); noise=noise, mean=mean, kern=kern, beta=beta)
+    mll(Optim.minimizer(results))
     return results
 end
 
