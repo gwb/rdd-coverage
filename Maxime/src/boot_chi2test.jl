@@ -14,7 +14,7 @@ function chistat(gpT::GPE, gpC::GPE, Xb::MatF64,
 end
 
 
-function sim_chi_null(
+function sim_chi_null!(
         gpT::GPE, gpC::GPE, gpNull::GPE, 
         treat::BitVector, Xb::MatF64, 
         Σcliff::PDMat, cK_T::MatF64, cK_C::MatF64; update_mean::Bool=false)
@@ -51,7 +51,7 @@ function nsim_chi(gpT::GPE, gpC::GPE, Xb::MatF64, nsim::Int; update_mean::Bool=f
     k = gpT_mod.k
     mT = gpT_mod.m
     mC = gpC_mod.m
-    t_sims = [sim_chi_null(gpT_mod, gpC_mod, gpNull, treat, Xb, Σcliff, cK_T, cK_C; update_mean=update_mean) 
+    t_sims = [sim_chi_null!(gpT_mod, gpC_mod, gpNull, treat, Xb, Σcliff, cK_T, cK_C; update_mean=update_mean) 
         for _ in 1:nsim];
     return t_sims
 end

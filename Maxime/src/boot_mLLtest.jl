@@ -3,7 +3,7 @@ function mll(gp::GPE)
     return -dot((gp.y - μ),gp.alpha)/2.0 - logdet(gp.cK)/2.0 - gp.nobsv*log(2π)/2.0 # Marginal log-likelihood
 end
 
-function sim_logP(gpT::GPE, gpC::GPE, gpNull::GPE, treat::BitVector; update_mean::Bool=false)
+function sim_logP!(gpT::GPE, gpC::GPE, gpNull::GPE, treat::BitVector; update_mean::Bool=false)
     n = gpNull.nobsv
     null = MultivariateNormal(zeros(n), gpNull.cK)
     Ysim = rand(null)
@@ -35,12 +35,12 @@ function nsim_logP(gpT::GPE, gpC::GPE,
                   nsim::Int; update_mean::Bool=false)
     gpT_mod = modifiable(gpT)
     gpC_mod = modifiable(gpC)
-    yNull = [gpT.y; gpC.y]
+    yNull = [gpT_mod.y; gpC_mod.y]
     gpNull = GPE([gpT.X gpC.X], yNull, MeanConst(mean(yNull)), gpT.k, gpT.logNoise)
     treat = BitVector(gpNull.nobsv)
     treat[:] = false
     treat[1:gpT.nobsv] = true
-    mll_sims = [sim_logP(gpT_mod, gpC_mod, gpNull, treat; update_mean=update_mean) 
+    mll_sims = [sim_logP!(gpT_mod, gpC_mod, gpNull, treat; update_mean=update_mean) 
         for _ in 1:nsim];
     return mll_sims
 end

@@ -17,7 +17,7 @@ function pval_invvar(gpT::GPE, gpC::GPE, Xb::MatF64, Σcliff::PDMat, cK_T::MatF6
     return pval_invvar
 end
 
-function sim_invvar(gpT::GPE, gpC::GPE, gpNull::GPE, 
+function sim_invvar!(gpT::GPE, gpC::GPE, gpNull::GPE, 
             treat::BitVector, Xb::MatF64; update_mean::Bool=false)
     n = gpNull.nobsv
     null = MultivariateNormal(zeros(n), gpNull.cK)
@@ -37,7 +37,7 @@ function sim_invvar(gpT::GPE, gpC::GPE, gpNull::GPE,
     return pval_invvar(gpT, gpC, Xb)
 end
 
-function sim_invvar(gpT::GPE, gpC::GPE, gpNull::GPE, 
+function sim_invvar!(gpT::GPE, gpC::GPE, gpNull::GPE, 
             treat::BitVector, Xb::MatF64, 
             Σcliff::PDMat, cK_T::MatF64, cK_C::MatF64; update_mean::Bool=false)
     n = gpNull.nobsv
@@ -69,7 +69,7 @@ function nsim_invvar_pval(gpT::GPE, gpC::GPE, Xb::MatF64, nsim::Int; update_mean
     treat = BitVector(gpNull.nobsv)
     treat[:] = false
     treat[1:gpT.nobsv] = true
-    pval_sims = Float64[sim_invvar(gpT_mod, gpC_mod, gpNull, treat, Xb, Σcliff, cK_T, cK_C;
+    pval_sims = Float64[sim_invvar!(gpT_mod, gpC_mod, gpNull, treat, Xb, Σcliff, cK_T, cK_C;
         update_mean=update_mean) 
         for _ in 1:nsim];
     return pval_sims
@@ -77,7 +77,7 @@ end
 
 function boot_invvar(gpT::GPE, gpC::GPE, Xb::MatF64, nsim::Int; update_mean::Bool=false)
     pval_obs = pval_invvar(gpT, gpC, Xb)
-    pval_sims = sim_invvar(gpT, gpC, Xb, nsim; update_mean=update_mean)
+    pval_sims = nsim_invvar_pval(gpT, gpC, Xb, nsim; update_mean=update_mean)
     return mean(pval_obs .< pval_sims)
 end
 
@@ -143,7 +143,7 @@ function pval_invvar_calib(gpT::GPE, gpC::GPE, Xb::Matrix, Σcliff::PDMat, cK_T:
     pval = 2*ccdf(null, abs(μτ_numer))
     return pval
 end
-function sim_invvar_calib(gpT::GPE, gpC::GPE, gpNull::GPE, 
+function sim_invvar_calib!(gpT::GPE, gpC::GPE, gpNull::GPE, 
             treat::BitVector, Xb::MatF64; update_mean::Bool=false)
     n = gpNull.nobsv
     null = MultivariateNormal(zeros(n), gpNull.cK)
@@ -170,7 +170,7 @@ function nsim_invvar_calib(gpT::GPE, gpC::GPE, Xb::MatF64, nsim::Int; update_mea
     treat = BitVector(gpNull.nobsv)
     treat[:] = false
     treat[1:gpT.nobsv] = true
-    pval_sims = Float64[sim_invvar_calib(gpT_mod, gpC_mod, gpNull, treat, Xb;
+    pval_sims = Float64[sim_invvar_calib!(gpT_mod, gpC_mod, gpNull, treat, Xb;
         update_mean=update_mean) 
         for _ in 1:nsim];
     return pval_sims
