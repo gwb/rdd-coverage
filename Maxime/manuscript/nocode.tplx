@@ -140,7 +140,7 @@
     \newcommand{\iid}{iid}
     \newcommand{\vectreat}{\Ind_{T}}
 
-    \newcommand{\boundary}{\mathcal{B}}
+    \newcommand{\border}{\mathcal{B}}
     \newcommand{\sentinels}{\bm{b}}
     \newcommand{\eye}{\mathbf{I}}
     \newcommand{\K}{\mathbf{K}}
@@ -162,7 +162,7 @@
     \newcommand{\taubold}{\bm{\tau}}
     \DeclareMathOperator{\Forall}{\forall}
     \newcommand{\numsent}{R}
-    \newcommand{\weightb}{w_{\boundary}}
+    \newcommand{\weightb}{w_{\border}}
     \newcommand{\wt}{w_{\treat}}   
     \newcommand{\wc}{w_{\ctrol}}
 
