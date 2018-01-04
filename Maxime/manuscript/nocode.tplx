@@ -66,6 +66,7 @@
 \usepackage{lineno}
 \usepackage{commath}
 \usepackage{pdflscape}
+\usepackage[doublespacing]{setspace}
 ((* endblock packages *))
 
 ((* block definitions *))
@@ -141,7 +142,12 @@
     \newcommand{\vectreat}{\Ind_{T}}
 
     \newcommand{\border}{\mathcal{B}}
-    \newcommand{\sentinels}{\bm{b}}
+    \newcommand{\sentinel}{\bm{b}}
+    \newcommand{\numsent}{R}
+    \newcommand{\sentinels}{\sentinel_{1:\numsent}}
+    \newcommand{\isent}{r}
+    \newcommand{\sentinelset}{\cbr{\sentinel_1,\ldots,\sentinel_\numsent}}
+
     \newcommand{\eye}{\mathbf{I}}
     \newcommand{\K}{\mathbf{K}}
 
@@ -161,7 +167,6 @@
     \DeclareMathOperator{\proj}{proj}
     \newcommand{\taubold}{\bm{\tau}}
     \DeclareMathOperator{\Forall}{\forall}
-    \newcommand{\numsent}{R}
     \newcommand{\weightb}{w_{\border}}
     \newcommand{\wt}{w_{\treat}}   
     \newcommand{\wc}{w_{\ctrol}}
