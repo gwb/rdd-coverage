@@ -12,6 +12,6 @@ nycdistrs=gpd.read_file("NYC_data/nysd_16c/nysd.shp").to_crs(epsg=EPSG)
 
 def background_schdistrs(ax, **kwargs):
     plot_dataframe(nycdistrs, ax=ax, **kwargs)
-    #plt.axes().set_aspect('equal', 'datalim')
-    #plt.axis("off")
+    #  plt.axes().set_aspect('equal', 'datalim')
+    #  plt.axis("off")
     return None
