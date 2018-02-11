@@ -1,7 +1,8 @@
 import LibGEOS
 import GeoJSON
 import Base.convert
-using DataTables
+import DataFrames
+using DataFrames
 using CSV
 
 import LibGEOS: LineString, MultiLineString
@@ -55,13 +56,15 @@ end
 
 
 function read_processed_sales()
-    NYC_sales=CSV.read("NYC_data/processed/NYC_sales.csv", DataTable,
-                   types=Dict("TAX CLASS AT PRESENT" => String,
-                              "TAX CLASS AT TIME OF SALE" => String))
+    NYC_sales=CSV.read("NYC_data/processed/NYC_sales.csv", DataFrame,
+                   types=Dict("TAX CLASS AT PRESENT" => Union{Missings.Missing, String},
+                              "TAX CLASS AT TIME OF SALE" => Union{Missings.Missing, String}),
+                   weakrefstrings=false,
+                   nullable=true,
+                   )
     nyc_schdistrs = NYC_sales[:SchDistr]
-    schd_strings = [dec(sd,2) for sd in  nyc_schdistrs.values]
-    str_schdistrs = NullableCategoricalArray(schd_strings, nyc_schdistrs.isnull)
-    str_schdistrs
+    schd_strings = [ismissing(sd)?missing:dec(sd,2) for sd in  nyc_schdistrs]
+    str_schdistrs = CategoricalVector(schd_strings)
     NYC_sales[:SchDistr] = str_schdistrs
     # categorical variables
     categorical!(NYC_sales, Symbol["BOROUGH",
@@ -76,96 +79,145 @@ function read_processed_sales()
     return NYC_sales
 end
 
-function filter_sales(NYC_sales::DataTable)
-    residential = Dict(
-        "01  ONE FAMILY DWELLINGS"=>true,
-        "02  TWO FAMILY DWELLINGS"=>true,
-        "03  THREE FAMILY DWELLINGS"=>true,
-        "04  TAX CLASS 1 CONDOS"=>true,
-        "05  TAX CLASS 1 VACANT LAND"=>false,
-        "06  TAX CLASS 1 - OTHER"=>false,
-        "07  RENTALS - WALKUP APARTMENTS"=>false,
-        "08  RENTALS - ELEVATOR APARTMENTS"=>false,
-        "09  COOPS - WALKUP APARTMENTS"=>true,
-        "10  COOPS - ELEVATOR APARTMENTS"=>true,
-        "11  SPECIAL CONDO BILLING LOTS"=>false,
-        "11A CONDO-RENTALS"=>false,
-        "12  CONDOS - WALKUP APARTMENTS"=>true, # why are these duplicated?
-        "13  CONDOS - ELEVATOR APARTMENTS"=>true,
-        "14  RENTALS - 4-10 UNIT"=>false,
-        "15  CONDOS - 2-10 UNIT RESIDENTIAL"=>true,
-        "16  CONDOS - 2-10 UNIT WITH COMMERCIAL UNIT"=>false,
-        "17  CONDO COOPS"=>true,
-        "18  TAX CLASS 3 - UNTILITY PROPERTIES"=>false,
-        "21  OFFICE BUILDINGS"=>false,
-        "22  STORE BUILDINGS"=>false,
-        "23  LOFT BUILDINGS"=>false,
-        "25  LUXURY HOTELS"=>false,
-        "26  OTHER HOTELS"=>false,
-        "27  FACTORIES"=>false,
-        "28  COMMERCIAL CONDOS"=>false,
-        "29  COMMERCIAL GARAGES"=>false,
-        "30  WAREHOUSES"=>false,
-        "31  COMMERCIAL VACANT LAND"=>false,
-        "32  HOSPITAL AND HEALTH FACILITIES"=>false,
-        "33  EDUCATIONAL FACILITIES"=>false,
-        "34  THEATRES"=>false,
-        "35  INDOOR PUBLIC AND CULTURAL FACILITIES"=>false,
-        "36  OUTDOOR RECREATIONAL FACILITIES"=>false,
-        "37  RELIGIOUS FACILITIES"=>false,
-        "38  ASYLUMS AND HOMES"=>false,
-        "41  TAX CLASS 4 - OTHER"=>false,
-        "42  CONDO CULTURAL/MEDICAL/EDUCATIONAL/ETC"=>false,
-        "43  CONDO OFFICE BUILDINGS"=>false,
-        "44  CONDO PARKING"=>false,
-        "45  CONDO HOTELS"=>false,
-        "46  CONDO STORE BUILDINGS"=>false,
-        "47  CONDO NON-BUSINESS STORAGE"=>false,
-        "48  CONDO TERRACES/GARDENS/CABANAS"=>false,
-        "49  CONDO WAREHOUSES/FACTORY/INDUS"=>false,
-        )
+const DWELLINGS_DICT = Dict(
+    "01  ONE FAMILY DWELLINGS"=>true,
+    "02  TWO FAMILY DWELLINGS"=>true,
+    "03  THREE FAMILY DWELLINGS"=>true,
+    "04  TAX CLASS 1 CONDOS"=>false,
+    "05  TAX CLASS 1 VACANT LAND"=>false,
+    "06  TAX CLASS 1 - OTHER"=>false,
+    "07  RENTALS - WALKUP APARTMENTS"=>false,
+    "08  RENTALS - ELEVATOR APARTMENTS"=>false,
+    "09  COOPS - WALKUP APARTMENTS"=>false,
+    "10  COOPS - ELEVATOR APARTMENTS"=>false,
+    "11  SPECIAL CONDO BILLING LOTS"=>false,
+    "11A CONDO-RENTALS"=>false,
+    "12  CONDOS - WALKUP APARTMENTS"=>false, # why are these duplicated?
+    "13  CONDOS - ELEVATOR APARTMENTS"=>false,
+    "14  RENTALS - 4-10 UNIT"=>false,
+    "15  CONDOS - 2-10 UNIT RESIDENTIAL"=>false,
+    "16  CONDOS - 2-10 UNIT WITH COMMERCIAL UNIT"=>false,
+    "17  CONDO COOPS"=>false,
+    "18  TAX CLASS 3 - UNTILITY PROPERTIES"=>false,
+    "21  OFFICE BUILDINGS"=>false,
+    "22  STORE BUILDINGS"=>false,
+    "23  LOFT BUILDINGS"=>false,
+    "25  LUXURY HOTELS"=>false,
+    "26  OTHER HOTELS"=>false,
+    "27  FACTORIES"=>false,
+    "28  COMMERCIAL CONDOS"=>false,
+    "29  COMMERCIAL GARAGES"=>false,
+    "30  WAREHOUSES"=>false,
+    "31  COMMERCIAL VACANT LAND"=>false,
+    "32  HOSPITAL AND HEALTH FACILITIES"=>false,
+    "33  EDUCATIONAL FACILITIES"=>false,
+    "34  THEATRES"=>false,
+    "35  INDOOR PUBLIC AND CULTURAL FACILITIES"=>false,
+    "36  OUTDOOR RECREATIONAL FACILITIES"=>false,
+    "37  RELIGIOUS FACILITIES"=>false,
+    "38  ASYLUMS AND HOMES"=>false,
+    "41  TAX CLASS 4 - OTHER"=>false,
+    "42  CONDO CULTURAL/MEDICAL/EDUCATIONAL/ETC"=>false,
+    "43  CONDO OFFICE BUILDINGS"=>false,
+    "44  CONDO PARKING"=>false,
+    "45  CONDO HOTELS"=>false,
+    "46  CONDO STORE BUILDINGS"=>false,
+    "47  CONDO NON-BUSINESS STORAGE"=>false,
+    "48  CONDO TERRACES/GARDENS/CABANAS"=>false,
+    "49  CONDO WAREHOUSES/FACTORY/INDUS"=>false,
+    )
+const RESIDENTIAL_DICT = Dict(
+    "01  ONE FAMILY DWELLINGS"=>true,
+    "02  TWO FAMILY DWELLINGS"=>true,
+    "03  THREE FAMILY DWELLINGS"=>true,
+    "04  TAX CLASS 1 CONDOS"=>true,
+    "05  TAX CLASS 1 VACANT LAND"=>false,
+    "06  TAX CLASS 1 - OTHER"=>false,
+    "07  RENTALS - WALKUP APARTMENTS"=>false,
+    "08  RENTALS - ELEVATOR APARTMENTS"=>false,
+    "09  COOPS - WALKUP APARTMENTS"=>true,
+    "10  COOPS - ELEVATOR APARTMENTS"=>true,
+    "11  SPECIAL CONDO BILLING LOTS"=>false,
+    "11A CONDO-RENTALS"=>false,
+    "12  CONDOS - WALKUP APARTMENTS"=>true, # why are these duplicated?
+    "13  CONDOS - ELEVATOR APARTMENTS"=>true,
+    "14  RENTALS - 4-10 UNIT"=>false,
+    "15  CONDOS - 2-10 UNIT RESIDENTIAL"=>true,
+    "16  CONDOS - 2-10 UNIT WITH COMMERCIAL UNIT"=>false,
+    "17  CONDO COOPS"=>true,
+    "18  TAX CLASS 3 - UNTILITY PROPERTIES"=>false,
+    "21  OFFICE BUILDINGS"=>false,
+    "22  STORE BUILDINGS"=>false,
+    "23  LOFT BUILDINGS"=>false,
+    "25  LUXURY HOTELS"=>false,
+    "26  OTHER HOTELS"=>false,
+    "27  FACTORIES"=>false,
+    "28  COMMERCIAL CONDOS"=>false,
+    "29  COMMERCIAL GARAGES"=>false,
+    "30  WAREHOUSES"=>false,
+    "31  COMMERCIAL VACANT LAND"=>false,
+    "32  HOSPITAL AND HEALTH FACILITIES"=>false,
+    "33  EDUCATIONAL FACILITIES"=>false,
+    "34  THEATRES"=>false,
+    "35  INDOOR PUBLIC AND CULTURAL FACILITIES"=>false,
+    "36  OUTDOOR RECREATIONAL FACILITIES"=>false,
+    "37  RELIGIOUS FACILITIES"=>false,
+    "38  ASYLUMS AND HOMES"=>false,
+    "41  TAX CLASS 4 - OTHER"=>false,
+    "42  CONDO CULTURAL/MEDICAL/EDUCATIONAL/ETC"=>false,
+    "43  CONDO OFFICE BUILDINGS"=>false,
+    "44  CONDO PARKING"=>false,
+    "45  CONDO HOTELS"=>false,
+    "46  CONDO STORE BUILDINGS"=>false,
+    "47  CONDO NON-BUSINESS STORAGE"=>false,
+    "48  CONDO TERRACES/GARDENS/CABANAS"=>false,
+    "49  CONDO WAREHOUSES/FACTORY/INDUS"=>false,
+    )
+
+function filter_sales(NYC_sales::DataFrame)
 
     NYC_sales[:logSalePricePerSQFT] = map(log, NYC_sales[SALE_PRICE]) .- map(log, NYC_sales[SQFT])
     believable = zeros(Bool, size(NYC_sales,1))
     removed=zeros(Int, 12)
     for i in 1:size(NYC_sales,1)
-        if isnull(NYC_sales[i,SALE_PRICE])
+        if ismissing(NYC_sales[i,SALE_PRICE])
             # remove sales without a sale price
             removed[1] += 1
-        elseif isnull(NYC_sales[i,:SchDistr])
+        elseif ismissing(NYC_sales[i,:SchDistr])
             # remove properties without a school district
             removed[2] += 1
-        elseif isnull(NYC_sales[i,BUILDING_CLASS_AT_TIME_OF_SALE])
+        elseif ismissing(NYC_sales[i,BUILDING_CLASS_AT_TIME_OF_SALE])
             # remove sales with missing covariates
             removed[3] += 1
-        elseif isnull(NYC_sales[i,BUILDING_CLASS_CATEGORY])
+        elseif ismissing(NYC_sales[i,BUILDING_CLASS_CATEGORY])
             # remove sales with missing covariates
             removed[4] += 1
-        elseif !residential[get(NYC_sales[i,BUILDING_CLASS_CATEGORY])]
+        elseif !DWELLINGS_DICT[NYC_sales[i,BUILDING_CLASS_CATEGORY]]
             # remove non-residential properties
+            # in fact, remove things that aren't dwellings (houses?)
             removed[5] += 1
-        elseif isnull(NYC_sales[i,BUILDING_CLASS_CATEGORY])
+        elseif ismissing(NYC_sales[i,BUILDING_CLASS_CATEGORY])
             # remove sales with missing covariates
             removed[6] += 1
-        elseif isnull(NYC_sales[i,TAX_CLASS_AT_TIME_OF_SALE])
+        elseif ismissing(NYC_sales[i,TAX_CLASS_AT_TIME_OF_SALE])
             # remove sales with missing covariates
             removed[7] += 1
-        elseif isnull(NYC_sales[i,SQFT])
+        elseif ismissing(NYC_sales[i,SQFT])
             # remove sales with missing GROSS SQUARE FEET information
             removed[8] += 1
-        elseif get(NYC_sales[i,SQFT])<100.0
+        elseif NYC_sales[i,SQFT]<100.0
             # remove properties smaller to 100sqft (seems unlikely to be real)
             removed[9] += 1
-        elseif get(NYC_sales[i,:logSalePricePerSQFT]) < 3.0
+        elseif NYC_sales[i,:logSalePricePerSQFT] < 3.0
             # that's too cheap (remove outliers)
             removed[10] += 1
-        elseif get(NYC_sales[i,:logSalePricePerSQFT]) > 8.0
+        elseif NYC_sales[i,:logSalePricePerSQFT] > 8.0
             # that's too expensive (remove outliers)
             removed[11] += 1
-        elseif isnull(NYC_sales[i,:XCoord])
+        elseif ismissing(NYC_sales[i,:XCoord])
             # remove properties with failed geocoding
             removed[12] += 1
-        elseif isnull(NYC_sales[i,:YCoord])
+        elseif ismissing(NYC_sales[i,:YCoord])
             # remove properties with failed geocoding
             removed[13] += 1
         else
@@ -192,7 +244,7 @@ function read_sentinels()
     return sentinels
 end
 
-function sales_dicts(NYC_sales::DataTable)
+function sales_dicts(NYC_sales::DataFrame)
     schdistrs = sort(NYC_sales[:SchDistr].pool.levels)
     schdistr_indices = Dict{String,Vector{Int}}()
     schdistrs_col = NYC_sales[:SchDistr]
