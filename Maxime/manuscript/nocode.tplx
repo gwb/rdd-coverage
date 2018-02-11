@@ -23,7 +23,7 @@
 \makeatother
 \let\Oldincludegraphics\includegraphics
 % Set max figure width to be 100% of text width, for now hardcoded.
-\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=1.0\maxwidth]{#1}}
+\renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=0.9\maxwidth]{#1}}
 % Ensure that by default, figures have no caption (until we provide a
 % proper Figure object with a Caption API and a way to capture that
 % in the conversion process - todo).
@@ -64,7 +64,12 @@
 \usepackage{bm}
 \usepackage{eulervm}
 \usepackage{lineno}
-\usepackage{commath}
+\let\originalleft\left
+\let\originalright\right
+\def\left#1{\mathopen{}\originalleft#1}
+\def\right#1{\originalright#1\mathclose{}}
+% \usepackage{commath}
+\usepackage{mathtools}
 \usepackage{pdflscape}
 \usepackage[doublespacing]{setspace}
 ((* endblock packages *))
@@ -78,13 +83,23 @@
     % \newcommand{\sbr}[1]{\genericdel[]{#1}}
     % \newcommand{\cbr}[1]{\genericdel\{\}{#1}}
     % \newcommand{\abs}[1]{\genericdel||{#1}}
+	\DeclarePairedDelimiter{\parenthesis}{\lparen}{\rparen}
+	\DeclarePairedDelimiter{\squarebracket}{\lbrack}{\rbrack}
+	\DeclarePairedDelimiter{\curlybracket}{\lbrack}{\rbrack}
+	\DeclarePairedDelimiter{\absolutevalue}{\lvert}{\rvert}
+	\newcommand{\del}[1]{\parenthesis*{#1}}
+	\newcommand{\sbr}[1]{\squarebracket*{#1}}
+	\newcommand{\cbr}[1]{\curlybracket*{#1}}
+	\newcommand{\abs}[1]{\absolutevalue*{#1}}
+	% \renewcommand{\del}{\del*}
+	\DeclareMathOperator{\dif}{d}
     \DeclareMathOperator*{\argmin}{arg\,min}
     \DeclareMathOperator*{\argmax}{arg\,max}
 	\let\Pr\relax
     \DeclareMathOperator{\Pr}{\mathbb{P}}
     \DeclareMathOperator{\E}{\mathbb{E}}
     \DeclareMathOperator{\V}{\mathbb{V}}
-    \DeclareMathOperator{\cov}{{cov}}
+    \DeclareMathOperator{\cov}{{Cov}}
     \DeclareMathOperator{\var}{{var}}
     \DeclareMathOperator{\Ind}{\mathbb{I}}
 	\DeclareMathOperator*{\sgn}{{sgn}}
@@ -115,7 +130,8 @@
     \newcommand{\district}{\mathtt{District}}
 
     \newcommand{\gp}{\mathcal{GP}}
-    \newcommand{\trans}{^{\intercal}}
+	\newcommand*{\trans}{^{\mkern-1.5mu\intercal}}
+    % \newcommand{\trans}{^{\top}}
 
     \newcommand{\area}{\mathcal{A}}
     \newcommand{\treat}{\mathrm{T}}
@@ -133,7 +149,11 @@
     \newcommand{\svec}{\mathbold{s}}
     \newcommand{\dvec}{\mathbold{d}}
     \newcommand{\xvec}{\mathbold{x}}
+    \newcommand{\wvec}{\mathbold{w}}
     \newcommand{\yvec}{\mathbold{y}}
+	\newcommand{\Yvec}{\mathbold{Y}}
+	\newcommand{\yt}{\Yvec_{\treat}}
+	\newcommand{\yc}{\Yvec_{\ctrol}}
     \newcommand{\vvec}{\mathbold{v}}
     \newcommand{\muvec}{\mathbold{\mu}}
     \newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
@@ -149,7 +169,6 @@
     \newcommand{\sentinelset}{\cbr{\sentinel_1,\ldots,\sentinel_\numsent}}
 
     \newcommand{\eye}{\mathbf{I}}
-    \newcommand{\K}{\mathbf{K}}
 
     \DeclareMathOperator{\trace}{trace}
     \newcommand{\tauw}{\tau^{w}}
@@ -164,16 +183,40 @@
     \newcommand{\modalt}{\mathscr{M}_1}
     \newcommand{\degree}{{\,^\circ}}
     \newcommand{\eqlabel}[1]{\label{#1}}
+
     \DeclareMathOperator{\proj}{proj}
+    \DeclareMathOperator{\dist}{dist}
+    \newcommand{\buffer}{\Delta}
+    \newcommand{\vicinity}[1]{\Ind^\buffer\del{#1}}
+    \newcommand{\hyperparam}{\bm{\theta}}
+
     \newcommand{\taubold}{\bm{\tau}}
     \DeclareMathOperator{\Forall}{\forall}
     \newcommand{\weightb}{w_{\border}}
-    \newcommand{\wt}{w_{\treat}}   
-    \newcommand{\wc}{w_{\ctrol}}
+    \newcommand{\wt}{\wvec_{\treat}}   
+    \newcommand{\wc}{\wvec_{\ctrol}}
+    \newcommand{\gridres}{\nu}
+    \newcommand{\grid}{G^\gridres}
+    \newcommand{\Dmat}{\mathbold{D}}
+    \newcommand{\Kmat}{\mathbold{K}}
+    \newcommand{\Amat}{\mathbold{A}}
+    \newcommand{\Xmat}{\mathbold{X}}
+    \newcommand{\Wmat}{\mathbold{W}}
+    \newcommand{\SigmaMat}{\mathbold{\Sigma}}
+    \newcommand{\KBB}{\Kmat_{\border \border}}
+    \newcommand{\KBT}{\Kmat_{\border \treat}}
+    \newcommand{\KBC}{\Kmat_{\border \ctrol}}
+    \newcommand{\STT}{\SigmaMat_{\treat \treat}}
+    \newcommand{\SCC}{\SigmaMat_{\ctrol \ctrol}}
+    \newcommand{\KTT}{\Kmat_{\treat \treat}}
+    \newcommand{\KCC}{\Kmat_{\ctrol \ctrol}}
+    \newcommand{\KTC}{\Kmat_{\treat \ctrol}}
+    \newcommand{\AT}{\Amat_{\treat}}
+    \newcommand{\AC}{\Amat_{\ctrol}}
 
 	\providecommand{\tightlist}{%
   	  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-	\renewcommand{\cite}[1]{\citep{#1}}
+	\renewcommand{\cite}[1]{\citet{#1}}
 ((* endblock definitions *))
 
 ((* block author *))\author{Maxime Rischard}((* endblock author *))
@@ -188,14 +231,10 @@
     ((* endif *))
 
 ((* endblock markdowncell *))
-((* block predoc *))
-    ((( super() )))
-	\tableofcontents
-((* endblock predoc *))
 ((*- block figure scoped -*))
     \begin{figure}[tbh]
     \begin{center}
-    \adjustimage{max size={1.0\linewidth}{1.0\paperheight}}{((( filename )))}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{((( filename )))}
     \end{center}
     { \hspace*{\fill} \\}
     \end{figure}
