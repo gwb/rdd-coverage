@@ -85,7 +85,7 @@
     % \newcommand{\abs}[1]{\genericdel||{#1}}
 	\DeclarePairedDelimiter{\parenthesis}{\lparen}{\rparen}
 	\DeclarePairedDelimiter{\squarebracket}{\lbrack}{\rbrack}
-	\DeclarePairedDelimiter{\curlybracket}{\lbrack}{\rbrack}
+	\DeclarePairedDelimiter{\curlybracket}{\lbrace}{\rbrace}
 	\DeclarePairedDelimiter{\absolutevalue}{\lvert}{\rvert}
 	\newcommand{\del}[1]{\parenthesis*{#1}}
 	\newcommand{\sbr}[1]{\squarebracket*{#1}}
@@ -156,6 +156,8 @@
 	\newcommand{\yc}{\Yvec_{\ctrol}}
     \newcommand{\vvec}{\mathbold{v}}
     \newcommand{\muvec}{\mathbold{\mu}}
+    \newcommand{\betavec}{\mathbold{\beta}}
+    \newcommand{\residvec}{\mathbold{R}}
     \newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
 	\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
     \newcommand{\iid}{iid}
