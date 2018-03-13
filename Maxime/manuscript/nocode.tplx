@@ -126,8 +126,8 @@
     \newcommand{\sqft}{\mathtt{SQFT}}
     
     \newcommand{\tax}{\mathtt{TaxClass}}
-    \newcommand{\building}{\mathtt{BuildingClass}}
-    \newcommand{\district}{\mathtt{District}}
+    \newcommand{\building}{\mathtt{BuildClass}}
+    \newcommand{\district}{\mathtt{Distr}}
 
     \newcommand{\gp}{\mathcal{GP}}
 	\newcommand*{\trans}{^{\mkern-1.5mu\intercal}}
@@ -222,6 +222,10 @@
 ((* endblock definitions *))
 
 ((* block author *))\author{Maxime Rischard}((* endblock author *))
+((* block title *))title{
+A Bayesian Non-parametric Approach to Geographic Regression Discontinuity Designs:
+Do School Districts Affect NYC House Prices?
+}((* endblock title *))
 
 % Render markdown
 ((* block markdowncell scoped *))
