@@ -1,9 +1,9 @@
 import LibGEOS
 import GeoJSON
 import Base.convert
-import DataFrames
 using DataFrames
-using CSV
+import CSV
+import JSON
 
 import LibGEOS: LineString, MultiLineString
 import GeoInterface
@@ -54,6 +54,19 @@ function read_distr_shapes()
     return schdistr_shape_dict
 end
 
+function read_distr_reprpoints()
+    json = JSON.parsefile("NYC_data/processed"
+                          *"/SchoolDistrict_reprpoints/schdistr_representative.json")
+    schdistr_repr_dict = Dict{SchDistr, Tuple{Float64, Float64}}()
+    for schdistr_int in keys(json)
+        schdistr = parse(SchDistr, schdistr_int)
+        value = json[schdistr_int]
+        v1 = value[1]::Float64
+        v2 = value[2]::Float64
+        schdistr_repr_dict[schdistr] = (v1, v2)
+    end
+    return schdistr_repr_dict
+end
 
 function read_processed_sales()
     NYC_sales=CSV.read("NYC_data/processed/NYC_sales.csv", DataFrame,
