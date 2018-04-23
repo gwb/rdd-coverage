@@ -174,7 +174,7 @@
 \author[c]{Luke Bornn}
 \affil[a]{Department of Statistics, Harvard University}
 \affil[b]{Graduate School of Education, Harvard University}
-\affil[c]{?}
+\affil[c]{Simon Fraser University}
 
     
 
@@ -602,7 +602,7 @@ where the second equality requires the assumption that the conditional regressio
 Analogously, we focus on the treatment effect at the border \(\border\) between the treatment and control regions.
 Here, \(\tau:\,\border \rightarrow \mathbb{R}\) is a function with
 \begin{equation}
-    \tau(\sentinel) =  \E\sbr{Y_{i\treat} - Y_{i\ctrol} \mid \svec_i = \sentinel}
+    \tau(\sentinel) =  \E\sbr{Y_{i\treat} - Y_{i\ctrol} \mid \svec_i = \sentinel} \,.
 \eqlabel{eq:functional_estimand}
 \end{equation}
 This is the estimand defined in \cite{imbens2011regression} and \cite{keele_titiunik_2015}.
@@ -628,10 +628,10 @@ There is a rich literature of possible covariance functions, known as ``kernels'
 This yields the outcomes model:
 \begin{equation}
 \begin{split}
-Y_{i\treat} &= \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \epsilon_i \\
-Y_{i\ctrol} &= \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i \\
-f_\treat{}, f_\ctrol{} &\overset{\indep}{\sim} \gp\del{0, k(\svec, \svec')} \\
-k(\svec,\svec') &= \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}}
+Y_{i\treat} &= \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \epsilon_i \,, \\
+Y_{i\ctrol} &= \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i \,, \\
+f_\treat{}, f_\ctrol{} &\overset{\indep}{\sim} \gp\del{0, k(\svec, \svec')} \,, \\
+k(\svec,\svec') &= \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \,.
 \end{split}
 \eqlabel{eq:spec2gp}
 \end{equation}
@@ -653,7 +653,7 @@ We expect that this assumption will be reasonable in many applications, but it c
 \subsection{Inference}\label{inference}}
 
 If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu\), then the model specification \eqref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
-Given hyperparameters \(\hyperparam \equiv \del{\ell,\sigmaf, \sigman, \sigmamu}\), any vector with entries consisting of observations, points on the potential outcomes surface \(f_{\treat}\) and \(f_{\ctrol}\), and the mean parameters \(m_{\ctrol}, m_{\treat}\) is jointly multivariate normal. Therefore the distribution of any such vector conditioned on another is also multivariate normal, with mean and covariances analytically tractable, and easily computed.
+Given hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), any vector with entries consisting of observations, points on the potential outcomes surface \(f_{\treat}\) and \(f_{\ctrol}\), and the mean parameters \(m_{\ctrol}, m_{\treat}\) is jointly multivariate normal. Therefore the distribution of any such vector conditioned on another is also multivariate normal, with mean and covariances analytically tractable, and easily computed.
     
 
 
@@ -663,14 +663,14 @@ Computationally, we need to represent this border as a set \(\sentinels=\sentine
 The extrapolation step then follows mechanically through multivariate normal theory.
 On the treatment side, for example, we have:
 \begin{equation}\begin{split}
-    g_\treat{}(\sentinels) \mid \yt{}, S_\treat{}, \hyperparam &\sim \normal\del{\mu_{\sentinels \mid T}, \Sigma_{\sentinels \mid T}} \\
-    \mu_{\sentinels \mid T} &\equiv 
+    g_\treat{}(\sentinels) \mid \yt{}, S_\treat{}, \hyperparam &\sim \normal\del{\mu_{\sentinels \mid T}, \Sigma_{\sentinels \mid T}} \,\text{, with} \\
+    \mu_{\sentinels \mid T} &=
             \KBT
             \STT^{-1} 
             \yt{} 
-        \\
-    \Sigma_{\sentinels \mid T} &\equiv 
-            \KBB - \KBT \STT^{-1} \KBT\trans
+            \,\text{, and} \\
+    \Sigma_{\sentinels \mid T} &=
+            \KBB - \KBT \STT^{-1} \KBT\trans \,.
 \end{split}
  \label{eq:postvar2gp_t_or_c}
 \end{equation}
@@ -680,9 +680,9 @@ Denote their posterior mean and covariance respectively by \(\mu_{\sentinels \mi
 Since the two surfaces are modeled as independent, the treatment effect \(\tau(\sentinels)=g_\treat{}(\sentinels)-g_\ctrol{}(\sentinels)\) has posterior
 \begin{equation}
 \begin{split}
-    \tau(\sentinels) \mid Y, \hyperparam &\sim \normal\del{\mu_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}}\\
-    \mu_{\sentinels \mid Y} &= \mu_{\sentinels \mid \treat} - \mu_{\sentinels \mid \ctrol} \\
-    \Sigma_{\sentinels \mid Y} &= \Sigma_{\sentinels \mid \treat} + \Sigma_{\sentinels \mid \ctrol}\,.
+    \tau(\sentinels) \mid Y, \hyperparam &\sim \normal\del{\mu_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}} \,\text{, with}\\
+    \mu_{\sentinels \mid Y} &= \mu_{\sentinels \mid \treat} - \mu_{\sentinels \mid \ctrol} \,\text{, and} \\
+    \Sigma_{\sentinels \mid Y} &= \Sigma_{\sentinels \mid \treat} + \Sigma_{\sentinels \mid \ctrol} \,.
 \end{split}
 \eqlabel{eq:postvar2gp}
 \end{equation}
@@ -710,11 +710,11 @@ We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regressio
 Our model becomes
 \begin{equation}
 \begin{split}
-Y_{i\treat} &= \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i \\
-Y_{i\ctrol} &= \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i \\
-f_\treat{}, f_\ctrol{} &\overset{\indep}{\sim} \gp\del{0, k(\svec, \svec')} \\
-k(\svec,\svec') &= \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \\
-\beta_j &\overset{\indep}{\sim} \normal\del{0,\sigmabeta^2}\text{ for }j=1,2,\dotsc,p
+Y_{i\treat} &= \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i\,, \\
+Y_{i\ctrol} &= \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i\,, \\
+f_\treat{}, f_\ctrol{} &\overset{\indep}{\sim} \gp\del{0, k(\svec, \svec')}\,, \\
+k(\svec,\svec') &= \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}}\,, \\
+\beta_j &\overset{\indep}{\sim} \normal\del{0,\sigmabeta^2}\text{ for }j=1,2,\dotsc,p \,.
 \end{split}
 \eqlabel{eq:covariates_model}
 \end{equation}
@@ -789,7 +789,7 @@ with weight function \(\weightb(\sentinel)\) defined everywhere on the border \(
 The weighted mean integral can be approximated as a weighted sum at the sentinels \(\sentinels\):
 \begin{equation}\begin{split}
     \tauw &= \frac{\oint_\border \left. \weightb(\sentinel) \tau(\sentinel) \dif \svec \right.}
-                  {\oint_\border \left. \weightb(\sentinel) \dif \sentinel \right.}\,,\\
+                  {\oint_\border \left. \weightb(\sentinel) \dif \sentinel \right.}\\
           &\approx \frac{\sum_{\isent=1}^\numsent \weightb(\sentinel_\isent) \tau(\sentinel_\isent)}
                        {\sum_{\isent=1}^\numsent \weightb(\sentinel_\isent) } \,.
 \end{split}
@@ -800,9 +800,9 @@ We have shown the posterior distribution of \(\tau(\sentinels)\)to be multivaria
 Since \(\tauw\) is a linear transformation of \(\tau(\sentinels)\), its posterior is also multivariate normal, with mean \(\mu_{\tauw \mid Y}\) and covariance \(\Sigma_{\tauw \mid Y}\) given by
 \begin{equation}\begin{split}
     \mu_{\tauw \mid Y} &= \frac{\weightb(\sentinels)\trans \muvec_{\sentinels \mid Y}}
-                               {\weightb(\sentinels)\trans  \ones_\numsent} \\
+    {\weightb(\sentinels)\trans  \ones_\numsent}\,\text{, and} \\
     \Sigma_{\tauw \mid Y} &= \frac{\weightb(\sentinels)\trans \Sigma_{\sentinels \mid Y} \weightb(\sentinels)}
-                                  { \del{\weightb(\sentinels)\trans  \ones_\numsent }^2 }\\
+                                  { \del{\weightb(\sentinels)\trans  \ones_\numsent }^2 } \,, \\
 \end{split}
 \eqlabel{eq:weighted_estimator}
 \end{equation}
@@ -842,11 +842,11 @@ The simplest choice is uniform weights \(\weightb(\sentinel)=1\), a seemingly re
 We estimate \(\unifavg\), the uniformly weighted mean of \(\tau(\border)\), by averaging the entries of the mean posterior at the sentinels.
 Following \eqref{eq:weighted_estimand} and \eqref{eq:weighted_estimator}:
 \begin{equation}\begin{split}
-    \unifavg &\equiv \frac{\oint_\border \left. \tau(x) \dif \svec \right.}
-                          {\oint_\border \left. \dif x \right.} \\
-    \unifavg \mid Y, \hyperparam &\sim \normal\del{\mu_{\unifavg \mid Y}, \Sigma_{\unifavg \mid Y}} \\
-    \mu_{\unifavg \mid Y} &= \del{\ones\trans \mu_{\sentinels \mid Y}} / \numsent \\
-    \Sigma_{\unifavg \mid Y} &= \del{\ones\trans \Sigma_{\sentinels \mid Y} \ones} / \numsent^2
+    \unifavg &= \frac{\oint_\border \left. \tau(x) \dif \svec \right.}
+                          {\oint_\border \left. \dif x \right.}\,, \\
+                          \unifavg \mid Y, \hyperparam &\sim \normal\del{\mu_{\unifavg \mid Y}, \Sigma_{\unifavg \mid Y}}\,\text{, with} \\
+    \mu_{\unifavg \mid Y} &= \del{\ones\trans \mu_{\sentinels \mid Y}} / \numsent\,\text{, and} \\
+    \Sigma_{\unifavg \mid Y} &= \del{\ones\trans \Sigma_{\sentinels \mid Y} \ones} / \numsent^2 \,.
 \end{split}
 \eqlabel{eq:unifavg}
 \end{equation}
@@ -893,8 +893,13 @@ but there is a deeper issue affecting this choice of estimand: its susceptibilit
 
     	\begin{figure}
 \centering
-\includegraphics{../figures/mississippi_counts.png}
-\caption{\label{fig:mississippi_counts} Evenly spaced sentinels along the border between Mississippi and Louisiana.}
+% \includegraphics{../figures/mississippi_counts.pdf}
+\Oldincludegraphics[height=0.5\textheight]{../figures/mississippi_counts.pdf}
+\caption{\label{fig:mississippi_counts} 
+Evenly spaced sentinels along the border between Mississippi and Louisiana.
+From north to south, the border first follows the Mississippi river, becomes a straight line from west to east, and then follows the Pearl river.
+Placing equispaced sentinels along the border results in the overrepresentation of the more sinuous sections of the border.
+}
 \end{figure}
 
 The unweighted and density-weighted mean treatment estimands are both affected by the shape of the border between the treatment and control regions,
@@ -914,9 +919,9 @@ Instead of averaging the posterior treatment effect along the border based on ge
 This motivates the inverse-variance weighted mean \(\invvar\):
 \begin{equation}
 \begin{split}
-    \left. \invvar \mid Y, \hyperparam \right. &\sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} \,, \\
-    \mu_{\invvar \mid Y} &= \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \mu_{\sentinels \mid Y}} \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones} \,, \\
-    \Sigma_{\invvar \mid Y} &= 1 \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \,. \ones}
+    \left. \invvar \mid Y, \hyperparam \right. &\sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} ~ \text{, with} \\
+    \mu_{\invvar \mid Y} &= \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \mu_{\sentinels \mid Y}} \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones} \,\textrm{, and} \\
+    \Sigma_{\invvar \mid Y} &= 1 \big/ \del{\ones\trans \Sigma_{\sentinels \mid Y}^{-1} \ones} \,.
 \end{split}
 \eqlabel{eq:invvar}
 \end{equation}
@@ -939,7 +944,7 @@ The classical RDD could be said to provide another example, as the estimand \eqr
 
     	\begin{figure}
 \centering
-\includegraphics{../figures/mississippi_projection_methods.png}
+\includegraphics{../figures/mississippi_projection_methods.pdf}
 \caption{\label{fig:mississippi_projection_methods}
 Illustration of (a) projected finite-population ATE \(\tauproj\), and (b) projected land ATE \(\taugeo\), using the border separating Mississippi and Louisiana near Baton Rouge, with units at the centroid of each county.
 The border vicinity \(\area_\buffer\) is defined as all land within \(\buffer=50\,\mathrm{km}\) of the border.
@@ -959,7 +964,7 @@ and covariance matrix \(\Sigma_{\sentinels \mid Y}\)
 with equivalent quantities obtained at the projected sentinels,
 to obtain the posterior mean and covariance of \(\tauproj\):
 \begin{equation}\begin{split}
-    \tauproj \mid \yt{}, \yc{}, \hyperparam &\sim \normal\del{\mu_{\tauproj \mid Y}, \Sigma_{\tauproj \mid Y}}\,, \\
+    \tauproj \mid \yt{}, \yc{}, \hyperparam &\sim \normal\del{\mu_{\tauproj \mid Y}, \Sigma_{\tauproj \mid Y}}\ \text{, with} \\
     \mu_{\tauproj \mid Y} &= 
     \frac{1}{
         \sum_{i=1}^{n_\treat{}+n_\ctrol{}}
@@ -972,7 +977,7 @@ to obtain the posterior mean and covariance of \(\tauproj\):
                 \proj_{\border}\del{\svec_i}
             }
             \mid Y, \hyperparam
-         } \,,\\
+        } \ \text{, and}\\
     \Sigma_{\tauproj \mid Y} &= 
         \frac{1}{
             \del{
@@ -1103,7 +1108,7 @@ To units above the border we add a treatment effect \(\tau(S_1, S_2) = S_1\).
 
     	\begin{figure}
 \centering
-\includegraphics{../figures/wiggly_boundaries_setup.png}
+\includegraphics{../figures/wiggly_boundaries_setup.pdf}
 \caption{\label{fig:wiggly_boundaries_setup}Spatial positions of units and border for the wiggly border simulation of Section~\ref{sec:wiggly_border}. Projection lines for the projected finite population ATE are shown in light gray.}
 \end{figure}
     
@@ -1111,7 +1116,7 @@ To units above the border we add a treatment effect \(\tau(S_1, S_2) = S_1\).
 
     	\begin{figure}
 \centering
-\includegraphics{../figures/wiggly_boundaries_posteriors.png}
+\includegraphics{../figures/wiggly_boundaries_posteriors.pdf}
 \caption{\label{fig:wiggly_boundaries_posteriors} Results of the simulations of Section~\ref{sec:wiggly_border}, showing for each ATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.}
 \end{figure}
     
@@ -1119,7 +1124,7 @@ To units above the border we add a treatment effect \(\tau(S_1, S_2) = S_1\).
 
     	\begin{figure}
 \centering
-\includegraphics{../figures/weight_functions.png}
+\includegraphics{../figures/weight_functions.pdf}
 \caption{\label{fig:weight_functions}Weight functions and induced weights on the observations for the six weight functions proposed in this paper. The weight function plots show the weight \(\weightb(\sentinel)\) against each sentinel's \(S_1\) coordinate. Sentinels with coinciding or nearly coinciding (within 0.005 of each other) coordinate \(S_1\) were merged and their weights summed. The induced weight plots show a circle for each unit, with the area of the circle proportional to its weight (\(\wt\) and \(\wc\) for treatment and control units respectively), and colored in blue for positive weights and orange for negative weights.}
 \end{figure}
     
@@ -1184,7 +1189,7 @@ The Projected 1D~RDD estimator can also be written as a linear combination of th
 \end{split}
 \eqlabel{eq:unit_weights_llr}
 \end{equation}
-where \(\Xmat_b \equiv \del{1~0}\), \(\Xmat_\treat\) is the \(n_\treat \times 2\) design matrix with the first column filled with ones and the second column containing the distance from the border of each treatment unit, and \(\Wmat_\treat\) is an \(n_\treat \times n_\treat\) diagonal matrix where the \(i^\mathrm{th}\) diagonal element is the triangular kernel evaluated on the \(i^\mathrm{th}\) unit's distance from the border.
+where \(\Xmat_b = \del{1~0}\), \(\Xmat_\treat\) is the \(n_\treat \times 2\) design matrix with the first column filled with ones and the second column containing the distance from the border of each treatment unit, and \(\Wmat_\treat\) is an \(n_\treat \times n_\treat\) diagonal matrix where the \(i^\mathrm{th}\) diagonal element is the triangular kernel evaluated on the \(i^\mathrm{th}\) unit's distance from the border.
 The \(\Xmat_\ctrol\) and \(\Wmat_\ctrol\) matrices are analogously defined for control units.
 By construction, the unit weights drop to zero outside of the support of the kernel.
 Within the support, Projected 1D RDD can also give negative weights to treatment units, and positive weights to control units.
@@ -1240,7 +1245,7 @@ the likelihood of the observations should be lower under \(\modnull\) than under
 the 2\(\gp\) model as specified in equation \eqref{eq:spec2gp}.
 We therefore choose the difference in log-likelihoods as our test statistic
 \begin{equation}
-    t = \log \Pr\del{\yt{}, \yc{} \mid \modalt} - \log \Pr\del{\yt{}, \yc{} \mid \modnull}
+    t = \log \Pr\del{\yt{}, \yc{} \mid \modalt} - \log \Pr\del{\yt{}, \yc{} \mid \modnull} \,,
 \end{equation}
 and wish to reject the sharp null hypothesis when its observed value \(t_{obs}\) is high.
 
@@ -1248,13 +1253,13 @@ A parametric bootstrap approach is used to quantify what ``high'' means. We draw
 using the same spatial locations as in the original data,
 and then fit the two competing models to the simulated data in order to obtain the bootstrapped test statistic
 \begin{equation}
-    t^* = \log \Pr\del{\yt{}^*, \yc{}^* \mid \modalt} - \log \Pr\del{\yt{}^*, \yc{}^* \mid \modnull}
+    t^* = \log \Pr\del{\yt{}^*, \yc{}^* \mid \modalt} - \log \Pr\del{\yt{}^*, \yc{}^* \mid \modnull}\,.
 \end{equation}
 Repeating this procedure, we obtain a distribution of \(t\) under \(\modnull\),
 which we can then compare to the observed \(t\).
-More precisely, we can interpret the proportion of \(t^*\) drawn above \(t_{obs}\) as a \(p\)-value.
+More precisely, we can interpret the proportion of \(t^*\) drawn above \(t_{obs}\) as a \(p\)-value
 \begin{equation}
-    p^{\mathrm{lik}} = \Pr\del{t^* > t_{obs} \mid \modnull}
+    p^{\mathrm{lik}} = \Pr\del{t^* > t_{obs} \mid \modnull}\,.
 \end{equation}
 Computationally, because the hyperparameters and locations of the units are held constant during the bootstrap, we can reuse the Cholesky decomposition of the covariance matrix, allowing the test to be performed in seconds even with hundreds of units and thousands of bootstrap samples.
     
@@ -1288,8 +1293,8 @@ We therefore again take the parametric bootstrap approach, this time using \(S^2
 With B bootstrap samples, the \(p\)-value is obtained as
 \begin{equation}
 \begin{split}
-    p &= \frac{1}{B} \sum_{t=1}^T \Ind\cbr{S_{(b)}^2 < S^2}\,,\\
-    S_{(b)}^2 &= (\muvec_{(b)} )\trans \SigmaMat^{-1} \muvec_{(b)}
+    p &= \frac{1}{B} \sum_{t=1}^T \Ind\cbr{S_{(b)}^2 < S^2}\  \text{, with}\\
+    S_{(b)}^2 &= (\muvec_{(b)} )\trans \SigmaMat^{-1} \muvec_{(b)}\,,
 \end{split}
 \end{equation}
 where \(\muvec_{(b)}\) is the result of applying \eqref{eq:postvar2gp} to \(\yt^{(b)}\) and \(\yc^{(b)}\), themselves drawn from \(\modnull\) at the same locations as the observations \(\yt\) and \(\yc\).
@@ -1307,10 +1312,10 @@ regardless of the regularization.
 We now turn to the weak null hypothesis that the average treatment effect along the border is zero, but otherwise allowing the treatment effect to be positive along some parts of the border and negative in others.
 As we saw in Section~\ref{sec:ate}, the ``average'' treatment effect can be defined in multiple ways.
 If we choose the inverse-variance weighted mean, then \(\invvar\) has posterior given by \eqref{eq:invvar}.
-While the posterior is a Bayesian object, we can use it heuristically to derive a pseudo-\(p\)-value
+While the posterior is a Bayesian object, we can use it heuristically to derive a pseudo-\(p\)-value:
 \begin{equation}
 \begin{split}
-    Z_0 &\sim \normal\del{0, \Sigma_{\invvar \mid Y}}  \\
+    Z_0 &\sim \normal\del{0, \Sigma_{\invvar \mid Y}} \,, \\
     p^{\mathrm{INV}} &= \Pr\del{ 
         \abs{Z_0} > 
         \abs{
@@ -1331,7 +1336,7 @@ While the posterior is a Bayesian object, we can use it heuristically to derive 
                 \Sigma_{\invvar \mid Y}
             }
         }
-    }
+    } \,.
 \end{split}
 \end{equation}
 This ``\(p\)-value'' obtained from the Bayesian posterior may not have good frequentist properties.
@@ -1355,7 +1360,7 @@ The calibrated inverse-variance test targets the weak null hypothesis in the sen
 
     	\begin{figure}
 \centering
-\includegraphics{../figures/mississippi_sim.png}
+\includegraphics{../figures/mississippi_sim.pdf}
 \caption{\label{fig:mississippi_counties}Set-up of the imaginary experiment in Louisiana and Mississippi. Each unit is at the centroid of a county. The colors indicated the observed outcomes in one draw of the simulation under \(\tau=1.5\). In this particular run, the p-values were 0.0016, 0.0018, and 0.0013 for the mLL, \(\chi^2\), and inverse-variance test respectively.}
 \end{figure}
     
@@ -1449,7 +1454,7 @@ Properties with missing square footage are almost all coops and condos, which ex
 
     	\begin{figure}
 \centering
-\includegraphics{../NYC/NYC_plots/NYC_sales_4.png}
+\Oldincludegraphics[width=\maxwidth]{../NYC/NYC_plots/NYC_sales_4.pdf}
 \caption{\label{fig:sales_map}Map of property sales in New York City. Each dot is a sale, and its color indicates the price per square foot. White crosses indicate sales of properties with missing square footage, which are therefore excluded from the analysis. School district boundaries are shown, and each district is labeled by its number.}
 \end{figure}
     
@@ -1466,13 +1471,13 @@ This model can be written:
 \begin{split}
     Y_i &= % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
              \mu_{\district\sbr{i}} + \beta_{\building\sbr{i}}
-                  + f_{\district\sbr{i}}(\svec_i) + \epsilon_i
+                  + f_{\district\sbr{i}}(\svec_i) + \epsilon_i \,,
     \\
-    \epsilon_i &\sim \normal\del{0, \sigma_y^2} \\
-    \mu_{j} &\sim \normal\del{0, \sigmamu^2},\,j=1,\dotsc,J_\district \\
-    f_j &\sim \gp\del{0, k(\svec, \svec')},\,j=1,\dotsc,J_\district \\
-    \beta_{l} &\sim \normal\del{0, \sigma_\beta^2},\,l=1,\dotsc,L_\building \\
-    k(\svec, \svec') &= \sigmaf^2 \exp\cbr{ - \frac{(\svec-\svec')\trans(\svec-\svec')}{2\ell^2}}
+    \epsilon_i &\sim \normal\del{0, \sigma_y^2} \,, \\
+    \mu_{j} &\sim \normal\del{0, \sigmamu^2},\,j=1,\dotsc,J_\district \,, \\
+    f_j &\sim \gp\del{0, k(\svec, \svec')},\,j=1,\dotsc,J_\district \,, \\
+    \beta_{l} &\sim \normal\del{0, \sigma_\beta^2},\,l=1,\dotsc,L_\building \,, \\
+    k(\svec, \svec') &= \sigmaf^2 \exp\cbr{ - \frac{(\svec-\svec')\trans(\svec-\svec')}{2\ell^2}} \,.
 \end{split}
 \eqlabel{eq:nyc_model}
 \end{equation}
@@ -1498,7 +1503,7 @@ Our goal is to establish whether this difference is measurable at the border, an
 
 \begin{figure}
 \centering
-\includegraphics{../NYC/NYC_plots/sales_histogram_19-27.png}
+\includegraphics{../NYC/NYC_plots/sales_histogram_19-27.pdf}
 \caption{\label{fig:NYC_histogram}Histogram of log sale prices per square foot in NYC school districts 19 and 27.}
 \end{figure}
     
@@ -1525,7 +1530,7 @@ We therefore proceed with this two-step approach.
 
     	\begin{figure}
 \centering
-\includegraphics{../NYC/NYC_plots/NYC_cliff_face.png}
+\includegraphics{../NYC/NYC_plots/NYC_cliff_face.pdf}
 \caption{\label{fig:NYC_cliff_face}
 (a)
 Cliff face estimator for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
@@ -1552,7 +1557,7 @@ The figure also gives a better sense of the spatial variation in prices captured
 
     	\begin{figure}
 \centering
-\includegraphics{../NYC/NYC_plots/NYC_surface_plot_multi_ev60az175.png}
+\includegraphics{../NYC/NYC_plots/NYC_surface_plot_multi_ev60az175.pdf}
 \caption{\label{fig:NYC_3d}NYC surface plot viewed from the West. The grey cliff face connects the fitted price surfaces of districts 19 and 27, and has height given by \eqref{eq:postvar2gp} and shown in Figure~\ref{fig:NYC_cliff_face}.}
 \end{figure}
     
@@ -1628,7 +1633,7 @@ There is in fact visible autocorrelation in the graphs of placebo \(p\)-values a
 
     	\begin{figure}
 \centering
-\includegraphics{../NYC/NYC_plots/NYC_placebos.png}
+\includegraphics{../NYC/NYC_plots/NYC_placebos.pdf}
 \caption{\label{fig:nyc_placebos} Placebo tests for significance tests applied to NYC school district house price example, applied within districts 19 and 27. The three rows respectively show results for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo p-value as a function of the border angle, in order to visualize the auto-correlation of the placebo tests. The second column shows histograms of the placebo p-values, with the black vertical line indicating the uniform distribution for comparison.}
 \end{figure}
     
@@ -1672,7 +1677,7 @@ And it violates the assumptions
 
     	\begin{figure}
 \centering
-\includegraphics{../NYC/NYC_plots/pairwise_mean_se.png}
+\Oldincludegraphics[width=\maxwidth]{../NYC/NYC_plots/pairwise_mean_se.pdf}
 \caption{\label{fig:NYC_pairwise}
 Pairwise estimates of the inverse variance ATE between adjacent districts.
 The thickness of the orange buffer adjacent to borders is proportional to the posterior mean of the inverse variance ATE, and the blue buffer beyond it is proportional to the posterior standard deviation of the ATE.
@@ -1790,7 +1795,7 @@ We demonstrate this with a simple artificial example, depicted in Figure~\ref{fi
 
     	\begin{figure}
 \centering
-\includegraphics{figures/confounding/confounding.png}
+\includegraphics{figures/confounding/confounding.pdf}
 \caption{A theoretical example illustrating the susceptibility of the projected 1D~RDD method to spatial confounding. The locations of treatment and control units are shown with circles and crosses respectively, separated by a border at \(s_2 = 0\). Units are denser in the upper left and lower right quadrants. The treatment effect, depicted as a gradient from blue to red, increases linearly with \(s_1\). \label{fig:confounding}}
 \end{figure}
     
@@ -1821,7 +1826,7 @@ A visual inspection of Figure \ref{fig:sales_map} showing the locations of units
     
 
 \label{sec:covariances}
-    	All covariances below are conditional on the hyperparameters \(\hyperparam \equiv \del{\ell,\sigmaf, \sigman, \sigmamu}\), omitted for concision.
+    	All covariances below are conditional on the hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), omitted for concision.
     
 
 
@@ -1920,12 +1925,12 @@ We derive the posterior mean of the linear regression coefficients vector \(\bet
 
     	\begin{equation}
 \begin{aligned}
-    \Yvec &\equiv \begin{pmatrix}
+    \Yvec &= \begin{pmatrix}
             \yt \\
             \yc
         \end{pmatrix}
         \\
-    \SigmaMat_{Y \mid \beta} &\equiv \cov\del{\Yvec \mid \betavec }
+    \SigmaMat_{Y \mid \beta} &= \cov\del{\Yvec \mid \betavec }
         = \begin{bmatrix}
             \STT & 0 \\
             0 & \SCC
@@ -1933,7 +1938,7 @@ We derive the posterior mean of the linear regression coefficients vector \(\bet
         & \text{conditional variance of $Y$} \\
     \cov\del{\betavec} &= \sigmabeta^2 \eye_p
         & \text{prior variance of $\betavec$} \\
-    \SigmaMat_Y &\equiv \cov\del{\Yvec} 
+    \SigmaMat_Y &= \cov\del{\Yvec} 
             = \SigmaMat_{\Yvec \mid \betavec} 
               + \sigmabeta^2 \Dmat \Dmat\trans
         & \text{prior variance of $\Yvec$} \\
@@ -1969,14 +1974,14 @@ Their joint covariance is
     = \begin{bmatrix}
         \STT & \KTC \\
         \KTC \trans & \SCC
-    \end{bmatrix}
+    \end{bmatrix}\,,
 \end{equation}
 where \(\KTC\) is the \(n_\treat \times n_\ctrol\) matrix with \(ij^{\mathrm{th}}\) entry equal to \(k\del{\svec_{i\treat},\svec_{j\ctrol}}\).
 The predicted mean outcomes \eqref{eq:postvar2gp_t_or_c} at the sentinels \(\mu_{\sentinels \mid T}\) and \(\mu_{\sentinels \mid T}\) are obtained by left-multiplying \(\yt{}\) and \(\yc{}\) by matrices \(\AT{}\) and \(\AC{}\) (respectively) that are deterministic functions of the unit locations and the hyperparameters:
 \begin{equation}
 \begin{split}
-    \AT &\equiv \KBT \STT^{-1} \,\text{, and} \\
-    \AC &\equiv \KBC \SCC^{-1}\,.
+    \AT &= \KBT \STT^{-1} \,\text{, and} \\
+    \AC &= \KBC \SCC^{-1}\,.
 \end{split}
 \end{equation}
     
@@ -1987,16 +1992,13 @@ The predicted mean outcomes \eqref{eq:postvar2gp_t_or_c} at the sentinels \(\mu_
     \cov \del{\begin{pmatrix}\AT{} \yt{} \\ \AC{} \yc{} \end{pmatrix} \mid \modnull } = \begin{bmatrix}
                         \AT{} \STT \AT{}\trans & \AT{} \KTC \AC{}\trans \\
                         \del{\AT{} \KTC \AC{} \trans}\trans & \AC{} \SCC \AC{}\trans
-                    \end{bmatrix}
+                    \end{bmatrix}\,.
 \end{equation}
 Continuing in this fashion, the cliff-face estimate \(\mu_{\sentinels \mid Y}\) \eqref{eq:postvar2gp} is yet another zero-mean multivariate normal with covariance given by:
-    
-
-
     	\begin{equation}
 \begin{split}
     \cov \del{\mu_{\sentinels \mid Y} \mid \modnull} &= \cov\del{ \AT{} \yt{} - \AC{} \yc{} } \\
-        &= \AT{} \STT \AT{}\trans + \AC{} \SCC \AC{}\trans - \AT{} \KTC \AC{}\trans -  \del{\AT{}\KTC \AC{}\trans}\trans
+        &= \AT{} \STT \AT{}\trans + \AC{} \SCC \AC{}\trans - \AT{} \KTC \AC{}\trans -  \del{\AT{}\KTC \AC{}\trans}\trans \,.
 \end{split}
 \end{equation}
     
@@ -2012,7 +2014,6 @@ For a weight function \(\weightb(\sentinel)\), its variance is given by
 \end{aligned}
 \end{equation}
     
-
 
     	The \(p\)-value follows from treating the ATE estimate as a test statistic.
 Under the null hypothesis, the probability of \(\mu_{\tauw \mid Y}\) exceeding in magnitude its observed value \(\mu_{\tauw \mid Y}^{obs}\) is:
@@ -2053,8 +2054,10 @@ The calibrated inverse-variance introduced in Section~\ref{eq:calib_test} test i
 	\end{tabular}
 	\caption{Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each average treatment effect estimand as the wiggliness of the border is increased in the simulations of Section \ref{sec:wiggly_border}.}
 \end{table}
+
+\pagebreak
     	\hypertarget{nyc-school-district-estimated-treatment-effects}{%
-\subsection{NYC School District Estimated Treatment Effects}\label{nyc-school-district-estimated-treatment-effects}}
+\subsection{Estimated Treatment Effects Between Adjacent NYC School Districts}\label{nyc-school-district-estimated-treatment-effects}}
     
 
 \begin{table}[!h]
