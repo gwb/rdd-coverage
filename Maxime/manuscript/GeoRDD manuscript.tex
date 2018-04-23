@@ -62,7 +62,6 @@
 % internal navigation ('pdf bookmarks' for the table of contents,
 % internal cross-reference links, web links for URLs, etc.)
 \usepackage{hyperref}
-\usepackage{longtable} % longtable support required by pandoc >1.10
 \usepackage{booktabs}  % table support for pandoc > 1.12.2
 \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
 \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
@@ -1020,22 +1019,19 @@ To units above the border we add a treatment effect \(\tau(S_1, S_2) = S_1\).
     
 
 
-    	\begin{longtable}[]{@{}rlll@{}}
-\caption{Summary of wiggly border simulation setup. \label{table:wiggly_setup}}\tabularnewline
-\toprule
+\begin{table}[tbp]
+\centering
+\begin{tabular}{llll}
+\hline
 & Left \(S_1< 0.5\) & Middle \(0.5 \ge S_1 < 1.5\) & Right \(1.5 \ge S_1\)\tabularnewline
-\midrule
-\endfirsthead
-\toprule
-& Left \(S_1< 0.5\) & Middle \(0.5 \ge S_1 < 1.5\) & Right \(1.5 \ge S_1\)\tabularnewline
-\midrule
-\endhead
+\hline
 \textbf{Border} & wiggly & straight & straight\tabularnewline
 \textbf{Density} & low \(\rho=1.0\) & very low \(\rho=0.3\) & high \(\rho=2.0\)\tabularnewline
 \(\taubold\) & weak & medium & strong\tabularnewline
-\bottomrule
-\end{longtable}
-    
+\hline
+\end{tabular}
+\caption{Summary of wiggly border simulation setup. \label{table:wiggly_setup}}
+\end{table}
 
 
     	\begin{figure}
@@ -1779,72 +1775,22 @@ A visual inspection of Figure \ref{fig:sales_map} showing the locations of units
     
 
 
-    	We further define some shorthand notation.
+    	We further define some shorthand notation, found in the table below.
 
-\begin{longtable}[]{@{}ccc@{}}
-\toprule
-\begin{minipage}[b]{0.24\columnwidth}\centering
-Symbol\strut
-\end{minipage} & \begin{minipage}[b]{0.30\columnwidth}\centering
-Size\strut
-\end{minipage} & \begin{minipage}[b]{0.37\columnwidth}\centering
-\(ij^{\mathrm{th}}\) entry\strut
-\end{minipage}\tabularnewline
-\midrule
-\endhead
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\KBB\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(\numsent \times \numsent\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\sentinel_i,\sentinel_j}\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\KBT\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(\numsent \times n_\treat\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\sentinel_i,\svec_{j\treat}}\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\KBC\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(\numsent \times n_\ctrol\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\sentinel_i,\svec_{j\ctrol}}\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\KTT\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(n_\treat \times n_\treat\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\svec_{i\ctrol},\svec_{j\ctrol}}\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\KCC\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(n_\ctrol \times n_\ctrol\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\svec_{i\treat},\svec_{j\treat}}\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\STT\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(n_\treat \times n_\treat\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\svec_{i\treat},\svec_{j\treat}} + \delta_{ij} \sigman^2\)\strut
-\end{minipage}\tabularnewline
-\begin{minipage}[t]{0.24\columnwidth}\centering
-\(\SCC\)\strut
-\end{minipage} & \begin{minipage}[t]{0.30\columnwidth}\centering
-\(n_\ctrol \times n_\ctrol\)\strut
-\end{minipage} & \begin{minipage}[t]{0.37\columnwidth}\centering
-\(\sigma_m^2 + k\del{\svec_{i\ctrol},\svec_{j\ctrol}} + \delta_{ij} \sigman^2\)\strut
-\end{minipage}\tabularnewline
-\bottomrule
-\end{longtable}
-    
-
+\begin{center}
+\begin{tabular}{lll}
+\hline
+Symbol & Size                       & $ij^{\mathrm{th}}$ entry                                                      \\ \hline
+$\KBB$ & $\numsent \times \numsent$ & $\sigma_m^2 + k\del{\sentinel_i,\sentinel_j}$                                 \\ 
+$\KBT$ & $\numsent \times n_\treat$ & $\sigma_m^2 + k\del{\sentinel_i,\svec_{j\treat}}$                             \\ 
+$\KBC$ & $\numsent \times n_\ctrol$ & $\sigma_m^2 + k\del{\sentinel_i,\svec_{j\ctrol}}$                             \\
+$\KTT$ & $n_\treat \times n_\treat$ & $\sigma_m^2 + k\del{\svec_{i\ctrol},\svec_{j\ctrol}}$                         \\
+$\KCC$ & $n_\ctrol \times n_\ctrol$ & $\sigma_m^2 + k\del{\svec_{i\treat},\svec_{j\treat}}$                         \\ 
+$\STT$ & $n_\treat \times n_\treat$ & $\sigma_m^2 + k\del{\svec_{i\treat},\svec_{j\treat}} + \delta_{ij} \sigman^2$ \\ 
+$\SCC$ & $n_\ctrol \times n_\ctrol$ & $\sigma_m^2 + k\del{\svec_{i\ctrol},\svec_{j\ctrol}} + \delta_{ij} \sigman^2$ \\
+\hline
+\end{tabular}
+\end{center}
 
     	\hypertarget{posterior-mean-of-betavec}{%
 \section{\texorpdfstring{Posterior Mean of \(\betavec\)}{Posterior Mean of \textbackslash{}betavec}}\label{posterior-mean-of-betavec}}
