@@ -21,30 +21,31 @@ module NYCPlots
     @PyCall.pyimport NYC_prepare_plots
     background_schdistrs = NYC_prepare_plots.background_schdistrs
     
-    function plot_polygon(poly_coords, color, alpha)
+    function plot_polygon(poly_coords, facecolor, alpha; 
+                          edgecolor="none", linestyle="None", linewidth=0.0, kwargs...)
         ax = plt.gca()
         poly_array = Array{Float64}(length(poly_coords), 2)
         for i in 1:length(poly_coords)
             poly_array[i, :] = poly_coords[i]
         end
-        polygon = plt.plt[:Polygon](poly_array, true)
+        polygon = plt.plt[:Polygon](poly_array, true; facecolor=facecolor, kwargs...)
         p = ax[:add_patch](polygon)
-        p[:set_color](color)
-        p[:set_zorder](99)
+        p[:set_edgecolor](edgecolor)
+        p[:set_linestyle](linestyle)
+        p[:set_linewidth](linewidth)
         p[:set_alpha](alpha)
-        p[:set_edgecolor]("none")
     end
 
-    function plot_buffer(shape, border, color, dist, alpha)
+    function plot_buffer(shape, border, color, dist, alpha; kwargs...)
         border_buffer = LibGEOS.buffer(border, dist)
         shape_buffer = LibGEOS.intersection(border_buffer, shape)            
         if typeof(shape_buffer) <: LibGEOS.Polygon
             poly_coords = GeoInterface.coordinates(shape_buffer)[1]
-            plot_polygon(poly_coords, color, alpha)
+            plot_polygon(poly_coords, color, alpha; kwargs...)
         elseif typeof(shape_buffer) <: LibGEOS.MultiPolygon
             mpoly_coords = GeoInterface.coordinates(shape_buffer)
             for poly_coords in mpoly_coords
-                plot_polygon(poly_coords[1], color, alpha)
+                plot_polygon(poly_coords[1], color, alpha; kwargs...)
             end
         else
             println(typeof(shape_buffer))
@@ -56,6 +57,7 @@ module NYCPlots
         schdistr_represent = read_distr_reprpoints()
         xmin,xmax = plt.xlim()
         ymin,ymax = plt.ylim()
+        ax = plt.gca()
         for schdistr in keys(schdistr_represent)
             center_x, center_y = schdistr_represent[schdistr]
             
@@ -65,7 +67,7 @@ module NYCPlots
                 continue
             end
             
-            plt.annotate(
+            ax[:annotate](
                 @sprintf("%d", schdistr),
                 xy=(center_x, center_y),
                 xycoords="data",
@@ -77,9 +79,10 @@ module NYCPlots
                 color=labelcolor,
                 alpha=1.0,
                 fontsize = fontsize,
-                zorder=3
+                zorder=3,
+                annotation_clip=true,
             )
-            plt.annotate(
+            ax[:annotate](
                 @sprintf("%d", schdistr),
                 xy=(center_x, center_y),
                 xycoords="data",
@@ -91,30 +94,40 @@ module NYCPlots
                 color=labelcolor,
                 alpha=0.5,
                 fontsize = fontsize,
-                zorder=20
+                zorder=20,
+                annotation_clip=true,
             )
         end
         plt.rc("text", usetex=true)
     end
 
-    function plot_all_pairs(τpost_pairs, sentinels, borders_dict, schdistr_shape_dict; scaleup=200.0)
+    function plot_all_pairs(τpost_pairs, sentinels, borders_dict, schdistr_shape_dict; scaleup=200.0, zorder="none")
         for distr_pair in keys(sentinels)
             distrA, distrB = distr_pair
 
             τpost = τpost_pairs[distr_pair]
-            eff_size = abs(mean(τpost)) / std(τpost) * 2
-            if eff_size < 2.0
+            # eff_size = abs(mean(τpost)) / std(τpost) * 2
+            # if eff_size < 2.0
+                # continue
+            # end
+
+            if parse(distrA) ∈ (1,2) || parse(distrB) ∈ (1,2)
+                # don't do Manhattan, it's weird
                 continue
             end
 
-            if distrA ∈ (1,2) || distrB ∈ (1,2)
-                # don't do Manhattan, it's weird
+            # skip districts that aren't on the map
+            if parse(distrA) ∉ (13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32)
+                continue
+            end
+            if parse(distrB) ∉ (13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 32)
                 continue
             end
 
             if distrA >= distrB
                 continue
             end
+
             X◫ = hcat(sentinels[distr_pair].coordinates...)
             border = borders_dict[(parse(distrA), parse(distrB))]
 
@@ -135,8 +148,11 @@ module NYCPlots
                 cheaper_shape = distrB_shape
                 pricier_shape = distrA_shape
             end
-            plot_buffer(pricier_shape, border, cbbPalette[2], (abs(mean(τpost)) + std(τpost))*scaleup, 0.6)
-            plot_buffer(pricier_shape, border, cbbPalette[1], abs(mean(τpost))*scaleup, 0.6)
+            plot_buffer(pricier_shape, border, cbbPalette[2], (abs(mean(τpost)) + std(τpost))*scaleup, 1.0, zorder=zorder-1)
+            # if abs(mean(τpost)) > std(τpost)
+                # plot_buffer(pricier_shape, border, "none", (abs(mean(τpost)) - std(τpost))*scaleup, 1.0, zorder=zorder+1, edgecolor="white", linestyle=":", linewidth=1.0)
+            # end
+            plot_buffer(pricier_shape, border, cbbPalette[1], abs(mean(τpost))*scaleup, 1.0, zorder=zorder)
         end
     end
 
