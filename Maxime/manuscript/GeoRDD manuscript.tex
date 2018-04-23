@@ -419,7 +419,7 @@ In particular, beginning with \cite{papay2011extending}, methods have been recen
 meaning that units within a certain region are assigned to treatment, while units in a neighboring region are assigned to control.
 For example, in \cite{macdonald2015effect}, a private police force patrols a neighborhood, but stays out of surrounding areas, and a causal effect on crime rates is sought.
 In \cite{chen2013evidence}, a policy applies south of the Huai River in China but not in the north, and pollution levels and life expectancies are measured to infer environmental and health impacts of the policy.
-In our example, we seek to estimate the effect of school districts on house prices in New York City.
+In our application, we seek to estimate the effect of school districts on house prices in New York City.
 Practitioners often wish to use the well-established methods and software developed for 1D~RDDs for their spatial problem.
 It is therefore tempting to reduce a GeoRDD problem to a 1D~RDD by using the signed distance from the boundary (positive for treatment and negative for control) as the forcing variable, a method that we will refer to as ``projected 1D~RDD,'' and which is used by both examples cited above.
 However, this method can fail to fully capture the spatial variation in the outcomes, resulting in spatial confoundedness of the estimator.
@@ -1350,7 +1350,7 @@ The resulting p-values will obviously be highly correlated, so we should only ex
 
 
     	\hypertarget{example-nyc-school-districts}{%
-\section{Example: NYC School Districts}\label{example-nyc-school-districts}}
+\section{Application: NYC School Districts}\label{application-nyc-school-districts}}
 
 \label{sec:NYC_example}
 
@@ -1542,7 +1542,7 @@ mLL bootstrap          & 0.002     \\
 $\invvar$ uncalibrated & 0.0007    \\
 $\invvar$ calibrated   & 0.002    
 \end{tabular}
-\caption{Results of hypothesis tests for New York school district house prices example.}
+\caption{Results of hypothesis tests for New York school district house prices.}
 \end{table}
     	The three tests reject the null hypothesis that \(\tau\del{\border}=0\) along the border between districts 19 and 27.
 This will not always be the case, as the calibrated inverse-variance test has higher power than the other two tests.
@@ -1562,7 +1562,7 @@ There is in fact visible autocorrelation in the graphs of placebo \(p\)-values a
     	\begin{figure}
 \centering
 \includegraphics{../NYC/NYC_plots/NYC_placebos.pdf}
-\caption{\label{fig:nyc_placebos} Placebo tests for significance tests applied to NYC school district house price example, applied within districts 19 and 27. The three rows respectively show results for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo p-value as a function of the border angle, in order to visualize the auto-correlation of the placebo tests. The second column shows histograms of the placebo p-values, with the black vertical line indicating the uniform distribution for comparison.}
+\caption{\label{fig:nyc_placebos} Placebo tests for significance tests applied to NYC school district house prices, applied within districts 19 and 27. The three rows respectively show results for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo p-value as a function of the border angle, in order to visualize the auto-correlation of the placebo tests. The second column shows histograms of the placebo p-values, with the black vertical line indicating the uniform distribution for comparison.}
 \end{figure}
     
 
@@ -1570,7 +1570,7 @@ There is in fact visible autocorrelation in the graphs of placebo \(p\)-values a
     	The mLL placebo \(p\)-values show a pronounced bias towards low values.
 This seems to confirm our concern that the marginal log-likelihood may be sensitive to features of the data other than the discontinuity at the border.
 In particular, model misspecification, which is a concern in spatial models, makes the interpretation of the mLL test unreliable.
-Based on this vulnerability, and its manifestation in this example, we do not recommend relying on the likelihood-ratio test.
+Based on this vulnerability, and its manifestation in this application, we do not recommend relying on the likelihood-ratio test.
 
 The \(\chi^2\) test shows more robustness, with Figure~\ref{fig:nyc_placebos}(d) showing some negative bias in district 27, and some positive bias in district 19, which could simply be due to the low effective sample size.
 We therefore believe that the \(\chi^2\) test will continue to be reliable under misspecification.
@@ -1650,7 +1650,7 @@ More sophisticated estimands, summarized in Table~\ref{table:estimator_propertie
 
 There are multiple valid approaches to hypothesis testing against the null hypothesis of zero treatment effect along the border.
 We recommend the use of the calibrated inverse-variance test, derived from the posterior distribution of the inverse-variance ATE estimator.
-It has generally high statistical power and behaved well in placebo tests in the NYC empirical example.
+It has generally high statistical power and behaved well in placebo tests in the NYC application.
     
 
 
