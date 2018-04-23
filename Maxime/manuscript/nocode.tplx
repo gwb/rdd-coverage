@@ -72,6 +72,8 @@
 \usepackage{mathtools}
 \usepackage{pdflscape}
 \usepackage[doublespacing]{setspace}
+\usepackage{authblk}
+
 ((* endblock packages *))
 
 ((* block definitions *))
@@ -221,11 +223,21 @@
 	\renewcommand{\cite}[1]{\citet{#1}}
 ((* endblock definitions *))
 
-((* block author *))\author{Maxime Rischard}((* endblock author *))
-((* block title *))title{
-A Bayesian Non-parametric Approach to Geographic Regression Discontinuity Designs:
-Do School Districts Affect NYC House Prices?
-}((* endblock title *))
+((* block author *))
+\author[a]{Maxime Rischard}
+\author[a]{Zach Branson}
+\author[b]{Luke Miratrix}
+\author[c]{Luke Bornn}
+\affil[a]{Department of Statistics, Harvard University}
+\affil[b]{Graduate School of Education, Harvard University}
+\affil[c]{?}
+((* endblock author *))
+((* block title *))
+\title{
+	A Bayesian Non-parametric Approach to Geographic Regression Discontinuity Designs:
+	Do School Districts Affect NYC House Prices?
+}
+((* endblock title *))
 
 % Render markdown
 ((* block markdowncell scoped *))
