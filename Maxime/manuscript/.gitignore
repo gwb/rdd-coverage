@@ -1,0 +1,14 @@
+GeoRDD*2017*.pdf
+GeoRDD*2018*.pdf
+*.xdv
+*.aux
+*.log
+*.out
+*.synctex.gz
+*.fdb_latexmk
+*.bbl
+*.blg
+*.flx
+*.toc
+*.fls
+*.key
