@@ -459,6 +459,51 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
 
 
 %%% NYC %%%
+
+\hypertarget{nyc-hypothesis-tests}{%
+\section{Additional Hypothesis Tests}\label{sec:nyc_hypothesis_tests}}
+
+\begin{table}[tbp]
+    \centering
+    \label{table:NYC_tests}
+    \begin{tabular}{ll}
+        \hline
+        Test                   & $p$-value \\
+        \hline
+        $\chi^2$ bootstrap     & 0.012     \\
+        mLL bootstrap          & 0.002     \\
+        $\invvar$ uncalibrated & 0.0007    \\
+        $\invvar$ calibrated   & 0.002 \\
+        \hline
+    \end{tabular}
+    \caption{Results of hypothesis tests for New York school district house prices.}
+\end{table}
+
+To assess the validity of the three tests, we apply the placebo tests devised in Section~\ref{sec:placebo}.
+Within each district, we split the data in half by a line at angles \(1\degree\), \(3\degree\), \(5\degree\), \(6\degree\), \(\dotsc\), \(179\degree\).
+Because these lines were drawn arbitrarily, we don't expect a discontinuous treatment effect between the two halves, and so we hope to see a uniform distribution of placebo \(p\)-values.
+However, these tests will be highly correlated,
+and so the low effective sample size could lead to some apparent departures from uniformity.
+There is in fact visible autocorrelation in the graphs of placebo \(p\)-values as a function of angle.
+
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{../NYC/NYC_plots/NYC_placebos.png}
+    \caption{\label{fig:nyc_placebos} Placebo tests for significance tests applied to NYC school district house prices, applied within districts 19 and 27. The three rows respectively show results for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo p-value as a function of the border angle; the second column shows histograms of the placebo p-values, with the black vertical line indicating the uniform distribution.}
+\end{figure}
+
+The mLL placebo \(p\)-values show a pronounced bias towards low values.
+This seems to confirm our concern that the marginal log-likelihood may be sensitive to features of the data other than the discontinuity at the border.
+In particular, model misspecification, which is a concern in spatial models, makes the interpretation of the mLL test unreliable.
+Based on this vulnerability, and its manifestation in this application, we do not recommend relying on the likelihood-ratio test.
+
+The \(\chi^2\) test shows more robustness, with Figure~\ref{fig:nyc_placebos}(d) showing some negative bias in district 27, and some positive bias in district 19, which could simply be due to the low effective sample size.
+We therefore believe that the \(\chi^2\) test will continue to be reliable under misspecification.
+It is only due to its low power that we hesitate to recommend its use in applications where the treatment effect is expected to be fairly homogenous.
+
+Lastly, the calibrated inverse-variance placebo \(p\)-values display no obvious bias, with Figure~\ref{fig:nyc_placebos}(f) close to uniformly distributed, and Figure~\ref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
+The high power and robustness of the inverse-variance test make a strong case for its use in most applications.
+
 \hypertarget{pairs-of-school-districts}{%
 \section{Pairs of School Districts}\label{pairs-of-school-districts}}
 
