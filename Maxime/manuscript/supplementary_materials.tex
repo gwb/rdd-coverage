@@ -1,178 +1,105 @@
 \documentclass[letter,12pt]{article}
 
-\usepackage[T1]{fontenc}
-% Nicer default font (+ math font) than Computer Modern for most use cases
-\usepackage{mathpazo}
-\usepackage{graphicx}
-\usepackage{xcolor} % Allow colors to be defined
-\usepackage{enumerate} % Needed for markdown enumerations to work
-\usepackage{geometry} % Used to adjust the document margins
-\usepackage{amsmath} % Equations
-\usepackage{amssymb} % Equations
-% The hyperref package gives us a pdf with properly built
-% internal navigation ('pdf bookmarks' for the table of contents,
-% internal cross-reference links, web links for URLs, etc.)
-\usepackage{hyperref}
-\usepackage{natbib}
-\usepackage[scr]{rsfso}
-\usepackage{bm}
-\usepackage{mathtools}
-\usepackage{pdflscape}
-\usepackage[doublespacing]{setspace}
-\usepackage{authblk}
-
-% Colors for the hyperref package
-\definecolor{urlcolor}{rgb}{0,.145,.698}
-\definecolor{linkcolor}{rgb}{.71,0.21,0.01}
-\definecolor{citecolor}{rgb}{.12,.54,.11}
-
-\title{
-    A Bayesian Non-parametric Approach to Geographic Regression Discontinuity Designs:
-    Do School Districts Affect NYC House Prices?
+\newcommand{\blind}{1}
+\newcommand{\georddtitle}{
+    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
+    Do School Districts Affect NYC House Prices? \\*
+    ~\\*
+    Supplementary Materials
 }
+\input{preamble.tex}
+\newcommand{\sprefix}{S-}
+\renewcommand{\theequation}{\sprefix\arabic{equation}}
+\renewcommand{\thesection}{\sprefix\arabic{section}}
+\renewcommand{\thefigure}{\sprefix\arabic{figure}}
+\renewcommand{\thetable}{\sprefix\arabic{table}}
 
-\author[a]{Maxime Rischard}
-\author[a]{Zach Branson}
-\author[b]{Luke Miratrix}
-\author[c]{Luke Bornn}
-\affil[a]{Department of Statistics, Harvard University}
-\affil[b]{Graduate School of Education, Harvard University}
-\affil[c]{Simon Fraser University}
 
-\DeclarePairedDelimiter{\parenthesis}{\lparen}{\rparen}
-\DeclarePairedDelimiter{\squarebracket}{\lbrack}{\rbrack}
-\DeclarePairedDelimiter{\curlybracket}{\lbrace}{\rbrace}
-\DeclarePairedDelimiter{\absolutevalue}{\lvert}{\rvert}
-\newcommand{\del}[1]{\parenthesis*{#1}}
-\newcommand{\sbr}[1]{\squarebracket*{#1}}
-\newcommand{\cbr}[1]{\curlybracket*{#1}}
-\newcommand{\abs}[1]{\absolutevalue*{#1}}
-\DeclareMathOperator{\dif}{d}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\let\Pr\relax
-\DeclareMathOperator{\Pr}{\mathbb{P}}
-\DeclareMathOperator{\E}{\mathbb{E}}
-\DeclareMathOperator{\V}{\mathbb{V}}
-\DeclareMathOperator{\cov}{{Cov}}
-\DeclareMathOperator{\var}{{var}}
-\DeclareMathOperator{\Ind}{\mathbb{I}}
-\DeclareMathOperator*{\sgn}{{sgn}}
-
-\DeclareMathOperator{\normal}{\mathcal{N}}
-\DeclareMathOperator{\unif}{Uniform}
-\DeclareMathOperator{\invchi}{\mathrm{Inv-\chi}^2}
-\DeclareMathOperator{\ones}{\mathbf{1}}
-\DeclareMathOperator{\GP}{\mathcal{GP}}
-\newcommand{\building}{\mathtt{BuildClass}}
-\newcommand{\district}{\mathtt{Distr}}
-
-\newcommand*{\trans}{^{\mkern-1.5mu\intercal}}
-% \newcommand{\trans}{^{\top}}
-
-\newcommand{\area}{\mathcal{A}}
-\newcommand{\treat}{\mathrm{T}}
-\newcommand{\ctrol}{\mathrm{C}}
-\newcommand{\treatind}{Z}
-\newcommand{\treatarea}{\area{}^{\treat}}
-\newcommand{\ctrolarea}{\area{}^{\ctrol}}
-
-\newcommand{\sigmaf}{\sigma_{\mathrm{GP}}}
-\newcommand{\sigman}{\sigma_{\epsilon}}
-\newcommand{\sigmabeta}{\sigma_{\beta}}
-\newcommand{\sigmamu}{\sigma_{\mu}}
-\newcommand{\svec}{\mathbold{s}}
-\newcommand{\dvec}{\mathbold{d}}
-\newcommand{\wvec}{\mathbold{w}}
-\newcommand{\yvec}{\mathbold{y}}
-\newcommand{\Yvec}{\mathbold{Y}}
-\newcommand{\yt}{\Yvec_{\treat}}
-\newcommand{\yc}{\Yvec_{\ctrol}}
-\newcommand{\vvec}{\mathbold{v}}
-\newcommand{\muvec}{\mathbold{\mu}}
-\newcommand{\betavec}{\mathbold{\beta}}
-\newcommand{\residvec}{\mathbold{R}}
-\newcommand{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
-\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
-\newcommand{\iid}{iid}
-\newcommand{\vectreat}{\Ind_{T}}
-
-\newcommand{\border}{\mathcal{B}}
-\newcommand{\sentinel}{\bm{b}}
-\newcommand{\numsent}{R}
-\newcommand{\sentinels}{\sentinel_{1:\numsent}}
-\newcommand{\isent}{r}
-\newcommand{\sentinelset}{\cbr{\sentinel_1,\ldots,\sentinel_\numsent}}
-
-\newcommand{\eye}{\mathbf{I}}
-
-\DeclareMathOperator{\trace}{trace}
-\newcommand{\tauw}{\tau^{w}}
-\newcommand{\unifavg}{\tau^{\mathrm{UNIF}}}
-\newcommand{\invvar}{\tau^{\mathrm{INV}}}
-\newcommand{\taurho}{\tau^{\rho}}
-\newcommand{\tauproj}{\tau^{\mathrm{PROJ}}}
-\newcommand{\taugeo}{\tau^{\mathrm{GEO}}}
-\newcommand{\taupop}{\tau^{\mathrm{POP}}}
-
-\newcommand{\modnull}{\mathscr{M}_0}
-\newcommand{\modalt}{\mathscr{M}_1}
-\newcommand{\degree}{{\,^\circ}}
-\newcommand{\eqlabel}[1]{\label{#1}}
-
-\DeclareMathOperator{\proj}{proj}
-\DeclareMathOperator{\dist}{dist}
-\newcommand{\buffer}{\Delta}
-\newcommand{\vicinity}[1]{\Ind^\buffer\del{#1}}
-\newcommand{\hyperparam}{\bm{\theta}}
-
-\newcommand{\taubold}{\bm{\tau}}
-\newcommand{\weightb}{w_{\border}}
-\newcommand{\wt}{\wvec_{\treat}}   
-\newcommand{\wc}{\wvec_{\ctrol}}
-\newcommand{\gridres}{\nu}
-\newcommand{\grid}{G^\gridres}
-\newcommand{\Dmat}{\mathbold{D}}
-\newcommand{\Kmat}{\mathbold{K}}
-\newcommand{\Amat}{\mathbold{A}}
-\newcommand{\Xmat}{\mathbold{X}}
-\newcommand{\Wmat}{\mathbold{W}}
-\newcommand{\SigmaMat}{\mathbold{\Sigma}}
-\newcommand{\KBB}{\Kmat_{\border \border}}
-\newcommand{\KBT}{\Kmat_{\border \treat}}
-\newcommand{\KBC}{\Kmat_{\border \ctrol}}
-\newcommand{\STT}{\SigmaMat_{\treat \treat}}
-\newcommand{\SCC}{\SigmaMat_{\ctrol \ctrol}}
-\newcommand{\KTT}{\Kmat_{\treat \treat}}
-\newcommand{\KCC}{\Kmat_{\ctrol \ctrol}}
-\newcommand{\KTC}{\Kmat_{\treat \ctrol}}
-\newcommand{\AT}{\Amat_{\treat}}
-\newcommand{\AC}{\Amat_{\ctrol}}
-
-\geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
 
 \begin{document}
 
-\hypertarget{characterizing-and-estimating-the-average-treatment-effect}{%
-\section{Characterizing and Estimating the Average Treatment Effect}\label{characterizing-and-estimating-the-average-treatment-effect}}
-\hypertarget{projected-land-ate}{%
-\subsection{Projected Land ATE}\label{projected-land-ate}}
+\externaldocument[M-]{"GeoRDD\space manuscript"}
 
+\if0\blind
+{
+\title{
+    \Large
+    \bf
+    \georddtitle
+}
+\author{\georddauthor}
+\maketitle
+} \fi
+
+\if1\blind
+{
+  \bigskip
+  \bigskip
+  \bigskip
+  \begin{center}
+    {\LARGE\bf \georddtitle}
+\end{center}
+  \medskip
+} \fi
+
+\hypertarget{spatial-confounding-of-1d-rdd-applied-to-geordd}{%
+\section{Spatial Confounding of 1D RDD Applied to GeoRDD}
+\label{sec:confounding}
+}
+
+Analysing GeoRDDs by using the signed distance from the border as a forcing variable in a 1D~RDD can lead to spatial confounding.
+We demonstrate this with a simple artificial example, depicted in \autoref{fig:confounding}.
+
+
+
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[height=0.35\textheight]{figures/confounding/confounding.png}
+    \caption{A theoretical example illustrating the susceptibility of the projected 1D~RDD method to spatial confounding. The locations of treatment and control units are shown with circles and crosses respectively, separated by a border at \(s_2 = 0\). Units are denser in the upper left and lower right quadrants. The treatment effect, depicted as a gradient from blue to red, increases linearly with \(s_1\). \label{fig:confounding}}
+\end{figure}
+
+
+
+Suppose we have units in a 2D square, with spatial coordinates \(\svec_1 \in [-1,1]\), and \(\svec_2 \in [-1,1]\), and with a horizontal border at \(s_2=0\) separating a treatment region from a control region.
+Let us assume the null hypothesis, with outcomes driven only by \(\svec_1\) (parallel to the border), given by \(Y_{i} = \alpha \svec_{1i} + \epsilon_i\),
+where \(\epsilon_i\) is an iid noise term \(\epsilon_i \sim \normal\del{0, \sigman^2}\).
+Lastly, let us consider the situation where the density \(\rho(\svec)\) of units is different in each quadrant of the square:
+\begin{equation}
+    \begin{aligned}
+        \rho(\svec) = 2\rho_0 & \text{, where }\svec_1 < 0,~\svec_2 > 0 & \text{ (top left)} \\
+        \rho(\svec) = \rho_0 & \text{, where }\svec_1 > 0,~\svec_2 > 0 & \text{ (top right)} \\
+        \rho(\svec) = 2\rho_0 & \text{, where }\svec_1 > 0,~\svec_2 < 0 & \text{ (bottom right)}  \\
+        \rho(\svec) = \rho_0 & \text{, where }\svec_1 < 0,~\svec_2 < 0 & \text{ (bottom left)}
+    \end{aligned}
+\end{equation}
+The projection RDD then considers a 1D RDD along \(s_2\).
+The usual RDD estimand \autoref*{M-eq:rdd_univ_estimand} can be obtained analytically, and equals \(\tau=\frac{-\alpha}{3}\), despite assuming the null hypothesis.
+This is because \(s_1\) acts as a hidden confounder, whose distribution changes discontinuously at the border, which leads to bias and inconsistency in the projected 1D~RDD estimate.
+In geographical settings, a discontinuous change in the density of units at the border is not unusual: for example a border could run alongside a park, or a small body of water, therefore with zero population density on one side of the border.
+A visual inspection of \autoref*{M-fig:sales_map} showing the locations of units in a New York City property sales dataset reveals many examples of this.
+
+
+\hypertarget{characterizing-and-estimating-the-average-treatment-effect}{%
+\section{Characterizing and Estimating the Average Treatment Effect}
+}
+\hypertarget{projected-land-ate}{%
+\subsection{Projected Land ATE}
+}
 In certain applications, population-based estimands can be undesirable, especially if the locations at which measurements are made are not representative of the population of interest.
 In such cases, geography-weighted estimands can be more natural.
 See \cite{antonelli2016positive} for a discussion of this distinction in the context of preferential sampling.
 Remember that the ``geometry-based'' estimand \(\unifavg\) places uniform weights along the border.
-Instead, the ``geography-based'' projected land ATE estimand \(\taugeo\), illustrated in Figure \ref{fig:mississippi_projection_methods}(b), begins by placing uniform weights on the treatment and control areas \(\area_\treat\) and \(\area_\ctrol\) that are within distance \(\buffer\) of the border \(\border\), but then projects them onto the border to derive border weights.
+Instead, the ``geography-based'' projected land ATE estimand \(\taugeo\), illustrated in \autoref{fig:mississippi_projection_methods}(b), begins by placing uniform weights on the treatment and control areas \(\area_\treat\) and \(\area_\ctrol\) that are within distance \(\buffer\) of the border \(\border\), but then projects them onto the border to derive border weights.
 In other words, the projection method from \(\tauproj\) is applied to an infinite population of uniform density on both sides of the border, instead of the finite population of observed units.
 
 We denote the border vicinity area by \(\area_\buffer\), defined as all points \(\svec\) such that \(\svec \in {\area_\treat \cup \area_\ctrol}\), and \(\dist_{\border}\del{\svec} < \buffer\).
 To estimate \(\taugeo\), a tight grid \(\grid\) of evenly spaced points separated by \(\gridres\) is first generated covering \(\area_\buffer\).
 Denote the number of grid points by \(L_\gridres\).
 Each point \(\grid_l\), \(l=1,\dotsc,L_\gridres\) in \(\grid\) is then projected onto the border to become a sentinel.
-The treatment effect at these positions is then estimated as before, yielding a mean vector and covariance matrix akin to \eqref{eq:postvar2gp}.
+The treatment effect at these positions is then estimated as before, yielding a mean vector and covariance matrix akin to \autoref*{M-eq:postvar2gp}.
 The mean of the mean vector then gives an estimate of \(\taugeo\).
 In other words, \(\taugeo\) is estimated by applying the \(\unifavg\) procedure with sentinels obtained by projecting the grid points, instead of equispaced sentinels.
-\(\taugeo\) remains in the category of weighted-mean estimands, with the weight function \(\weightb(\sentinel)\) in \eqref{eq:weighted_estimand} proportional to the area of \(\treatarea\) and \(\ctrolarea\) that \(\sentinel\) is nearest to, which can be written as the limit as the grid spacing goes to zero of point masses at the grid locations projected onto the border:
+\(\taugeo\) remains in the category of weighted-mean estimands, with the weight function \(\weightb(\sentinel)\) in \autoref*{M-eq:weighted_estimand} proportional to the area of \(\treatarea\) and \(\ctrolarea\) that \(\sentinel\) is nearest to, which can be written as the limit as the grid spacing goes to zero of point masses at the grid locations projected onto the border:
 \begin{equation}
     \weightb(\sentinel) = \lim_{\gridres \rightarrow 0}\frac{1}{L_\gridres}\sum_{l=1}^{L_\gridres} \Ind\cbr{\sentinel = \proj_{\border}\del{\grid_l} }\,,
 \end{equation}
@@ -185,8 +112,8 @@ Estimating the latter estimand would require predicting the conditional regressi
 
 
 \hypertarget{projected-super-population-ate}{%
-\subsection{Projected Super-Population ATE}\label{projected-super-population-ate}}
-
+\subsection{Projected Super-Population ATE}
+}
 
 \begin{figure}[tbp]
     \centering
@@ -206,16 +133,16 @@ The estimand \(\taupop\) can be interpreted as giving equal weight to each unit 
 
 
 
-        \hypertarget{wiggly-border-simulation}{%
-\subsection{Wiggly Border Simulation}\label{wiggly-border-simulation}}
-
+\hypertarget{wiggly-border-simulation}{%
+\subsection{Wiggly Border Simulation}
 \label{sec:wiggly_border}
+}
     
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[height=0.35\textheight]{../figures/wiggly_boundaries_setup.png}
-\caption{\label{fig:wiggly_boundaries_setup}Spatial positions of units and border for the wiggly border simulation of Section~\ref{sec:wiggly_border}. Projection lines for the projected finite population ATE are shown in light gray.}
+\caption{\label{fig:wiggly_boundaries_setup}Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population ATE are shown in light gray.}
 \end{figure}
     
 
@@ -235,8 +162,8 @@ which are then further divided horizontally at \(S_1=0.5\) and \(S_1=1.5\) into 
 
 Furthermore, the border in the leftmost band is a triangular wave, to create ``wiggliness.''
 We increase the number of wiggles from 0 to 1000 to observe the effect on the estimates.
-The simulation setting is summarized in Table~\ref{table:wiggly_setup}.
-We draw a single set of spatial coordinates, shown in Figure~\ref{fig:wiggly_boundaries_setup}, then draw 10,000 simulations of the outcomes \(Y\) from a Gaussian process with squared exponential kernel (\(\ell=0.4\), \(\sigma=0.5\)).
+The simulation setting is summarized in \autoref{table:wiggly_setup}.
+We draw a single set of spatial coordinates, shown in \autoref{fig:wiggly_boundaries_setup}, then draw 10,000 simulations of the outcomes \(Y\) from a Gaussian process with squared exponential kernel (\(\ell=0.4\), \(\sigma=0.5\)).
 To units above the border we add a treatment effect \(\tau(S_1, S_2) = S_1\).
 
 
@@ -255,16 +182,16 @@ To units above the border we add a treatment effect \(\tau(S_1, S_2) = S_1\).
 \caption{Summary of wiggly border simulation setup. \label{table:wiggly_setup}}
 \end{table}
 
-        We fit the Gaussian process model \eqref{eq:spec2gp},
+        We fit the Gaussian process model \autoref*{M-eq:spec2gp},
 using the known hyperparameters of the covariance kernel and a weak prior on the mean parameter of each region,
 and estimate the average treatment effect using the six methods proposed above.
-In Figure \ref{fig:wiggly_boundaries_posteriors}(a) we show, for each estimator, the corresponding estimand and average posterior mean estimate evolving as the number of border wiggles increases.
-The behavior of the posterior standard deviation is shown in Figure~\ref{fig:wiggly_boundaries_posteriors}(b).
+In \autoref{fig:wiggly_boundaries_posteriors}(a) we show, for each estimator, the corresponding estimand and average posterior mean estimate evolving as the number of border wiggles increases.
+The behavior of the posterior standard deviation is shown in \autoref{fig:wiggly_boundaries_posteriors}(b).
 
 \begin{figure}[tbp]
 \centering
 \includegraphics[height=0.4\textheight]{../figures/wiggly_boundaries_posteriors.png}
-\caption{\label{fig:wiggly_boundaries_posteriors} Results of the simulations of Section~\ref{sec:wiggly_border}, showing for each ATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.}
+\caption{\label{fig:wiggly_boundaries_posteriors} Results of the simulations of \autoref{sec:wiggly_border}, showing for each ATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.}
 \end{figure}
     
 As the border is a straight line and \(\treatarea\) and \(\ctrolarea\) are rectangles,
@@ -279,7 +206,7 @@ They give equal weight to the sparsely populated middle band, which produces a l
 
 Lastly, the information-based inverse-variance estimand \(\invvar\) does not coincide with any others.
 The estimand and mean estimate change slightly from 0 to 1 wiggles, but remains stable thereafter, demonstrating the robustness of this estimator to border topology.
-Weighting by the inverse variance gives the lowest posterior variance within the class of ATEs under consideration, which can indeed be seen in Figure \ref{fig:wiggly_boundaries_posteriors}(b).
+Weighting by the inverse variance gives the lowest posterior variance within the class of ATEs under consideration, which can indeed be seen in \autoref{fig:wiggly_boundaries_posteriors}(b).
 
 As we introduce wiggles into the leftmost band,
 \(\taurho\) and \(\unifavg\) show their susceptibility to the border topology.
@@ -302,7 +229,7 @@ caused by the presence of some sentinels nearer to the observed units.
 \end{figure}
     
 
-        In Figure~\ref{fig:weight_functions}(a-f), we illustrate the behavior of border weights \(\weightb(\sentinel)\) and unit weights (\(\wt\) and \(\wc\)) in this simulation setting with 3 wiggles.
+        In \autoref{fig:weight_functions}(a-f), we illustrate the behavior of border weights \(\weightb(\sentinel)\) and unit weights (\(\wt\) and \(\wc\)) in this simulation setting with 3 wiggles.
 Note how evenly spaced sentinels (for \(\unifavg\), \(\taurho\), and \(\invvar\)) are more densely packed along \(S_1\) in the leftmost area because of the zig-zagging border.
 The inverse-variance weighted estimator border weights can be seen to respond to this change in the border topology, though it is difficult to interpret their oscillating behavior.
 While these border-weights look unreasonable and unstable, the induced unit weights for \(\invvar\) are well-behaved, and in fact quite similar to those of the projected finite- and infinite-population estimators.
@@ -313,9 +240,9 @@ All other estimators spread the weights more evenly amongst the units near the b
     
 
 
-        For comparison, the weights placed on units by the projected 1D RDD are shown in Figure~\ref{fig:weight_functions}(g).
+        For comparison, the weights placed on units by the projected 1D RDD are shown in \autoref{fig:weight_functions}(g).
 A triangular kernel in \(S_2\) was used with bandwidth selected using the MSE-minimizing method proposed by \cite{imbens2012optimal}.
-The Projected 1D~RDD estimator can also be written as a linear combination of the observed outcomes \eqref{eq:unit_weights}, and the unit weight vectors can be derived as:
+The Projected 1D~RDD estimator can also be written as a linear combination of the observed outcomes \autoref*{M-eq:unit_weights}, and the unit weight vectors can be derived as:
 \begin{equation}
 \begin{split}
 \wt &= \hphantom{-} \Xmat_b (\Xmat_\treat\trans \Wmat_\treat \Xmat_\treat)^{-1} \Xmat_\treat\trans \Wmat_\treat \,, 
@@ -323,7 +250,7 @@ The Projected 1D~RDD estimator can also be written as a linear combination of th
 \\
 \wc &= - \Xmat_b (\Xmat_\ctrol\trans \Wmat_\ctrol \Xmat_\ctrol)^{-1} \Xmat_\ctrol\trans \Wmat_\ctrol \,, 
 \end{split}
-\eqlabel{eq:unit_weights_llr}
+\label{eq:unit_weights_llr}
 \end{equation}
 where \(\Xmat_b = \del{1~0}\), \(\Xmat_\treat\) is the \(n_\treat \times 2\) design matrix with the first column filled with ones and the second column containing the distance from the border of each treatment unit, and \(\Wmat_\treat\) is an \(n_\treat \times n_\treat\) diagonal matrix where the \(i^\mathrm{th}\) diagonal element is the triangular kernel evaluated on the \(i^\mathrm{th}\) unit's distance from the border.
 The \(\Xmat_\ctrol\) and \(\Wmat_\ctrol\) matrices are analogously defined for control units.
@@ -334,10 +261,13 @@ Strikingly, almost all of the positive weights are given to units in the rightmo
 Consequently, any trend in the outcomes across \(S_1\) would confound the estimated treatment effect.
 
 \hypertarget{testing-for-non-zero-effect}{%
-\section{Testing for Non-Zero Effect}\label{testing-for-non-zero-effect}}
+\section{Testing for Non-Zero Effect}
+\label{sec:hypothesis_testing}
+}
 
 \hypertarget{marginal-likelihood-test}{%
-\subsection{Marginal Likelihood Test}\label{marginal-likelihood-test}}
+\subsection{Marginal Likelihood Test}
+}
 
 To target the sharp null hypothesis, we first define a parametric null model \(\modnull\),
 specified as a single Gaussian process spanning the control and treatment regions,
@@ -346,7 +276,7 @@ with the same kernel and hyperparameters obtained in the 2GP procedure.
 and therefore accords with the sharp null hypothesis.
 Intuitively, if there is a treatment effect,
 the likelihood of the observations should be lower under \(\modnull\) than under \(\modalt\),
-the \(\GP\) model as specified in equation \eqref{eq:spec2gp}.
+the \(\GP\) model as specified in \autoref*{M-eq:spec2gp}.
 We therefore choose the difference in log-likelihoods as our test statistic
 \begin{equation}
     t = \log \Pr\del{\yt{}, \yc{} \mid \modalt} - \log \Pr\del{\yt{}, \yc{} \mid \modnull} \,,
@@ -370,14 +300,14 @@ Computationally, because the hyperparameters and locations of the units are held
 
 
 \hypertarget{chi-squared-test}{%
-\subsection{``Chi-squared'' Test}\label{chi-squared-test}}
-
+\subsection{``Chi-squared'' Test}
+}
 The likelihood-based sharp null above is valid and easy to understand.
 But it may seem odd that the test aims to detect a non-zero treatment effect at the border, without any explicit reference to the border \(\border\).
 The test statistic and \(p\)-values can be computed without access to the sentinel positions, using only the treatment and control indicators.
 If the test is significant, there is no guarantee that this is due to a discontinuity at the border.
 
-To address this oddity, we can derive a test statistic directly from the cliff face estimator \eqref{eq:postvar2gp}.
+To address this oddity, we can derive a test statistic directly from the cliff face estimator \autoref*{M-eq:postvar2gp}.
 We will use \(\muvec\) and \(\SigmaMat\) as shorthand for the posterior mean \(\muvec_{\sentinels \mid Y}\)
 and covariance matrix \(\SigmaMat_{\sentinels \mid Y}\) throughout this section.
 If a \(k\)-vector \(\yvec\) is distributed \(\normal\del{\muvec, \Sigma}\), with mean vector \(\muvec\) unknown and covariance \(\SigmaMat\) known, then under the null hypothesis that \(\mu=0\), the test statistic \(\yvec\trans \SigmaMat^{-1} \yvec\) has distribution \(\chi^2_k\).
@@ -401,7 +331,7 @@ With B bootstrap samples, the \(p\)-value is obtained as
         S_{(b)}^2 &= (\muvec_{(b)} )\trans \SigmaMat^{-1} \muvec_{(b)}\,,
     \end{split}
 \end{equation}
-where \(\muvec_{(b)}\) is the result of applying \eqref{eq:postvar2gp} to \(\yt^{(b)}\) and \(\yc^{(b)}\), themselves drawn from \(\modnull\) at the same locations as the observations \(\yt\) and \(\yc\).
+where \(\muvec_{(b)}\) is the result of applying \autoref*{M-eq:postvar2gp} to \(\yt^{(b)}\) and \(\yc^{(b)}\), themselves drawn from \(\modnull\) at the same locations as the observations \(\yt\) and \(\yc\).
 
 Because calculating \(S^2\) involves inverting a matrix \(\Sigma\) that is mathematically of full rank, but numerically of low rank, we may worry about the numerical stability of computing \(S\).
 We verified in simulated examples that regularizing \(\Sigma\) by adding a small constant to its diagonal does not greatly affect the computed \(S^2\).
@@ -410,9 +340,9 @@ regardless of the regularization.
 
 
 \hypertarget{power-in-simulated-example}{%
-\section{Power in Simulated Example}\label{power-in-simulated-example}}
-
+\subsection{Power in Simulated Example}
 \label{sec:powersim}
+}
 
 
 
@@ -424,10 +354,10 @@ regardless of the regularization.
 
 
 
-The three tests we developed leverage different aspects of the problem, and target two different null hypotheses. One may wonder how their power compares in the presence of a treatment effect. Considering once more the border between Louisiana and Mississippi, we imagine an experiment where the unit of analysis is the county, located at its centroid, as shown in Figure \ref{fig:mississippi_counties}.
+The three tests we developed leverage different aspects of the problem, and target two different null hypotheses. One may wonder how their power compares in the presence of a treatment effect. Considering once more the border between Louisiana and Mississippi, we imagine an experiment where the unit of analysis is the county, located at its centroid, as shown in \autoref{fig:mississippi_counties}.
 We will simulate outcomes from a single Gaussian process covering both states. For simplicity, we fix the hyperparameters to arbitrary values: \(\sigman=\sigmaf=1.0\) and \(\ell=100\,\mathrm{km}\).
 We then add a constant treatment effect \(\tau\) to all the outcomes in Louisiana.
-The results of the three tests proposed so far are shown in the first three rows of Table~\ref{table:power} for \(\tau=0\) (null hypothesis) and \(\tau=1.2\) and significance level \(\alpha=0.05\).
+The results of the three tests proposed so far are shown in the first three rows of \autoref{table:power} for \(\tau=0\) (null hypothesis) and \(\tau=1.2\) and significance level \(\alpha=0.05\).
 
 
 \begin{table}
@@ -459,9 +389,13 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
 
 
 %%% NYC %%%
+\hypertarget{application-nyc-school-districts}{%
+\section{Application: NYC School Districts}
+\label{sec:NYC_example}
+}
 
 \hypertarget{nyc-hypothesis-tests}{%
-\section{Additional Hypothesis Tests}\label{sec:nyc_hypothesis_tests}}
+\subsection{Additional Hypothesis Tests}\label{sec:nyc_hypothesis_tests}}
 
 \begin{table}[tbp]
     \centering
@@ -479,7 +413,7 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
     \caption{Results of hypothesis tests for New York school district house prices.}
 \end{table}
 
-To assess the validity of the three tests, we apply the placebo tests devised in Section~\ref{sec:placebo}.
+To assess the validity of the three tests, we apply the placebo tests devised in \autoref*{M-sec:placebo}.
 Within each district, we split the data in half by a line at angles \(1\degree\), \(3\degree\), \(5\degree\), \(6\degree\), \(\dotsc\), \(179\degree\).
 Because these lines were drawn arbitrarily, we don't expect a discontinuous treatment effect between the two halves, and so we hope to see a uniform distribution of placebo \(p\)-values.
 However, these tests will be highly correlated,
@@ -488,7 +422,7 @@ There is in fact visible autocorrelation in the graphs of placebo \(p\)-values a
 
 \begin{figure}[tbp]
     \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{../NYC/NYC_plots/NYC_placebos.png}
+    \includegraphics[width=\textwidth]{../NYC/NYC_plots/NYC_placebos.png}
     \caption{\label{fig:nyc_placebos} Placebo tests for significance tests applied to NYC school district house prices, applied within districts 19 and 27. The three rows respectively show results for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo p-value as a function of the border angle; the second column shows histograms of the placebo p-values, with the black vertical line indicating the uniform distribution.}
 \end{figure}
 
@@ -497,20 +431,20 @@ This seems to confirm our concern that the marginal log-likelihood may be sensit
 In particular, model misspecification, which is a concern in spatial models, makes the interpretation of the mLL test unreliable.
 Based on this vulnerability, and its manifestation in this application, we do not recommend relying on the likelihood-ratio test.
 
-The \(\chi^2\) test shows more robustness, with Figure~\ref{fig:nyc_placebos}(d) showing some negative bias in district 27, and some positive bias in district 19, which could simply be due to the low effective sample size.
+The \(\chi^2\) test shows more robustness, with \autoref{fig:nyc_placebos}(d) showing some negative bias in district 27, and some positive bias in district 19, which could simply be due to the low effective sample size.
 We therefore believe that the \(\chi^2\) test will continue to be reliable under misspecification.
 It is only due to its low power that we hesitate to recommend its use in applications where the treatment effect is expected to be fairly homogenous.
 
-Lastly, the calibrated inverse-variance placebo \(p\)-values display no obvious bias, with Figure~\ref{fig:nyc_placebos}(f) close to uniformly distributed, and Figure~\ref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
+Lastly, the calibrated inverse-variance placebo \(p\)-values display no obvious bias, with \autoref{fig:nyc_placebos}(f) close to uniformly distributed, and \autoref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
 The high power and robustness of the inverse-variance test make a strong case for its use in most applications.
 
 \hypertarget{pairs-of-school-districts}{%
-\section{Pairs of School Districts}\label{pairs-of-school-districts}}
+\subsection{Pairs of School Districts}\label{pairs-of-school-districts}}
 
 
 
 The GeoRDD analysis can be repeated for each pair of adjacent districts.
-Figure~\ref{fig:NYC_pairwise} and Table~\ref{table:NYC_pairwise} give an overview of the results by showing the posterior mean and standard deviation of the inverse variance ATE estimated at each border.
+\autoref{fig:NYC_pairwise} and \autoref{table:NYC_pairwise} give an overview of the results by showing the posterior mean and standard deviation of the inverse variance ATE estimated at each border.
 Significant effects are found between many districts, but interpreting the results requires some caution.
 We have already mentioned the issue of compound treatments for borders between school districts that overlap with the border between boroughs.
 School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 are in Queens.
@@ -518,7 +452,7 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
 
 \begin{figure}[tbp]
     \centering
-    \includegraphics[width=\textwidth,height=0.7\textheight,keepaspectratio]{../NYC/NYC_plots/pairwise_mean_se.png}
+    \includegraphics[width=\textwidth,height=0.8\textheight,keepaspectratio]{../NYC/NYC_plots/pairwise_mean_se.png}
     \caption{\label{fig:NYC_pairwise}
         Pairwise estimates of the inverse variance ATE between adjacent districts.
         The thickness of the orange buffer adjacent to borders is proportional to the posterior mean of the inverse variance ATE, and the blue buffer beyond it is proportional to the posterior standard deviation of the ATE.
@@ -528,12 +462,8 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
 Some school districts are separated by parks (or other non-residential zones), for example districts 15 \& 17 or 19 \& 24, so that house sales do not extend all the way to the border on one or both sides.
 A significant treatment effect between these pairs cannot be interpreted as the detection of a discontinuity in prices at the border, let alone any kind of causal interpretation, but rather it means that the difference in prices between the two sides of the park exceeds the typical spatial variation of house prices expected over the same distance.
 This is not unsurprising, and one may speculate that physical barriers like parks, rivers, railways and major roads can separate neighborhoods with distinct character, demographics and thus house prices.
-This in turn challenges the stationarity assumption of the spatial model \eqref{eq:spec2gp}.
+This in turn challenges the stationarity assumption of the spatial model \autoref*{M-eq:spec2gp}.
 The higher distance between data and the border also stretches the spatial model's ability to extrapolate, which makes it more vulnerable to model misspecification.
-And it violates the assumptions
-
-
-
 
 Other pairs of district, like 13 \& 14, 13 \& 17, and 25 \& 28 have clusters of missing data (condo sales with unknown square footage) near the border that cast doubt on the interpretation of the estimated effect.
 Nonetheless, significant effects are also found between pairs of school districts without issues due to compound treatments, physical barriers, or missing data.
@@ -542,54 +472,15 @@ Overall, it seems that school district borders in Brooklyn and Queens can corres
 The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 20\% price increase from 29 to 26, or 22\% from 18 to 17.
 
 
-\hypertarget{spatial-confounding-of-1d-rdd-applied-to-geordd}{%
-\section{Spatial Confounding of 1D RDD Applied to GeoRDD}\label{spatial-confounding-of-1d-rdd-applied-to-geordd}}
-
-
-
-\label{sec:confounding}
-
-
-
-Analysing GeoRDDs by using the signed distance from the border as a forcing variable in a 1D~RDD can lead to spatial confounding.
-We demonstrate this with a simple artificial example, depicted in Figure~\ref{fig:confounding}.
-
-
-
-\begin{figure}[tbp]
-    \centering
-    \includegraphics[height=0.35\textheight]{figures/confounding/confounding.png}
-    \caption{A theoretical example illustrating the susceptibility of the projected 1D~RDD method to spatial confounding. The locations of treatment and control units are shown with circles and crosses respectively, separated by a border at \(s_2 = 0\). Units are denser in the upper left and lower right quadrants. The treatment effect, depicted as a gradient from blue to red, increases linearly with \(s_1\). \label{fig:confounding}}
-\end{figure}
-
-
-
-Suppose we have units in a 2D square, with spatial coordinates \(\svec_1 \in [-1,1]\), and \(\svec_2 \in [-1,1]\), and with a horizontal border at \(s_2=0\) separating a treatment region from a control region.
-Let us assume the null hypothesis, with outcomes driven only by \(\svec_1\) (parallel to the border), given by \(Y_{i} = \alpha \svec_{1i} + \epsilon_i\),
-where \(\epsilon_i\) is an iid noise term \(\epsilon_i \sim \normal\del{0, \sigman^2}\).
-Lastly, let us consider the situation where the density \(\rho(\svec)\) of units is different in each quadrant of the square:
-\begin{equation}
-    \begin{aligned}
-        \rho(\svec) = 2\rho_0 & \text{, where }\svec_1 < 0,~\svec_2 > 0 & \text{ (top left)} \\
-        \rho(\svec) = \rho_0 & \text{, where }\svec_1 > 0,~\svec_2 > 0 & \text{ (top right)} \\
-        \rho(\svec) = 2\rho_0 & \text{, where }\svec_1 > 0,~\svec_2 < 0 & \text{ (bottom right)}  \\
-        \rho(\svec) = \rho_0 & \text{, where }\svec_1 < 0,~\svec_2 < 0 & \text{ (bottom left)}
-    \end{aligned}
-\end{equation}
-The projection RDD then considers a 1D RDD along \(s_2\).
-The usual RDD estimand \eqref{eq:rdd_univ_estimand} can be obtained analytically, and equals \(\tau=\frac{-\alpha}{3}\), despite assuming the null hypothesis.
-This is because \(s_1\) acts as a hidden confounder, whose distribution changes discontinuously at the border, which leads to bias and inconsistency in the projected 1D~RDD estimate.
-In geographical settings, a discontinuous change in the density of units at the border is not unusual: for example a border could run alongside a park, or a small body of water, therefore with zero population density on one side of the border.
-A visual inspection of Figure \ref{fig:sales_map} showing the locations of units in a New York City property sales dataset reveals many examples of this.
-
 %%% TABLES %%%
 
 \newgeometry{margin=2cm} % modify this if you need even more space
 \begin{landscape}
 
-    \hypertarget{tables}{%
-    \section{Tables}\label{tables}}
-    \label{sec:tables}
+\hypertarget{tables}{%
+\section{Tables}
+\label{sec:tables}
+}
 
     \begin{table}[!h]
         \begin{tabular}{r|rrrrrrrrrrrr}
@@ -611,10 +502,11 @@ A visual inspection of Figure \ref{fig:sales_map} showing the locations of units
             1000     & 0.35 (0.18) & 0.26    & 1.15 (0.09) & 1.15   & 0.35 (0.18) & 0.26   & 1.24 (0.10) & 1.23    & 0.95 (0.13) & 0.92   & 1.12 (0.10) & 1.11 
             \\    \hline
         \end{tabular}
-        \caption{\textbf{Wiggly Border Simulation Results} Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each average treatment effect estimand as the wiggliness of the border is increased in the simulations of Section~\ref{sec:wiggly_border}.}
+        \caption{\textbf{Wiggly Border Simulation Results} Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each average treatment effect estimand as the wiggliness of the border is increased in the simulations of \autoref{sec:wiggly_border}.}
     \end{table}
 
     \begin{table}[!h]
+        \footnotesize
         \begin{tabular}{r|lllllll}
             \hline
             \( \mathbf{13} \)& \( \mathbf{14:}~-0.29 \pm 0.09 \)& \( \mathbf{15:}~+0.03 \pm 0.07 \)& \( \mathbf{16:}~-0.13 \pm 0.07 \)& \( \mathbf{17:}~-0.26 \pm 0.08 \)\\ 
@@ -639,13 +531,16 @@ A visual inspection of Figure \ref{fig:sales_map} showing the locations of units
             \hline
         \end{tabular}
         \caption{
+            \label{table:NYC_pairwise}
             \textbf{Estimated Treatment Effects Between Adjacent NYC School Districts}
             Posterior inverse variance ATE ($\pm$ posterior standard deviation) for pairs of school districts in NYC.
             Each row gives the posterior (mean $\pm$ standard deviation) of the inverse-variance ATEs for one district (row header) compared to its neighbors.
             For example the first cell indicates an estimated average change difference log house prices per square foot going from district 13 to 14 of -0.29.
         }
-        \label{table:NYC_pairwise}
     \end{table}\end{landscape}
     \restoregeometry
+
+\bibliographystyle{chicago}
+\bibliography{GeoRDD}
 
 \end{document}
