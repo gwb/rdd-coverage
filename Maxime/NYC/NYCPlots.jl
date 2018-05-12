@@ -247,7 +247,6 @@ module NYCPlots
                     zorder=11)
         _xlim = (0.98e6, 1.06e6)
         _ylim = (1.5e5, 2.2e5)
-        fig[:set_size_inches](7.0,5.0)
         plt.plot(
             missing_sqft[:XCoord], 
             missing_sqft[:YCoord], 
