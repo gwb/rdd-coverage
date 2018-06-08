@@ -9,9 +9,8 @@ import LibGEOS: LineString, MultiLineString
 import GeoInterface
 
 # type conversion
-const BorderType = Union{MultiLineString, LineString}
-BorderType(ls::GeoInterface.LineString) = LineString(ls)
-BorderType(ls::GeoInterface.MultiLineString) = MultiLineString(ls)
+border_type(ls::GeoInterface.LineString) = LineString(ls)
+border_type(ls::GeoInterface.MultiLineString) = MultiLineString(ls)
 
 const SchDistr = Int
 const RegionType = Union{GeoInterface.AbstractPolygon,
@@ -37,7 +36,7 @@ function read_borders()
         schdist1 = f.properties["SchoolDistrict1"]
         schdist2 = f.properties["SchoolDistrict2"]
         border = f.geometry
-        borders_dict[schdist1,schdist2] = BorderType(border)
+        borders_dict[schdist1,schdist2] = border_type(border)
     end
     return borders_dict
 end
@@ -73,7 +72,7 @@ function read_processed_sales()
                    types=Dict("TAX CLASS AT PRESENT" => Union{Missings.Missing, String},
                               "TAX CLASS AT TIME OF SALE" => Union{Missings.Missing, String}),
                    weakrefstrings=false,
-                   nullable=true,
+                   allowmissing=:all,
                    )
     nyc_schdistrs = NYC_sales[:SchDistr]
     schd_strings = [ismissing(sd)?missing:dec(sd,2) for sd in  nyc_schdistrs]
@@ -88,7 +87,7 @@ function read_processed_sales()
         "TAX CLASS AT TIME OF SALE",
         "NEIGHBORHOOD",
         ])
-    sort!(NYC_sales; cols=:SchDistr)
+    sort!(NYC_sales, :SchDistr)
     return NYC_sales
 end
 
@@ -191,48 +190,52 @@ function filter_sales(NYC_sales::DataFrame)
 
     NYC_sales[:logSalePricePerSQFT] = map(log, NYC_sales[SALE_PRICE]) .- map(log, NYC_sales[SQFT])
     believable = zeros(Bool, size(NYC_sales,1))
-    removed=zeros(Int, 12)
+    removed_reason = Dict(
+        :residential => 0,
+        :noprice => 0,
+        :nosqft => 0,
+        :geocode => 0,
+        :toosmall => 0,
+        :outlier => 0,
+       )
     for i in 1:size(NYC_sales,1)
-        if ismissing(NYC_sales[i,SALE_PRICE])
-            # remove sales without a sale price
-            removed[1] += 1
-        elseif ismissing(NYC_sales[i,:SchDistr])
-            # remove properties without a school district
-            removed[2] += 1
-        elseif ismissing(NYC_sales[i,BUILDING_CLASS_AT_TIME_OF_SALE])
+        if ismissing(NYC_sales[i,BUILDING_CLASS_AT_TIME_OF_SALE])
             # remove sales with missing covariates
-            removed[3] += 1
+            removed_reason[:residential] += 1
         elseif ismissing(NYC_sales[i,BUILDING_CLASS_CATEGORY])
             # remove sales with missing covariates
-            removed[4] += 1
+            removed_reason[:residential] += 1
         elseif !DWELLINGS_DICT[NYC_sales[i,BUILDING_CLASS_CATEGORY]]
             # remove non-residential properties
             # in fact, remove things that aren't dwellings (houses?)
-            removed[5] += 1
-        elseif ismissing(NYC_sales[i,BUILDING_CLASS_CATEGORY])
-            # remove sales with missing covariates
-            removed[6] += 1
-        elseif ismissing(NYC_sales[i,TAX_CLASS_AT_TIME_OF_SALE])
-            # remove sales with missing covariates
-            removed[7] += 1
+            removed_reason[:residential] += 1
+        elseif ismissing(NYC_sales[i,SALE_PRICE])
+            # remove sales without a sale price
+            removed_reason[:noprice] += 1
         elseif ismissing(NYC_sales[i,SQFT])
             # remove sales with missing GROSS SQUARE FEET information
-            removed[8] += 1
-        elseif NYC_sales[i,SQFT]<100.0
-            # remove properties smaller to 100sqft (seems unlikely to be real)
-            removed[9] += 1
-        elseif NYC_sales[i,:logSalePricePerSQFT] < 3.0
-            # that's too cheap (remove outliers)
-            removed[10] += 1
-        elseif NYC_sales[i,:logSalePricePerSQFT] > 8.0
-            # that's too expensive (remove outliers)
-            removed[11] += 1
+            removed_reason[:nosqft] += 1
         elseif ismissing(NYC_sales[i,:XCoord])
             # remove properties with failed geocoding
-            removed[12] += 1
+            removed_reason[:geocode] += 1
         elseif ismissing(NYC_sales[i,:YCoord])
             # remove properties with failed geocoding
-            removed[13] += 1
+            removed_reason[:geocode] += 1
+        elseif ismissing(NYC_sales[i,:SchDistr])
+            # remove properties without a school district
+            removed_reason[:geocode] += 1
+        # elseif ismissing(NYC_sales[i,TAX_CLASS_AT_TIME_OF_SALE])
+            # # remove sales with missing covariates
+            # removed_reason[7] += 1
+        elseif NYC_sales[i,SQFT]<100.0
+            # remove properties smaller to 100sqft (seems unlikely to be real)
+            removed_reason[:toosmall] += 1
+        elseif NYC_sales[i,:logSalePricePerSQFT] < 3.0
+            # that's too cheap (remove outliers)
+            removed_reason[:outlier] += 1
+        elseif NYC_sales[i,:logSalePricePerSQFT] > 8.0
+            # that's too expensive (remove outliers)
+            removed_reason[:outlier] += 1
         else
             # otherwise keep
             believable[i] = true
@@ -243,7 +246,7 @@ function filter_sales(NYC_sales::DataFrame)
     return Dict(
         :filtered => filtered,
         :believable => believable,
-        :removed => removed,
+        :removed_reason => removed_reason,
         )
 end
 
