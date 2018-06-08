@@ -24,7 +24,7 @@ type MultiGPCovars{MT<:Mean, KT1<:Kernel, KT2<:Kernel}
     alpha::Vector{Float64}  # (k + obsNoise)⁻¹y
     mll::Float64            # Marginal log-likelihood
     dmll::Vector{Float64}   # Gradient marginal log-likelihood
-    function MultiGPCovars(D::Array{Float64,2}, 
+    function MultiGPCovars{MT,KT1,KT2}(D::Array{Float64,2}, 
         y::Vector{Float64},
         mgp::MultiGP, 
         p::Int,
@@ -34,7 +34,7 @@ type MultiGPCovars{MT<:Mean, KT1<:Kernel, KT2<:Kernel}
         m::MT,
         k::KT1,
         βkern::KT2
-        )
+        ) where {MT<:Mean, KT1<:Kernel, KT2<:Kernel}
         βdata=KernelData(βkern, D')
         mgpcv = new(D, y, mgp, p, dim, nobsv, logNoise, m, k, βkern, βdata)
         initialise_mll!(mgpcv)
