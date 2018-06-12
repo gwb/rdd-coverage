@@ -101,16 +101,16 @@ A visual inspection of \autoref*{M-fig:sales_map} showing the locations of units
 
 \section{Characterizing and Estimating the Average Treatment Effect}
 
-In the paper, we presented and characterized four choices of average treatment effect (ATE) estimands (and corresponding estimators): the uniformly-weighted $\unifavg$, population-weighted $\taurho$, inverse-weighted $\invvar$, and finite population projected $\tauproj$.
+In the paper, we presented and characterized four choices of local average treatment effect (LATE) estimands (and corresponding estimators): the uniformly-weighted $\unifavg$, population-weighted $\taurho$, inverse-weighted $\invvar$, and finite population projected $\tauproj$.
 We here present two other estimands of interest not directly presented in the paper, which extend the projection population idea of $\tauproj$ to superpopulations.
 We then compare all the estimators in a simulated demonstration to illustrated their differences.
 
-\subsection{Projected Land ATE}
+\subsection{Projected Land LATE}
 In certain applications, population-based estimands can be undesirable, especially if the locations at which measurements are made are not representative of the population of interest.
 In such cases, geography-weighted estimands can be more natural.
 See \cite{antonelli2016positive} for a discussion of this distinction in the context of preferential sampling.
 Remember that the ``geometry-based'' estimand \(\unifavg\) places uniform weights along the border.
-Instead, the ``geography-based'' projected land ATE estimand \(\taugeo\), illustrated in \autoref{fig:mississippi_projection_methods}(b), begins by placing uniform weights on the treatment and control areas \(\area_\treat\) and \(\area_\ctrol\) that are within distance \(\buffer\) of the border \(\border\), but then projects them onto the border to derive border weights.
+Instead, the ``geography-based'' projected land LATE estimand \(\taugeo\), illustrated in \autoref{fig:mississippi_projection_methods}(b), begins by placing uniform weights on the treatment and control areas \(\area_\treat\) and \(\area_\ctrol\) that are within distance \(\buffer\) of the border \(\border\), but then projects them onto the border to derive border weights.
 In other words, the projection method from \(\tauproj\) is applied to an infinite population of uniform density on both sides of the border, instead of the finite population of observed units.
 
 We denote the border vicinity area by \(\area_\buffer\), defined as all points \(\svec\) such that \(\svec \in {\area_\treat \cup \area_\ctrol}\), and \(\dist_{\border}\del{\svec} < \buffer\).
@@ -130,20 +130,20 @@ For certain applications, it may be desirable to further restrict \(\area_\buffe
 However, it is important to note that \(\taugeo\) is never interpretable as the average treatment effect in the vicinity of the border, that is \(\taugeo \neq \int_{\area_\buffer} \tau(\svec) \dif \svec\).
 Estimating the latter estimand would require predicting the conditional regression function at grid locations within the treatment or control region using only observations on the \emph{other} side of the border, which increases the extent of extrapolation required and thus makes the analysis more vulnerable to model misspecification.
 
-\subsection{Projected Super-Population ATE}
+\subsection{Projected Super-Population LATE}
 
 \begin{figure}[tbp]
     \centering
     \includegraphics[width=\textwidth]{../figures/mississippi_projection_methods.png}
     \caption{\label{fig:mississippi_projection_methods}
-        Illustration of (a) projected finite-population ATE \(\tauproj\), and (b) projected land ATE \(\taugeo\), using the border separating Mississippi and Louisiana near Baton Rouge, with units at the centroid of each county.
+        Illustration of (a) projected finite-population LATE \(\tauproj\), and (b) projected land LATE \(\taugeo\), using the border separating Mississippi and Louisiana near Baton Rouge, with units at the centroid of each county.
         The border vicinity \(\area_\buffer\) is defined as all land within \(\buffer=50\,\mathrm{km}\) of the border.
-    With both methods, every projected sentinel has equal weight in the ATE, but the tight grid in (b) causes sentinels to coincide or nearly coincide, which we depict by scaling up the size of the marker by the number of coinciding sentinels.}
+    With both methods, every projected sentinel has equal weight in the LATE, but the tight grid in (b) causes sentinels to coincide or nearly coincide, which we depict by scaling up the size of the marker by the number of coinciding sentinels.}
 \end{figure}
 
 The purely geographical estimand \(\taugeo\) can be modified by weighting the grid points \(\grid_l\), \(l=1,\dotsc,L_\buffer\) by the population density \(\rho\del{\grid_l}\).
-This gives the projected superpopulation ATE \(\taupop\).
-Similarly to the density-weighted ATE \(\taurho\), estimating \(\taupop\) requires an estimate of the density \(\rho\del{\grid_l}\) at every grid point.
+This gives the projected superpopulation LATE \(\taupop\).
+Similarly to the density-weighted LATE \(\taurho\), estimating \(\taupop\) requires an estimate of the density \(\rho\del{\grid_l}\) at every grid point.
 As before, the uncertainty in the estimate of \(\rho\) should in principle be propagated to the estimate of \(\taupop\), which generally will make the posterior distribution of \(\taupop\) neither normal nor analytically tractable.
 
 The estimand \(\taupop\) can be interpreted as giving equal weight to each unit in the superpopulation of units within the border vicinity \(\area_\buffer\), but then moving each unit from its original location to its nearest location along the border, where the GeoRDD setting allows for the estimation of the treatment effect without undue extrapolation, and finally averaging the treatment effect of each unit in this displaced superpopulation.
@@ -157,11 +157,11 @@ The estimand \(\taupop\) can be interpreted as giving equal weight to each unit 
 \begin{figure}[tbp]
 \centering
 \includegraphics[height=0.35\textheight]{../figures/wiggly_boundaries_setup.png}
-\caption{\label{fig:wiggly_boundaries_setup}Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population ATE are shown in light gray.}
+\caption{\label{fig:wiggly_boundaries_setup}Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population LATE are shown in light gray.}
 \end{figure}
     
 
-We illustrate all of our ATE estimators with a simulation.
+We illustrate all of our LATE estimators with a simulation.
 200 units are placed in a square area delimited by spatial coordinates \(\svec_1 \in \cbr{0,2}\) and \(\svec_2 \in \cbr{-1, 1}\).
 A border at \(\svec_2=0\) divides units vertically into a control and treatment region,
 which are then further divided horizontally at \(\svec_1=0.5\) and \(\svec_1=1.5\) into three bands:
@@ -202,7 +202,7 @@ To units above the border we add a treatment effect \(\tau(\svec_1, \svec_2) = \
 
         We fit the Gaussian process model \autoref*{M-eq:spec2gp},
 using the known hyperparameters of the covariance kernel and a weak prior on the mean parameter of each region,
-and estimate the average treatment effect using the six methods proposed above.
+and estimate the LATE using the six methods proposed above.
 In \autoref{fig:wiggly_boundaries_posteriors}(a) we show, for each estimator, the corresponding estimand and average posterior mean estimate evolving as the number of border wiggles increases.
 The behavior of the posterior standard deviation is shown in \autoref{fig:wiggly_boundaries_posteriors}(b).
 The simulations results can also be found in \autoref{table:wiggly_results}.
@@ -210,7 +210,7 @@ The simulations results can also be found in \autoref{table:wiggly_results}.
 \begin{figure}[!tb]
 \centering
 \includegraphics[height=0.6\textheight]{../figures/wiggly_boundaries_posteriors.png}
-\caption{\label{fig:wiggly_boundaries_posteriors} Results of the simulations of \autoref{sec:wiggly_border}, showing for each ATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.}
+\caption{\label{fig:wiggly_boundaries_posteriors} Results of the simulations of \autoref{sec:wiggly_border}, showing for each LATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.}
 \end{figure}
     
 As the border is a straight line and \(\treatarea\) and \(\ctrolarea\) are rectangles,
@@ -218,14 +218,14 @@ and as the treatment effect does not depend on the vertical axis \(\svec_2\),
 the density-weighted estimand \(\taurho\) equals the projected superpopulation estimand \(\taupop\),
 and they are in fact both equal to the infinite-population average treatment effect.
 Correspondingly, the posteriors of \(\taurho\) and \(\taupop\) are identical.
-With 200 units, \(\taupop\) and the finite-population projected ATE \(\tauproj\) are also similar, but the latter has the advantage of not require estimating the population density.
+With 200 units, \(\taupop\) and the finite-population projected LATE \(\tauproj\) are also similar, but the latter has the advantage of not require estimating the population density.
 
-The geometry- and geography-based ATE \(\unifavg\) and \(\taugeo\) are also equivalent when the border is a straight line.
+The geometry- and geography-based LATE \(\unifavg\) and \(\taugeo\) are also equivalent when the border is a straight line.
 They give equal weight to the sparsely populated middle band, which produces a lower estimate with higher variance than the posteriors of \(\taurho\) and \(\taupop\).
 
 Lastly, the information-based inverse-variance estimand \(\invvar\) does not coincide with any others.
 The estimand and mean estimate change slightly from 0 to 1 wiggles, but remains stable thereafter, demonstrating the robustness of this estimator to border topology.
-Weighting by the inverse variance gives the lowest posterior variance within the class of ATEs under consideration, which can indeed be seen in \autoref{fig:wiggly_boundaries_posteriors}(b).
+Weighting by the inverse variance gives the lowest posterior variance within the class of LATEs under consideration, which can indeed be seen in \autoref{fig:wiggly_boundaries_posteriors}(b).
 
 As we introduce wiggles into the leftmost band,
 \(\taurho\) and \(\unifavg\) show their susceptibility to the border topology.
@@ -282,8 +282,8 @@ Consequently, any trend in the outcomes across \(\svec_1\) would confound the es
 \section{Alternate Tests for Non-Zero Treatment Effect}
 \label{sec:alternate_tests}
 
-In our main paper, we present the calibrated inverse-variance test, which targets the weak null hypothesis of zero ATE.
-It can be generalized to any other choice of ATE estimand defined as a weighted mean over the border, as in \autoref{M-eq:weighted_estimand}.
+In our main paper, we present the calibrated inverse-variance test, which targets the weak null hypothesis of zero LATE.
+It can be generalized to any other choice of LATE estimand defined as a weighted mean over the border, as in \autoref{M-eq:weighted_estimand}.
 Tests of the sharp null hypothesis, that is $\tau(\sentinel)=0$ for all $\sentinel \in \border$, are also of interest, and we present two such tests in this section.
 We provide a simulation comparing the power of the three tests when the treatment effect is constant, and apply each test to the NYC school district application of the main paper.
 We advocate for the use of the calibrated inverse-variance test in most situations, as it has demonstrated higher power and robustness to model misspecification than the sharp null tests.
@@ -457,7 +457,7 @@ The high power and robustness of the inverse-variance test make a strong case fo
 
 
 The GeoRDD analysis can be repeated for each pair of adjacent districts.
-\autoref{fig:NYC_pairwise} and \autoref{table:NYC_pairwise} give an overview of the results by showing the posterior mean and standard deviation of the inverse variance ATE estimated at each border.
+\autoref{fig:NYC_pairwise} and \autoref{table:NYC_pairwise} give an overview of the results by showing the posterior mean and standard deviation of the inverse variance LATE estimated at each border.
 Significant effects are found between many districts, but interpreting the results requires some caution.
 We have already mentioned the issue of compound treatments for borders between school districts that overlap with the border between boroughs.
 School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 are in Queens.
@@ -467,8 +467,8 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
     \centering
     \includegraphics[width=0.97\textwidth,height=0.8\textheight,keepaspectratio]{../NYC/NYC_plots/pairwise_mean_se.png}
     \caption{\label{fig:NYC_pairwise}
-        Pairwise estimates of the inverse variance ATE between adjacent districts.
-        The thickness of the orange buffer adjacent to borders is proportional to the posterior mean of the inverse variance ATE, and the blue buffer beyond it is proportional to the posterior standard deviation of the ATE.
+        Pairwise estimates of the inverse variance LATE between adjacent districts.
+        The thickness of the orange buffer adjacent to borders is proportional to the posterior mean of the inverse variance LATE, and the blue buffer beyond it is proportional to the posterior standard deviation of the LATE.
     The buffers are drawn on the side of the border that is estimated to have higher house prices.}
 \end{figure}
 
@@ -515,7 +515,7 @@ The estimated size of this effect varies: zero or negligible in some cases, such
         \end{tabular}
         \caption{
             \textbf{Wiggly Border Simulation Results.} 
-            Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each average treatment effect estimand as the wiggliness of the border is increased in the simulations of \autoref{sec:wiggly_border}.
+            Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each LATE estimand as the wiggliness of the border is increased in the simulations of \autoref{sec:wiggly_border}.
             \label{table:wiggly_results}
             }
     \end{table}
@@ -548,7 +548,7 @@ The estimated size of this effect varies: zero or negligible in some cases, such
         \caption{
             \label{table:NYC_pairwise}
             \textbf{Estimated Treatment Effects Between Adjacent NYC School Districts.}
-            Each row gives the posterior (mean $\pm$ standard deviation) of the inverse-variance ATEs for one district (row header) compared to its neighbors.
+            Each row gives the posterior (mean $\pm$ standard deviation) of the inverse-variance LATEs for one district (row header) compared to its neighbors.
             For example the first cell indicates an estimated average change in log house prices per square foot of -0.29 when crossing the border from district 13 to 14.
         }
     \end{table}\end{landscape}

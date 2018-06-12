@@ -42,7 +42,7 @@
     More recently, situations with multiple forcing variables have garnered interest.
     When these variables are spatial covariates---that is, when a treatment is applied to a region but not its neighbor---the resulting natural experiment is termed a geographic regression discontinuity design (GeoRDD).
     In this paper, we propose a general framework for analysing GeoRDDs, which we implement using Gaussian process regression.
-    We address multiple nuances of having a functional estimand defined on a border with potentially intricate topology, particularly when defining and estimating causal estimands of the average treatment effect, and when testing for non-zero treatment effects.
+    We address multiple nuances of having a functional estimand defined on a border with potentially intricate topology, particularly when defining and estimating causal estimands of the local average treatment effect, and when testing for non-zero treatment effects.
     Finally, we use our methodology on a dataset of property sales in New York City,
     and show evidence of a discontinuity in house prices between some pairs of neighboring school districts.
 \end{abstract}
@@ -115,12 +115,12 @@ See \cite{banerjee2014hierarchical} for a textbook introduction to kriging for s
 In \autoref{sec:geordd_model}, we use GPR to estimate the treatment effect along the border by extending the model of \cite{Branson:2017qy} to geographical settings.
 A peculiarity of GeoRDDs is that the estimand is a function defined everywhere along the border, which is a one-dimensional manifold embedded in two-dimensional space.
 Furthermore, geographical borders, whether they be political or natural, are rarely simple straight lines.
-The topology of borders complicates the definition and interpretation of estimands for the average treatment effect (ATE), which we address in \autoref{sec:ate}.
-We obtain Bayesian estimators for multiple possible ATE estimands and discuss their properties.
+The topology of borders complicates the definition and interpretation of estimands for the local average treatment effect (LATE), which we address in \autoref{sec:ate}.
+We obtain Bayesian estimators for multiple possible LATE estimands and discuss their properties.
 In \autoref{sec:hypothesis_testing} we turn to hypothesis testing, and propose a method to test against the null hypothesis of no treatment effect along the border.
 
 In \autoref{sec:NYC_example}, we apply our methodology to a publicly available dataset of property sales in NYC to determine whether school districts affect property prices.
-Focusing on a single border between two school districs, we estimate the treatment effect everywhere along the border, obtain estimates of the ATE, and perform and validate a hypothesis test.
+Focusing on a single border between two school districs, we estimate the treatment effect everywhere along the border, obtain estimates of the LATE, and perform and validate a hypothesis test.
 We find a statistically significant difference in price across the border with a \(p\)-value of 0.002, and estimate that the same house located near the border will on average fetch an almost 20\% higher price in district 27 than in district 19.
 However, this effect can not be attributed solely to the reputation of the school district, as this border also separates the boroughs of Brooklyn and Queens, thus confounding the causal effect of the districts.
 
@@ -296,7 +296,7 @@ This is an approximation, as it ignores the uncertainty in the estimate of \(\be
 \section{Estimating the Average Treatment Effect}
 \label{sec:ate}
 
-Once we have obtained the posterior of \(\tau\) \eqref{eq:postvar2gp}, estimating the average treatment effect (ATE) along the border will often be of interest.
+Once we have obtained the posterior of \(\tau\) \eqref{eq:postvar2gp}, estimating the local average treatment effect (LATE) along the border will often be of interest.
 We consider the class of weighted means of the functional treatment effect \(\tau\del{\sentinel}\),
 with weight function \(\weightb(\sentinel)\) defined everywhere on the border \(\border\).
 The weighted mean integral can be approximated as a weighted sum at the sentinels \(\sentinels\):
@@ -349,13 +349,13 @@ for treatment and control units respectively.
 
 The question remains: what is the most appropriate choice of weights?
 We next motivate and consider four possible choices of \(\weightb(\sentinel)\), and explore interpretations, advantages, and drawbacks. 
-In the Supplementary Materials, we discuss two further choices, the projected land ATE \(\taugeo\), and the projected superpopulation ATE \(\taupop\).
-We also provide a simulation study to better understand the characteristics of the different ATE choices.
+In the Supplementary Materials, we discuss two further choices, the projected land LATE \(\taugeo\), and the projected superpopulation LATE \(\taupop\).
+We also provide a simulation study to better understand the characteristics of the different LATE choices.
 A summary of their properties is provided in \autoref{table:estimator_properties}.
 
-\subsection{Uniform ATE}
+\subsection{Uniform LATE}
 The simplest choice is uniform weights \(\weightb(\sentinel)=1\), a seemingly reasonable and unopinionated decision.
-The uniformly weighted ATE \(\unifavg\) is estimated by averaging the entries of the mean posterior at the sentinels.
+The uniformly weighted LATE \(\unifavg\) is estimated by averaging the entries of the mean posterior at the sentinels.
 Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
 \begin{equation}\begin{split}
     &\unifavg = \oint_\border \tau(\sentinel) \dif\sentinel
@@ -370,7 +370,7 @@ Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
 The uniformly weighted estimand takes on a geometric interpretation: equal-length segments of the border are given equal weight.
 Unfortunately, uniform weights suffer from several issues that we describe and address in \autoref{sec:tau_rho} and \autoref{sec:invvar}.
 
-\subsection{Density Weighted ATE}
+\subsection{Density Weighted LATE}
 \label{sec:tau_rho}
 
 With uniform border weights, parts of the border adjoining dense populations are given equal weights to those in sparsely populated areas.
@@ -404,10 +404,10 @@ See \autoref*{S-sec:wiggly_border} of the Supplementary Materials for a simulati
 % Troublingly, the sinuousness of the border therefore determines the estimand, even though the outcomes of interest will generally have nothing to do with river topologies.
 % TODO: fill gap
 In population terms, the result is that units near wigglier segments receive more weight.
-Worse, the resolution of the border map used for the analysis affects the estimated ATE.
+Worse, the resolution of the border map used for the analysis affects the estimated LATE.
 
 
-\subsection{Inverse-variance Weighted ATE}
+\subsection{Inverse-variance Weighted LATE}
 \label{sec:invvar}
 
 % \begin{figure}[tbp]
@@ -444,8 +444,8 @@ This is counter to the conventional approach in causal inference, that the estim
 While perhaps unorthodox, analogous ``estimands of convenience'' have been proposed in other settings, for example matching methods that exclude some unmatched units from the analysis \citep[discussed in][]{crump2009dealing}, or in the context of balancing treatment and control populations with little overlap in their covariate distributions \citep{li2016balancing}.
 The classical RDD could be said to provide another example, as the estimand \autoref{eq:rdd_univ_estimand} focuses on the treatment effect near the threshold not because those units are of particular substantive interest, but because the available data restricts estimation of the treatment effect elsewhere.
 
-\subsection{Projected Finite-Population ATE}
-All average treatment effect estimators considered so far presuppose evenly spaced sentinel points, which are then given weights.
+\subsection{Projected Finite-Population LATE}
+All LATE estimators considered so far presuppose evenly spaced sentinel points, which are then given weights.
 Alternatively, we can project the positions of treatment and control units that are within a distance \(\buffer\) of the border onto the border, and use those projected unit locations without weights (see \autoref*{S-fig:mississippi_projection_methods} of the Supplementary Materials for an illustration).
 For any point \(\svec\), we use the notation \(\proj_{\border}\del{\svec}\) to give the coordinates of the point on the border \(\border\) that is closest to \(\svec\) (assuming uniqueness), and \(\dist_{\border}\del{\svec}\) for the distance between the point and the border.
 Let \(\vicinity{\svec} = \allowbreak \Ind\cbr{\dist_{\border}\del{\svec} \le \buffer} \) indicate inclusion in the border vicinity.
@@ -513,9 +513,9 @@ It should be noted that this choice only affects the location and density of pro
 \subsection{Summary}
 \label{sec:summary}
 
-The properties of the four ATE definitions proposed in this paper are summarized in \autoref{table:estimator_properties}.
+The properties of the four LATE definitions proposed in this paper, and two additional choices presented in the Supplementary Materials, are summarized in \autoref{table:estimator_properties}.
 In most applications, we recommend the use of the finite population or inverse-variance-weighted estimators, to prevent the undesirable influence of border topology.
-The projected finite population method is simplest to understand and interpret in the tradition of finite population estimators, and unlike the density weighted ATE \(\taurho\) it does not require estimating population density.
+The projected finite population method is simplest to understand and interpret in the tradition of finite population estimators, and unlike the density weighted LATE \(\taurho\) it does not require estimating population density.
 Meanwhile, the inverse-variance estimator is the most efficient (lowest posterior variance) weighted mean estimator,
 and sidesteps the choice of a distance cutoff for projected units.
 
@@ -531,27 +531,27 @@ and sidesteps the choice of a distance cutoff for projected units.
         \(\taurho\)  & Density-weighted      & Sensitive & Equispaced      & Population  & Low      \\
         \(\invvar\)  & Inverse-var. weighted & Robust    & Equispaced      & Information & Lowest   \\
         \(\tauproj\) & Projected finite pop. & Robust    & Projected       & Finite pop. & Low      \\
-        \(\taugeo\)  & Proj. land ATE        & Robust    & Proj. Grid  & Geography   & High     \\
-        \(\taupop\)  & Proj. superpop. ATE   & Robust    & Proj. Grid  & Population  & Low \\
+        \(\taugeo\)  & Proj. land            & Robust    & Proj. Grid  & Geography   & High     \\
+        \(\taupop\)  & Proj. superpop.       & Robust    & Proj. Grid  & Population  & Low \\
         \hline
     \end{tabular}
     \egroup
     \caption{
     \label{table:estimator_properties}
-    Summary of average treatment effect estimator and estimand properties.}
+    Summary of local average treatment effect estimator and estimand properties.}
 \end{table}
 
 \section{Testing for Non-Zero Effect}
 \label{sec:hypothesis_testing}
-Once we have obtained the ``cliff face'' estimate \autoref{eq:postvar2gp} and estimated an average treatment effect, we might also naturally wonder whether we can claim to have detected a significant treatment effect at the border.
+Once we have obtained the ``cliff face'' estimate \autoref{eq:postvar2gp} and estimated a LATE, we might also naturally wonder whether we can claim to have detected a significant treatment effect at the border.
 In the hypothesis testing framework, we have two possible choices of null hypotheses.
 The sharp null specifies that the treatment effect is zero everywhere along the border:
 \(\tau(\sentinel)=0\) for all \(\sentinel \in \border\).
-Meanwhile, the weak null only requires the ATE to be zero.
+Meanwhile, the weak null only requires the LATE to be zero.
 We focus on a test of the weak null hypothesis here, but also provide two tests of the sharp null hypothesis based on the marginal liklihood and a chi-squared statistic in \autoref*{S-sec:alternate_tests} of the Supplementary Materials.
 We found through simulations and in our applied example that the test presented in this paper has superior power and robustness to model misspecification, and therefore recommend its use.
 
-As we saw in \autoref{sec:ate}, the ATE estimand can be defined in multiple ways.
+As we saw in \autoref{sec:ate}, the LATE estimand can be defined in multiple ways.
 If we choose the inverse-variance weighted mean, then \(\invvar\) has posterior given by \autoref{eq:invvar}.
 While the posterior is a Bayesian object, we can use it heuristically to derive a pseudo-\(p\)-value:
 \begin{equation}
@@ -587,7 +587,7 @@ as a single Gaussian process spanning the control and treatment regions,
 with the same kernel and hyperparameters values obtained through the procedure of \autoref{sec:inference}.
 \(\modnull\) is smooth and continuous at the border,
 and therefore accords with both the sharp and weak null hypotheses.
-We now choose the posterior mean of the inverse-variance ATE \(\mu_{\invvar \mid Y}\) as a test statistic.
+We now choose the posterior mean of the inverse-variance LATE \(\mu_{\invvar \mid Y}\) as a test statistic.
 For \(b=1,\dotsc,B\) iterations, we draw \(Y^{(b)}\) from \(\modnull\),
 using the same spatial locations as the original data,
 and compute \(\mu_{\invvar \mid Y^{(b)}}\) according to \autoref{eq:invvar} applied to the simulated data rather than the true data.
@@ -610,9 +610,9 @@ The proportion of \(\mu_{\invvar \mid Y^{(b)}}\) with absolute value greater tha
 Computationally, because the hyperparameters and locations of the units are held constant during the bootstrap, we can reuse the Cholesky decomposition of the covariance matrix, allowing the test to be performed in seconds even with hundreds of units and thousands of bootstrap samples.
 
 The calibration can also be achieved analytically, since \(\mu_{\invvar \mid Y}\) is normally distributed under the null hypothesis.
-We derive the analytical calibration of hypothesis tests based on any ATE estimand in \autoref{sec:calibration}.
+We derive the analytical calibration of hypothesis tests based on any LATE estimand in \autoref{sec:calibration}.
 Note that the \(p\)-value for this test is derived under the parametric null model \(\modnull\), which accords with both the sharp null and weak null hypotheses, but is not the only possible model that satisfies the weak null.
-The calibrated inverse-variance test “targets” the weak null hypothesis in the sense that the test statistic is an estimate of the ATE, and thus the test is sensitive to deviations of the ATE from zero, rather than its \(p\)-value being derived directly under the weak null (such as the classical \(t\)-test).
+The calibrated inverse-variance test “targets” the weak null hypothesis in the sense that the test statistic is an estimate of the LATE, and thus the test is sensitive to deviations of the LATE from zero, rather than its \(p\)-value being derived directly under the weak null (such as the classical \(t\)-test).
 
 \label{eq:calib_test}
 
@@ -743,10 +743,10 @@ However, the credible envelope is fairly wide, especially in the southern sectio
 
 \subsection{Average Log-Price Increase}
 The cliff face \autoref{fig:NYC_cliff_face} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
-Our two recommended estimators, based on inverse-variance weighting and finite-population projection, yield ATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
+Our two recommended estimators, based on inverse-variance weighting and finite-population projection, yield LATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
 By contrast, treating each district and building class as a fixed effect in an ordinary least squares (OLS) model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East-West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
-All ATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
+All LATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
 In this example the different estimators yield similar answers, as the border is fairly straight and short relative to the fitted lengthscale.
 
 
@@ -767,7 +767,7 @@ In this example the different estimators yield similar answers, as the border is
     \end{tabular}
     \caption{
     \label{table:NYC_ate}
-Average difference in log price per square foot between school districts 19 and 27. For each ATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr(\tau > 0 \mid Y, \hat{\beta}, \hyperparam)\) of the average treatment being greater than zero. Negative ATEs correspond to district 27 being more expensive.}
+Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr(\tau > 0 \mid Y, \hat{\beta}, \hyperparam)\) of the LATE being greater than zero. Negative LATEs correspond to district 27 being more expensive.}
 \end{table}
 
 \subsection{Significant Difference in Price?}
@@ -810,14 +810,14 @@ In this paper, we emphasize the importance of the geographical aspect of the pro
 We used Gaussian process regression, known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step (1) of our general framework.
 Our approach yields a multivariate normal posterior distribution of the treatment effect for a collection of ``sentinel'' locations along the border.
 
-Defining an ``average treatment effect'' estimand turns out to have surprising pitfalls.
+Defining a LATE estimand turns out to have surprising pitfalls.
 Simply integrating the treatment effect uniformly along the border yields an estimand that is inefficient and undesirably sensitive to the topology of the border.
 More sophisticated estimands, summarized in \autoref{table:estimator_properties}, are robust to this effect, and use the information available in the data more efficiently.
 
-% We recommend the use of the calibrated inverse-variance test, derived from the posterior distribution of the inverse-variance ATE estimator.
+% We recommend the use of the calibrated inverse-variance test, derived from the posterior distribution of the inverse-variance LATE estimator.
 % It has generally high statistical power and behaved well in placebo tests in the NYC application.
-To test against the null hypothesis of zero treatment effect along the border, we develop a test based on the posterior distribution of the average treatment effect.
-We use the inverse-variance weighted ATE to attain high power, but the other ATE estimates of \autoref{sec:ate} could be used similarly.
+To test against the null hypothesis of zero treatment effect along the border, we develop a test based on the posterior distribution of the LATE.
+We use the inverse-variance weighted LATE to attain high power, but the other LATE estimates of \autoref{sec:ate} could be used similarly.
 To ensure good frequentist properties we “calibrate” the test, obtaining its distribution under the null model, either using a parametric bootstrap or analytically.
 
 We applied our method to a publicly available dataset of one year of New York City property sales, to examine whether school district cause difference in property prices.
@@ -850,7 +850,7 @@ This presents many opportunities for future research, inspired by the past and f
 In spatial statistics, kriging has been used as the foundation for a plethora of spatial models, which may be adapted for the purposes of analyzing GeoRDDs.
 \cite{banerjee2014hierarchical} provides a good introduction to the richness of the spatial statistics field.
 For example, if the outcomes are binary, proportions, or counts, then binomial or Poisson likelihoods could be substituted for the iid normal likelihood used in this paper.
-Besides ATE and hypothesis testing, another potential question is whether the treatment effects are homogenous or heterogeneous.
+Besides LATE estimation and hypothesis testing, another potential question is whether the treatment effects are homogenous or heterogeneous.
 Hypothesis tests of homogeneity would be an interesting possible extension of our framework.
 
 The framework and techniques of this paper could also be extended to spatio-temporal settings.
@@ -947,7 +947,7 @@ Conditionally on \(\betavec=\hat\betavec\), the residuals of the treatment and c
 \section{Calibration of Inverse-variance Test}
 \label{sec:calibration}
 
-We seek to obtain a valid hypothesis test against the null hypothesis of zero treatment effect everywhere along the border by using the inverse-variance weighted ATE estimate obtained in \autoref{sec:invvar} as a test statistic.
+We seek to obtain a valid hypothesis test against the null hypothesis of zero treatment effect everywhere along the border by using the inverse-variance weighted LATE estimate obtained in \autoref{sec:invvar} as a test statistic.
 
 
 
@@ -982,7 +982,7 @@ is yet another zero-mean multivariate normal with covariance given by:
         = \AT{} \STT \AT{}\trans + \AC{} \SCC \AC{}\trans - \AT{} \KTC \AC{}\trans -  \del{\AT{}\KTC \AC{}\trans}\trans \,.
 \end{equation}
 
-Weighted mean ATE estimators of the form defined in \autoref{eq:weighted_estimator} are linear transformations of \(\mu_{\sentinels \mid Y}\) and so under \(\modnull\), they are normally distributed with mean zero.
+Weighted LATE estimators of the form defined in \autoref{eq:weighted_estimator} are linear transformations of \(\mu_{\sentinels \mid Y}\) and so under \(\modnull\), they are normally distributed with mean zero.
 For a weight function \(\weightb(\sentinel)\), its variance is given by
 \begin{equation}
         \var\del{\mu_{\tauw \mid Y} \mid \modnull} = \cov\del{ \frac{\weightb(\sentinels)\trans \mu_{\sentinels \mid Y}}{ \weightb(\sentinels)\trans\ones_{\numsent}}}
@@ -990,7 +990,7 @@ For a weight function \(\weightb(\sentinel)\), its variance is given by
         \,.
 \end{equation}
 
-The \(p\)-value follows from treating the ATE estimate as a test statistic.
+The \(p\)-value follows from treating the LATE estimate as a test statistic.
 Under the null hypothesis, the probability of \(\mu_{\tauw \mid Y}\) exceeding in magnitude its observed value \(\mu_{\tauw \mid Y^{obs}}\) is:
 \begin{equation}
     \Pr\del{ \abs{\mu_{\tauw \mid Y}} \ge \abs{\mu_{\tauw \mid Y^{obs}}} \mid \modnull} = 2 \Phi\del{ -\abs{\mu_{\tauw \mid Y^{obs}}} \big/ {\sqrt{\var({\mu_{\tauw \mid Y} \mid \modnull})}} }\,.
