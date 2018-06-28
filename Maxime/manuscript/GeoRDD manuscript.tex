@@ -37,14 +37,14 @@
     % \author{\vspace{-3em}}
 % } \fi
 \begin{abstract}
-    Regression discontinuity designs (RDDs) are natural experiments characterized by the treatment assignment being fully determined by covariates.
-    Most research has focused on one-dimensional cases, where units with a ``forcing'' variable lying on one side of a threshold value receive a treatment that the rest do not receive.
-    More recently, situations with multiple forcing variables have garnered interest.
-    When these variables are spatial covariates---that is, when a treatment is applied to a region but not its neighbor---the resulting natural experiment is termed a geographic regression discontinuity design (GeoRDD).
-    In this paper, we propose a general framework for analysing GeoRDDs, which we implement using Gaussian process regression.
-    We address multiple nuances of having a functional estimand defined on a border with potentially intricate topology, particularly when defining and estimating causal estimands of the local average treatment effect, and when testing for non-zero treatment effects.
-    Finally, we use our methodology on a dataset of property sales in New York City,
-    and show evidence of a discontinuity in house prices between some pairs of neighboring school districts.
+    Most research on regression discontinuity designs (RDDs) has focused on one-dimensional cases, where units with a ``forcing'' variable on one side of a threshold value receive a treatment that the rest do not receive.
+    Geographical regression designs (GeoRDDs) extend the RDD concept to multivariate settings where the forcing variables are spatial---that is, when a treatment is applied inside a region but not a neighboring region.
+    We propose a general framework for analysing GeoRDDs, which we implement using Gaussian process regression.
+    We address multiple nuances of having a functional estimand defined on a border with potentially intricate topology, particularly when defining and estimating causal estimands of the local average treatment effect (LATE).
+    The Bayesian estimate of the LATE can also be used as test statistic
+    in a hypothesis testing procedure with good frequentist properties.
+    We demonstrate our methodology with a dataset of property sales in New York City,
+    and show evidence of a difference in house prices at the border between some neighboring school districts.
 \end{abstract}
 
 \noindent%
@@ -54,9 +54,12 @@
 
 \section{Introduction}\label{introduction}
 
-The theory and methods for regression discontinuity designs (RDDs) date from the 1960s, starting with \cite{thistlethwaite1960regression}.
+Regression discontinuity designs (RDDs) are natural experiments characterized by the treatment assignment being fully determined by covariates.
+A typical RDD scenario is that units (e.g. students) that fall below a certain threshold (e.g. test score) are given a treatment (e.g. a remedial program) that units above the threshold do not receive.
+Treatment assignment and outcomes (e.g. test scores after attending the program) are of course confounded, but by focusing on units at the border, a treatment effect can be estimated.
+The theory and methods for RDDs date from the 1960s, starting with \cite{thistlethwaite1960regression}.
 \cite{cook2008waiting} trace the history of how interest in RDDs subsequently waned, until the late 1990s when the design saw renewed attention, theoretical progress, and popularity in the social sciences.
-In particular, beginning with \cite{papay2011extending}, methods have been recently developed to analyse RDDs with multiple forcing variables.
+More recently, beginning with \cite{papay2011extending}, methods have been developed to analyse RDDs with multiple forcing variables.
 \cite{imbens2011regression} extend the local linear regression methods \citep[see][]{imbensrdd} that are popular for analysing RDDs with a single forcing variable (1D RDDs) to settings with multiple forcing variables.
 
 Geographical regression discontinuity designs (GeoRDDs) are such RDDs where the forcing variables are spatial,
@@ -64,26 +67,23 @@ meaning that units within a certain region are assigned to treatment, while unit
 For example, in \cite{macdonald2015effect}, a private police force patrols a neighborhood, but stays out of surrounding areas, and a causal effect on crime rates is sought.
 In \cite{chen2013evidence}, a policy applies south of the Huai River in China but not in the north, and pollution levels and life expectancies are measured to infer environmental and health impacts of the policy.
 In our application, we seek to estimate the effect of school districts on house prices in New York City.
+
 Practitioners often wish to use the well-established methods and software developed for 1D~RDDs for their spatial problem.
 It is therefore tempting to reduce a GeoRDD problem to a 1D~RDD by using the signed distance from the boundary (positive for treatment and negative for control) as the forcing variable, a method that we refer to as ``projected 1D~RDD,'' and which is used by both examples cited above.
 However, this method can fail to fully capture the spatial variation in the outcomes, resulting in spatial confoundedness of the estimator.
 We demonstrate this in a simple example in \autoref*{S-sec:confounding} of the Supplementary Materials.
 See also Section~4.2 of \cite{keele_titiunik_2015} for a discussion of this issue.
 
-
-
 A more principled treatment of the GeoRDD is offered by \cite{keele_titiunik_2015}, who build theoretical foundations for the analysis of GeoRDDs.
 They extend the identification assumptions that were formalized by \cite{hahn2001identification} for 1D~RDDs, and \cite{imbens2011regression} for multivariate RDDs, to GeoRDDs.
 The main requirement for identification of the treatment effect is continuity of the conditional regression functions near the border.
 Notably, this is violated if units can sort around the border, crossing the border to seek or avoid the treatment, a particular concern in GeoRDDs.
-\cite{keele_titiunik_2015} also discuss further pitfalls of GeoRDDs, such as the issue of compound treatments---when a geographical border determines the assignment of the treatment of interest, but also of other differences.
-
-
+\cite{keele_titiunik_2015} discuss further pitfalls of GeoRDDs, such as the issue of compound treatments---when a geographical border determines the assignment of the treatment of interest, but also of other differences.
 
 Several methods for estimating the treatment effect in GeoRDDs have been proposed.
 \cite{keele_titiunik_2015} and \cite{keeleoverview} estimate the treatment effect using a modification of the projected 1D~RDD method by applying it locally around each point along the border, thus alleviating the problem of spatial confounding.
 This is slightly different from the method of \cite{imbens2011regression} developed for multivariate regression discontinuities that are not necessarily geographical: they use a multivariate local linear regression to estimate the treatment effect at each boundary point, thus avoiding the need to specify a distance metric in the space of covariates.
-\cite{keele2015enhancing} propose an alternative methodology, deploying the matching methodology of \cite{zubizarreta2012using} to match units on opposite sides of the border that are near each other geographically and in other covariates, and then analysing the matched outcomes as if they came from a randomized experiment.
+\cite{keele2015enhancing} propose an alternative methodology: they deploy the matching algorithms of \cite{zubizarreta2012using} to match units on opposite sides of the border that are near each other geographically and in other covariates, and then analyze the matched outcomes as if they came from a randomized experiment.
 Their method requires the analyst to choose a ``buffer'' distance from the border, so that within this distance spatial variation can plausibly be assumed to be negligible, resulting in estimates that are robust to spatial confounding.
 
 \label{sec:framework}
