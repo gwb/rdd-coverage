@@ -66,20 +66,21 @@
 \newcommand{\building}{\mathtt{BuildClass}}
 \newcommand{\district}{\mathtt{Distr}}
 
-% \newcommand*{\trans}{^{\intercal}}
-\newcommand*{\trans}{^{\top}}
+\newcommand*{\trans}{^{\intercal}}
+% \newcommand*{\trans}{^{\top}}
+% \newcommand*{\trans}{^{\prime}}
 
 \newcommand*{\area}{\mathcal{A}}
-\newcommand*{\treat}{\mathrm{T}}
-\newcommand*{\ctrol}{\mathrm{C}}
+\newcommand*{\treat}{T}
+\newcommand*{\ctrol}{C}
 \newcommand*{\treatind}{Z}
-\newcommand*{\treatarea}{\area{}^{\treat}}
-\newcommand*{\ctrolarea}{\area{}^{\ctrol}}
+\newcommand*{\treatarea}{\area{}_{\treat}}
+\newcommand*{\ctrolarea}{\area{}_{\ctrol}}
 
 \newcommand*{\sigmaf}{\sigma_{\mathrm{GP}}}
 \newcommand*{\sigman}{\sigma_{\epsilon}}
 \newcommand*{\sigmabeta}{\sigma_{\beta}}
-\newcommand*{\sigmamu}{\sigma_{\mu}}
+\newcommand*{\sigmamu}{\sigma_{m}}
 \newcommand*{\svec}{\mathbold{s}}
 \newcommand*{\dvec}{\mathbold{d}}
 \newcommand*{\wvec}{\mathbold{w}}
@@ -132,7 +133,6 @@
 \newcommand*{\grid}{G^\gridres}
 \newcommand*{\Dmat}{\mathbold{D}}
 \newcommand*{\Kmat}{\mathbold{K}}
-\newcommand*{\Amat}{\mathbold{A}}
 \newcommand*{\Xmat}{\mathbold{X}}
 \newcommand*{\Wmat}{\mathbold{W}}
 \newcommand*{\SigmaMat}{\mathbold{\Sigma}}
@@ -144,8 +144,8 @@
 \newcommand*{\KTT}{\Kmat_{\treat \treat}}
 \newcommand*{\KCC}{\Kmat_{\ctrol \ctrol}}
 \newcommand*{\KTC}{\Kmat_{\treat \ctrol}}
-\newcommand*{\AT}{\Amat_{\treat}}
-\newcommand*{\AC}{\Amat_{\ctrol}}
+\newcommand*{\WT}{\Wmat_{\treat}}
+\newcommand*{\WC}{\Wmat_{\ctrol}}
 
 \geometry{tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
 \def\sectionautorefname{Section}

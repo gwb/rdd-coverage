@@ -127,18 +127,17 @@ However, this effect can not be attributed solely to the reputation of the schoo
 \section{GeoRDD Modeling with Gaussian processes}
 \label{sec:geordd_model}
 
-\subsection{GeoRDD Setup and Notation}
 We largely adopt the setup and notation for GeoRDDs laid out in \cite{keele_titiunik_2015}.
 The outcomes \(Y_i\) of \(n\) units with spatial coordinates \(\svec_i\) are observed within an area \(\area\) of 2-dimensional coordinate space.
 The units are separated into \(n_\treat\) treatment units in area \(\treatarea \subset \area\)
 and \(n_\ctrol\) units in the control area \(\ctrolarea\).
 The defining characteristic of GeoRDDs is that the two areas are adjacent but non-overlapping, intersecting only at the border \(\border\) between them.
 Throughout this paper, points on the border are denoted by \(\sentinel\).
-Under the potential outcomes framework for causal inference, each unit \(i\) has a potential outcomes \(Y_{i\treat}\) and \(Y_{i\ctrol}\), which represent the outcome under treatment and control respectively.
+Under the potential outcomes framework for causal inference, each unit \(i\) has potential outcomes \(Y_{i\treat}\) and \(Y_{i\ctrol}\) under treatment and control respectively.
 Let \(\treatind_i\) denote the treatment indicator, which is equal to one if unit \(i\) is in the treatment area, and zero if it is in the control area.
 Unlike traditional randomized experiments, treatment assignment is a deterministic function of a unit's geographical coordinates \(\svec_i\): \(\treatind_i = \Ind\cbr{\svec_i \in \treatarea}\).
 The observed outcome for unit \(i\) is \(Y_i = \treatind_i Y_{i\treat} + (1 - \treatind_i) Y_{i\ctrol}\).
-We denote the vector of observed outcomes of the treatment units and control units respectively by \(\yt\) and \(\yc\).
+We denote the vector of observed outcomes of the treatment units and control units respectively by \(\yt\) and \(\yc\), and \(\Yvec\) the vector formed by concatening \(\yt\) and \(\yc\).
 
 For 1D RDDs, because the treatment and control regions do not overlap, the treatment effect is typically only inferred at the threshold \(X=b\).
 As was already recognized by \cite{thistlethwaite1960regression}, this choice requires the least extrapolation of the fitted regression functions, which makes the estimated treatment more credible.
@@ -200,7 +199,7 @@ We expect that this assumption will be reasonable in many applications, but it c
 
 \subsection{Inference of the Treatment Effect}
 \label{sec:inference}
-If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
+If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu^2\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
 Given hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), any vector with entries consisting of observations, points on the potential outcomes surface \(f_{\treat}\) and \(f_{\ctrol}\), and the mean parameters \(m_{\ctrol}, m_{\treat}\) is jointly multivariate normal. Therefore the distribution of any such vector conditioned on another is also multivariate normal, with mean and covariances analytically tractable, and easily computed.
 
 In accordance with the framework laid out in \autoref{sec:framework}, we proceed by extrapolating both Gaussian processes to the border,
@@ -209,8 +208,8 @@ Computationally, we need to represent this border as a set \(\sentinels=\sentine
 The extrapolation step then follows mechanically through multivariate normal theory.
 On the treatment side, for example:
 \begin{equation}\begin{split}
-    & g_\treat{}(\sentinels) \mid \yt{}, \hyperparam \sim \normal\del{\mu_{\sentinels \mid T}, \Sigma_{\sentinels \mid T}} \,\text{, with} \\
-    & \mu_{\sentinels \mid T} =
+    & g_\treat{}(\sentinels) \mid \yt{}, \hyperparam \sim \normal\del{\muvec_{\sentinels \mid T}, \Sigma_{\sentinels \mid T}} \,\text{, with} \\
+    & \muvec_{\sentinels \mid T} =
     \KBT
     \STT^{-1} 
     \yt{} 
@@ -222,19 +221,17 @@ On the treatment side, for example:
 \end{equation}
 with all the covariance matrices derived from the model specification (see \autoref{sec:covariances}).
 Analogously, predictions for \(g_\ctrol{}(\sentinels)\) are obtained using the data in the control region,
-and their posterior mean and covariance denoted respectively by \(\mu_{\sentinels \mid C}\) and \(\Sigma_{\sentinels \mid C}\).
+and their posterior mean and covariance denoted respectively by \(\muvec_{\sentinels \mid C}\) and \(\Sigma_{\sentinels \mid C}\).
 Since the two surfaces are modeled as independent, the treatment effect \(\tau(\sentinels)=g_\treat{}(\sentinels)-g_\ctrol{}(\sentinels)\) has posterior
 \begin{equation}
     \begin{split}
-        & \tau(\sentinels) \mid Y, \hyperparam \sim \normal\del{\mu_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}} \,\text{, with}\\
-        & \mu_{\sentinels \mid Y} = \mu_{\sentinels \mid \treat} - \mu_{\sentinels \mid \ctrol} \quad\text{and}\quad
+        & \tau(\sentinels) \mid Y, \hyperparam \sim \normal\del{\muvec_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}} \,\text{, with}\\
+        & \muvec_{\sentinels \mid Y} = \muvec_{\sentinels \mid \treat} - \muvec_{\sentinels \mid \ctrol} \quad\text{and}\quad
         \Sigma_{\sentinels \mid Y} = \Sigma_{\sentinels \mid \treat} + \Sigma_{\sentinels \mid \ctrol} \,.
     \end{split}
     \label{eq:postvar2gp}
 \end{equation}
 The posterior mean and covariance of the ``cliff height'' \(\tau(\sentinels)\) are the primary output of our GeoRDD analysis, and we refer to \autoref{eq:postvar2gp} as the ``cliff face'' estimator.
-
-
 
 This leaves the choice of the hyperparameters: \(\hyperparam=\ell\), \(\sigmaf\), \(\sigman\), and \(\sigmamu\).
 For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak.
@@ -247,7 +244,7 @@ An alternative would be to also specify a prior on the hyperparameters, which wo
 
 The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on non-spatial covariates.
 The models are modified by the addition of the linear regression term \(\Dmat \betavec\) on the \(n \times p\) matrix of covariates \(\Dmat\), where \(p\) is the number of non-spatial covariates.
-We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigma_\beta^2 \Dmat \Dmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\), the vector of outcomes formed by concatening the treatment outcomes and the control outcomes.
+We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigma_\beta^2 \Dmat \Dmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\).
 Let \(\dvec_i\) be the \(p\)-vector of non-spatial covariates of unit \(i\).
 Our model becomes:
 \begin{equation}
@@ -264,7 +261,7 @@ Unfortunately, the linear term induces a covariance between the treatment and co
 The introduction of the linear term modifies the cliff face estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
 \begin{equation}
     \begin{split}
-        \mu_{\sentinels \mid Y, D} &= 
+        \muvec_{\sentinels \mid Y, D} &= 
         \begingroup\SmallColSep
         \begin{bmatrix}
             \KBT & -\KBC
@@ -290,7 +287,7 @@ The introduction of the linear term modifies the cliff face estimator \autoref{e
 \end{equation}
 To avoid the complexity caused by the correlation between \(\yt\) and \(\yc\) that the linear term induces, we suggest first obtaining an estimate \(\hat\betavec\) of the coefficients.
 We show how to obtain the posterior mean of \(\betavec\) in \autoref{sec:betahat}.
-We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\betavec\).
+We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\betavec=\hat\betavec\).
 This is an approximation, as it ignores the uncertainty in the estimate of \(\betavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
 
 \section{Estimating the Average Treatment Effect}
@@ -362,7 +359,7 @@ Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
         \ \big/ \ 
         \oint_\border \dif{\sentinel}  \,, \\
     &\unifavg \mid \yt, \yc, \hyperparam \sim \normal\del{\mu_{\unifavg \mid Y}, \Sigma_{\unifavg \mid Y}}\,\text{, with} \\
-    &\mu_{\unifavg \mid Y} = \del{\ones_{\numsent}\trans \mu_{\sentinels \mid Y}} / \numsent \quad\text{and}\quad
+    &\mu_{\unifavg \mid Y} = \del{\ones_{\numsent}\trans \muvec_{\sentinels \mid Y}} / \numsent \quad\text{and}\quad
     \Sigma_{\unifavg \mid Y} = \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y} \ones_{\numsent}} / \numsent^2 \,.
 \end{split}
 \label{eq:unifavg}
@@ -429,12 +426,12 @@ This motivates the inverse-variance weighted mean \(\invvar\):
 \begin{equation}
     \begin{split}
         & \left. \invvar \mid Y, \hyperparam \right. \sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} \,\text{, with} \\
-        & \mu_{\invvar \mid Y} = \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \mu_{\sentinels \mid Y}} \big/ \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}} \quad\text{and}\quad
+        & \mu_{\invvar \mid Y} = \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \muvec_{\sentinels \mid Y}} \big/ \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}} \quad\text{and}\quad
         \Sigma_{\invvar \mid Y} = 1 \big/ \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}} \,.
     \end{split}
     \label{eq:invvar}
 \end{equation}
-This estimator efficiently extracts the information from the posterior treatment effect, as it minimizes the posterior variance amongst weighted averages of the form \autoref{eq:weighted_estimand}.
+This estimator efficiently extracts the information from the posterior treatment effect, as it can be shown to minimize the posterior variance amongst weighted averages of the form \autoref{eq:weighted_estimand}.
 It automatically gives more weight to sentinels in dense areas (as the variance will be lower there), and to sentinels in straight sections of the border (as the correlations between sentinels will be lower).
 
 The estimand is still a weighted mean, with weights for the sentinels given by \(\weightb(\sentinels) = \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}\).
@@ -450,7 +447,7 @@ Alternatively, we can project the positions of treatment and control units that 
 For any point \(\svec\), we use the notation \(\proj_{\border}\del{\svec}\) to give the coordinates of the point on the border \(\border\) that is closest to \(\svec\) (assuming uniqueness), and \(\dist_{\border}\del{\svec}\) for the distance between the point and the border.
 Let \(\vicinity{\svec} = \allowbreak \Ind\cbr{\dist_{\border}\del{\svec} \le \buffer} \) indicate inclusion in the border vicinity.
 The projected finite-population \(\tauproj\) is then the uniformly weighted mean applied with the projected unit locations instead of the evenly spaced sentinels.
-We can therefore modify \autoref{eq:unifavg}, replacing the cliff face mean vector \(\mu_{\sentinels \mid Y}\)
+We can therefore modify \autoref{eq:unifavg}, replacing the cliff face mean vector \(\muvec_{\sentinels \mid Y}\)
 and covariance matrix \(\Sigma_{\sentinels \mid Y}\)
 with their equivalents obtained at the projected unit locations,
 to obtain the posterior mean and covariance of \(\tauproj\):
@@ -673,11 +670,11 @@ This model can be written:
 \begin{equation}
     \begin{split}
         Y_i &= % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
-        \mu_{\district\sbr{i}} + \beta_{\building\sbr{i}}
+        m_{\district\sbr{i}} + \beta_{\building\sbr{i}}
         + f_{\district\sbr{i}}(\svec_i) + \epsilon_i \,,
         \\
         \epsilon_i &\sim \normal\del{0, \sigma_y^2} \,, \\
-        \mu_{j} &\sim \normal\del{0, \sigmamu^2},\,j=1,\dotsc,J_\district \,, \\
+        m_{j} &\sim \normal\del{0, \sigmamu^2},\,j=1,\dotsc,J_\district \,, \\
         f_j &\sim \GP\del{0, k(\svec, \svec')},\,j=1,\dotsc,J_\district \,, \\
         \beta_{l} &\sim \normal\del{0, \sigma_\beta^2},\,l=1,\dotsc,L_\building \,, \\
         k(\svec, \svec') &= \sigmaf^2 \exp\cbr{ - \frac{(\svec-\svec')\trans(\svec-\svec')}{2\ell^2}} \,.
@@ -707,11 +704,11 @@ Since it is not captured by the available covariates, this added value is folded
     \caption{\label{fig:NYC_histogram}Histogram of log sale prices per square foot of houses sold in NYC school districts 19 and 27.}
 \end{figure}
 
-The histogram in \autoref{fig:NYC_histogram} of outcomes \(Y\) in both districts also shows that marginally the house prices are very different.
+The histogram in \autoref{fig:NYC_histogram} of outcomes \(Y\) in both districts shows that marginally the house prices are very different.
 Our goal is to establish whether this difference is measurable at the border, and not merely an underlying trend that spans both districts.
 
 We fit the hyperparameters \(\sigma_\beta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
-We hold \(\sigmamu\) fixed to 20 to give the district means \(\mu_j\) a fairly uninformative prior.
+We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
 The fitted hyperparameters were \(\widehat{\sigman}=0.4020\), \(\widehat{\sigmaf}=0.1955\), \(\widehat{\sigma_\beta}=0.1465\), and \(\widehat{\ell}=4482~\text{ft}\).
 
 \subsection{Cliff Face Estimator}
@@ -737,7 +734,7 @@ We therefore proceed with this two-step approach.
     The northernmost sentinel (shown as a blue circle in both plots) has index 1, while the last sentinels (shown in yellow) is on Rulers Bar Hassock.}
 \end{figure}
 
-Following the inference procedure outlined in \autoref{sec:twogp}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at the sentinel locations.
+Following the inference procedure outlined in \autoref{sec:twogp}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at $R=100$ sentinel locations evenly spaced along the border.
 The cliff face is shown in \autoref{fig:NYC_cliff_face}, and shows that \(\tau\) is estimated as negative everywhere along the border, which corresponds to higher property prices in district 27.
 However, the credible envelope is fairly wide, especially in the southern section of the border, so we cannot visually rule out the null hypothesis that \(\tau=0\).
 
@@ -836,7 +833,7 @@ We believe care must therefore be taken not to lean heavily on modeling assumpti
 In particular, we recommend that hypothesis tests always be accompanied by placebo tests:
 by applying the same procedure with arbitrary borders where no treatment was applied, we can verify that the test behaves appropriately under the null hypothesis, despite any potential model misspecification.
 We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and in particular we chose the squared exponential kernel.
-This kernel makes smoothness assumptions that are often considered unrealistic in spatial settings, and so the Matérn covariance family is often recommended as a more robust alternative.
+This kernel makes smoothness assumptions that are often considered unrealistic in spatial settings, and so the Mat\'ern covariance family is often recommended as a more robust alternative.
 The assumption of equal covariance parameters in the two areas can also be relaxed, by separately tuning the parameters within each area.
 
 Because of the need to extrapolate the fitted processes a short distance to the border, our GeoRDD method may be vulnerable to the limitations of Gaussian processes when extrapolating.
@@ -845,7 +842,7 @@ We expect that methodological advances that improve the extrapolating behavior o
 For example, \cite{wilson2013gaussian} develop spectral mixture (SM) covariance kernels with good extrapolating behavior, which could be applied beneficially to GeoRDDs.
 However, SM kernels are motivated by time series with some periodic or oscillatory behavior, which is more unusual in spatial applications, and may therefore not be as well-suited for use with GeoRDDs.
 
-The use of Gaussian process regression to analyse GeoRDDs gives flexibility and extensibility to the method.
+The use of GPR to analyse GeoRDDs gives flexibility and extensibility to the method.
 This presents many opportunities for future research, inspired by the past and future development of methods in spatial statistics and machine learning that are based on Gaussian processes.
 In spatial statistics, kriging has been used as the foundation for a plethora of spatial models, which may be adapted for the purposes of analyzing GeoRDDs.
 \cite{banerjee2014hierarchical} provides a good introduction to the richness of the spatial statistics field.
@@ -884,7 +881,7 @@ We further define some shorthand notation, found in \autoref{table:notation}.
 \begin{table}[tbp]
     \centering
     \bgroup
-    \def\arraystretch{1.1}%  1 is the default, change whatever you need
+    \def\arraystretch{1.2}%  1 is the default, change whatever you need
     \begin{tabular}{lll}
         \hline
         Symbol & Size                       & \(ij^{\mathrm{th}}\) entry                                                      \\ \hline
@@ -907,7 +904,7 @@ We further define some shorthand notation, found in \autoref{table:notation}.
 \section{Estimating Linear Regression Coefficients}
 \label{sec:betahat}
 
-We present the posterior mean of the linear regression coefficients vector \(\betavec\) for the model specified in \autoref{eq:covariates_model}. \(\Yvec\) is the vector of outcomes formed by concatening the treatment outcomes and the control outcomes.
+We present the posterior mean of the linear regression coefficients vector \(\betavec\) for the model specified in \autoref{eq:covariates_model}.
 \begin{equation}
     \begin{split}
         % \Yvec &= \begin{pmatrix}
@@ -949,44 +946,42 @@ Conditionally on \(\betavec=\hat\betavec\), the residuals of the treatment and c
 
 We seek to obtain a valid hypothesis test against the null hypothesis of zero treatment effect everywhere along the border by using the inverse-variance weighted LATE estimate obtained in \autoref{sec:invvar} as a test statistic.
 
-
-
-Under the parametric null hypothesis \(\modnull\), \(\yt{}\) and \(\yc{}\) are drawn from a single Gaussian process, with no discontinuity at the border.
+Under the parametric null hypothesis \(\modnull\), \(\yt\) and \(\yc\) are drawn from a single Gaussian process, with no discontinuity at the border.
 Their joint covariance is
 \begin{equation}
-\cov \del{\begin{pmatrix}\yt{} \\ \yc{}\end{pmatrix} \mid \modnull } 
+\cov \del{\begin{pmatrix}\yt \\ \yc\end{pmatrix} \mid \modnull } 
     = \begin{bmatrix}
         \STT & \KTC \\
         \KTC \trans & \SCC
     \end{bmatrix}\,,
 \end{equation}
 where \(\KTC\) is the \(n_\treat \times n_\ctrol\) matrix with \(ij^{\mathrm{th}}\) entry equal to \(k\del{\svec_{i\treat},\svec_{j\ctrol}}\).
-The predicted mean outcomes \autoref{eq:postvar2gp_t_or_c} at the sentinels \(\mu_{\sentinels \mid T}\) and \(\mu_{\sentinels \mid T}\) are obtained by left-multiplying \(\yt{}\) and \(\yc{}\) by matrices \(\AT{}\) and \(\AC{}\) (respectively) that are deterministic functions of the unit locations and the hyperparameters:
+The predicted mean outcomes \autoref{eq:postvar2gp_t_or_c} at the sentinels \(\muvec_{\sentinels \mid T}\) and \(\muvec_{\sentinels \mid T}\) are obtained by left-multiplying \(\yt\) and \(\yc\) by matrices \(\WT\) and \(\WC\) (respectively) that are deterministic functions of the unit locations and the hyperparameters:
 \begin{equation}
-    \AT = \KBT \STT^{-1} \quad\text{and}\quad
-    \AC = \KBC \SCC^{-1}\,.
+    \WT = \KBT \STT^{-1} \quad\text{and}\quad
+    \WC = \KBC \SCC^{-1}\,.
 \end{equation}
 
-Under \(\modnull\), the joint distribution of \(\mu_{\sentinels \mid T}\) and \(\mu_{\sentinels \mid T}\) is consequently also multivariate normal with mean zero and covariance given by:
+Under \(\modnull\), the joint distribution of \(\muvec_{\sentinels \mid T}\) and \(\muvec_{\sentinels \mid T}\) is consequently also multivariate normal with mean zero and covariance given by:
 \begin{equation}
-\cov \del{\begin{pmatrix}\AT{} \yt{} \\ \AC{} \yc{} \end{pmatrix} \mid \modnull } = \begin{bmatrix}
-    \AT{} \STT \AT{}\trans & \AT{} \KTC \AC{}\trans \\
-    \del{\AT{} \KTC \AC{} \trans}\trans & \AC{} \SCC \AC{}\trans
+\cov \del{\begin{pmatrix}\WT \yt \\ \WC \yc \end{pmatrix} \mid \modnull } = \begin{bmatrix}
+    \WT \STT       \WT\trans & \WT \KTC \WC\trans \\
+    \WC \KTC\trans \WT\trans & \WC \SCC \WC\trans
 \end{bmatrix}\,.
 \end{equation}
-Continuing in this fashion, the cliff-face \autoref{eq:postvar2gp} estimate 
-\(\mu_{\sentinels \mid Y} = \AT{} \yt{} - \AC{} \yc{}\)
+Continuing in this fashion, the cliff face \autoref{eq:postvar2gp} estimate 
+\(\muvec_{\sentinels \mid Y} = \WT \yt - \WC \yc\)
 is yet another zero-mean multivariate normal with covariance given by:
 \begin{equation}
-        \cov \del{\mu_{\sentinels \mid Y} \mid \modnull} 
-        = \AT{} \STT \AT{}\trans + \AC{} \SCC \AC{}\trans - \AT{} \KTC \AC{}\trans -  \del{\AT{}\KTC \AC{}\trans}\trans \,.
+        \cov \del{\muvec_{\sentinels \mid Y} \mid \modnull} 
+        = \WT \STT \WT\trans + \WC \SCC \WC\trans - \WT \KTC \WC\trans -  \WC\KTC\trans\WT\trans \,.
 \end{equation}
 
-Weighted LATE estimators of the form defined in \autoref{eq:weighted_estimator} are linear transformations of \(\mu_{\sentinels \mid Y}\) and so under \(\modnull\), they are normally distributed with mean zero.
-For a weight function \(\weightb(\sentinel)\), its variance is given by
+Weighted LATE estimators of the form defined in \autoref{eq:weighted_estimator} are linear transformations of \(\muvec_{\sentinels \mid Y}\) and so under \(\modnull\), they are normally distributed with mean zero.
+For a given weight function \(\weightb\), its variance is given by
 \begin{equation}
-        \var\del{\mu_{\tauw \mid Y} \mid \modnull} = \cov\del{ \frac{\weightb(\sentinels)\trans \mu_{\sentinels \mid Y}}{ \weightb(\sentinels)\trans\ones_{\numsent}}}
-        = \frac{\weightb(\sentinels) \trans \cov \del{\mu_{\sentinels \mid Y}} \weightb(\sentinels)}{\del{ \weightb(\sentinels)\trans\ones_{\numsent}}^2}
+        \var\del{\mu_{\tauw \mid Y} \mid \modnull} = \cov\del{ \frac{\weightb(\sentinels)\trans \muvec_{\sentinels \mid Y}}{ \weightb(\sentinels)\trans\ones_{\numsent}}}
+        = \frac{\weightb(\sentinels) \trans \cov \del{\muvec_{\sentinels \mid Y}} \weightb(\sentinels)}{\del{ \weightb(\sentinels)\trans\ones_{\numsent}}^2}
         \,.
 \end{equation}
 
