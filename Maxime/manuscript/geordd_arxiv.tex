@@ -1,0 +1,82 @@
+\documentclass[12pt]{article}
+
+\newcommand{\georddtitle}{
+    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
+    Do School Districts Affect NYC House Prices?
+}
+\input{preamble.tex}
+\usepackage{authblk}
+\newcommand{\autorefexternal}[1]{\autoref{#1}}
+
+\begin{document}
+\singlespacing
+
+
+\title{
+    \LARGE
+    \bf
+    \georddtitle
+}
+\author[a]{Maxime Rischard
+	\thanks{
+		This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.
+	}
+}
+\author[a]{Zach Branson}
+\author[b]{Luke Miratrix}
+\author[c]{Luke Bornn}
+\affil[a]{Department of Statistics, Harvard University}
+\affil[b]{Graduate School of Education, Harvard University}
+\affil[c]{Simon Fraser University}
+\maketitle
+
+\begin{abstract}
+    Most research on regression discontinuity designs (RDDs) has focused on univariate cases, where only those units with a ``forcing'' variable on one side of a threshold value receive a treatment.
+    Geographical regression discontinuity designs (GeoRDDs) extend the RDD to multivariate settings with spatial forcing variables.
+    We propose a framework for analysing GeoRDDs, which we implement using Gaussian process regression. 
+    This yields a Bayesian posterior distribution of the treatment effect at every point along the border.
+    We address nuances of having a functional estimand defined on a border with potentially intricate topology, particularly when defining and estimating causal estimands of the local average treatment effect (LATE).
+    The Bayesian estimate of the LATE can also be used as a test statistic
+    in a hypothesis test with good frequentist properties, 
+    which we validate using simulations and placebo tests.
+    We demonstrate our methodology with a dataset of property sales in New York City,
+    to assess whether there is a discontinuity in housing prices at the border between two school district.
+    We find a statistically significant difference in price across the border between the districts with \(p\)=0.002, and estimate a 20\%  higher price on average for a house on the more desirable side.
+\end{abstract}
+
+\noindent%
+{\it Keywords}: \georddkeywords
+\vfill
+\newpage
+
+\input{geordd_raw}
+
+%%%%%%%%%% Merge with supplemental materials %%%%%%%%%%
+% https://tex.stackexchange.com/questions/168169/options-for-supplementary-materials-in-preprint-version-revtex-arxiv#169606
+\pagebreak
+\begin{center}
+\phantomsection
+	\addcontentsline{toc}{section}{Supplementary Materials}
+% \addcontentsline{toc}{section}{
+	\bf
+	\LARGE
+	Supplementary Materials: A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
+    Do School Districts Affect NYC House Prices?
+	
+% }
+\end{center}
+%%%%%%%%%% Merge with supplemental materials %%%%%%%%%%
+%%%%%%%%%% Prefix a "S" to all equations, figures, tables and reset the counter %%%%%%%%%%
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{section}{0}
+\newcommand{\sprefix}{S-}
+\renewcommand{\theequation}{\sprefix\arabic{equation}}
+\renewcommand{\thesection}{\sprefix\arabic{section}}
+\renewcommand{\thefigure}{\sprefix\arabic{figure}}
+\renewcommand{\thetable}{\sprefix\arabic{table}}
+
+\input{supplementary_raw.tex}
+
+\end{document}
