@@ -91,7 +91,7 @@ Estimating the latter estimand would require predicting the conditional regressi
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=\textwidth]{../figures/mississippi_projection_methods.png}
+    \includegraphics[width=\textwidth]{figures/mississippi_projection_methods.png}
     \caption{
 		\label{fig:mississippi_projection_methods}
         Illustration of (a) projected finite-population LATE \(\tauproj\), and (b) projected land LATE \(\taugeo\), using the border separating Mississippi and Louisiana near Baton Rouge, with units at the centroid of each county.
@@ -121,7 +121,7 @@ The resulting weight function is:
 
 \begin{figure}[tb]
 \centering
-\includegraphics[height=0.35\textheight]{../figures/wiggly_boundaries_setup.png}
+\includegraphics[height=0.35\textheight]{figures/wiggly_boundaries_setup.png}
 \caption{
 	\label{fig:wiggly_boundaries_setup}
 	Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population LATE are shown in light gray.}
@@ -179,7 +179,7 @@ The simulations results can also be found in \autoref{table:wiggly_results}.
 
 \begin{figure}[!tb]
 	\centering
-	\includegraphics[height=0.6\textheight]{../figures/wiggly_boundaries_posteriors.png}
+	\includegraphics[height=0.6\textheight]{figures/wiggly_boundaries_posteriors.png}
 	\caption{
 		\label{fig:wiggly_boundaries_posteriors}
 		Results of the simulations of \autoref{sec:wiggly_border}, showing for each LATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.
@@ -214,7 +214,7 @@ because the projected sentinels hardly move.
     
 \begin{figure}[ptb]
 \centering
-\includegraphics[width=\textwidth]{../figures/weight_functions.png}
+\includegraphics[width=\textwidth]{figures/weight_functions.png}
 \caption{
 	\label{fig:weight_functions}
 	Weight functions and induced weights on the observations for the six weight functions proposed in this paper. The weight function plots show the weight \(\weightb(\sentinel)\) against each sentinel's \(\svec_1\) coordinate. Sentinels with coinciding or nearly coinciding (within 0.005 of each other) coordinate \(\svec_1\) were merged and their weights summed. The induced weight plots show a circle for each unit, with the area of the circle proportional to its weight (\(\wt\) and \(\wc\) for treatment and control units respectively), and colored in blue for positive weights and orange for negative weights.}
@@ -362,7 +362,7 @@ regardless of the regularization.
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[height=0.4\textheight]{../figures/mississippi_sim.png}
+    \includegraphics[height=0.4\textheight]{figures/mississippi_sim.png}
     \caption{
 		\label{fig:mississippi_counties}
 		Set-up of the imaginary experiment in Louisiana and Mississippi. Each unit is at the centroid of a county. The colors indicated the observed outcomes in one draw of the simulation under \(\tau=1.5\). In this particular run, the \(p\)-values were 0.0016, 0.0018, and 0.0013 for the mLL, \(\chi^2\), and inverse-variance test respectively.}
@@ -440,7 +440,7 @@ There is in fact visible autocorrelation in the graphs of placebo \(p\)-values a
 
 \begin{figure}[tbp]
     \centering
-    \includegraphics[width=\textwidth]{../NYC/NYC_plots/NYC_placebos.png}
+    \includegraphics[width=\textwidth]{figures/NYC_placebos.png}
     \caption{
 		\label{fig:nyc_placebos}
 		Placebo tests for significance tests applied to NYC school district house prices, applied within districts 19 and 27. The three rows respectively show results for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo \(p\)-value as a function of the border angle; the second column shows histograms of the placebo \(p\)-values, with the black vertical line indicating the uniform distribution.
@@ -476,7 +476,7 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
 
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=0.97\textwidth,height=0.8\textheight,keepaspectratio]{../NYC/NYC_plots/pairwise_mean_se.png}
+    \includegraphics[width=0.97\textwidth,height=0.8\textheight,keepaspectratio]{figures/pairwise_mean_se.png}
     \caption{
 		\label{fig:NYC_pairwise}
         Pairwise estimates of the inverse variance LATE between adjacent districts.
