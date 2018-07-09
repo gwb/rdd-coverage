@@ -236,7 +236,7 @@ We show how to obtain the posterior mean of \(\betavec\) in \autoref{sec:betahat
 We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\betavec=\hat\betavec\).
 This is an approximation, as it ignores the uncertainty in the estimate of \(\betavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
 
-\section{Estimating the Average Treatment Effect}
+\section{Estimating the Local Average Treatment Effect}
 \label{sec:ate}
 
 Once we have obtained the posterior of \(\tau\) \eqref{eq:postvar2gp}, estimating the local average treatment effect (LATE) along the border will often be of interest.
@@ -292,7 +292,7 @@ for treatment and control units respectively.
 
 The question remains: what is the most appropriate choice of weights?
 We next motivate and consider four possible choices of \(\weightb(\sentinel)\), and explore interpretations, advantages, and drawbacks. 
-In the Supplementary Materials, we discuss two further choices, the projected land LATE \(\taugeo\), and the projected superpopulation LATE \(\taupop\).
+In \autorefexternal{sec:additional_late} of the Supplementary Materials, we discuss two further choices, the projected land LATE \(\taugeo\), and the projected superpopulation LATE \(\taupop\).
 We also provide a simulation study to better understand the characteristics of the different LATE choices.
 A summary of their properties is provided in \autoref{table:estimator_properties}.
 
@@ -340,14 +340,13 @@ If a section of the border has more twists and turns---for example if it follows
 The unweighted and density-weighted mean treatment estimands are both affected by this effect,
 which gives higher weight to wigglier sections of the border.
 See \autorefexternal{sec:wiggly_border} of the Supplementary Materials for a simulation demonstrating this susceptibility to border topology.
-% We illustrate this with the border separating two American States: Louisiana and Mississippi.
-% From North to South, the border follows the meandering Mississippi river, then takes a sharp turn to the East and becomes a straight line, until it meets the even more sinuous Pearl river, which it then follows until it reaches the Gulf of Mexico.
-% Sentinels placed at equal distance intervals along this border will therefore be more densely packed along the rivers, and sparsest along the straight segment (see \autoref{fig:mississippi_counts}).
-% When averaging a function over the border, those sections will therefore be overrepresented.
-% Troublingly, the sinuousness of the border therefore determines the estimand, even though the outcomes of interest will generally have nothing to do with river topologies.
-% TODO: fill gap
-In population terms, the result is that units near wigglier segments receive more weight.
-Worse, the resolution of the border map used for the analysis affects the estimated LATE.
+Consider, for illustration purposes, the border separating the two American states of Louisian and Mississippi, depicted in \autorefexternal{fig:mississippi_counties} of the Supplementary Materials.
+From North to South, it follows the meandering Mississippi river, then takes a sharp turn to the East and becomes a straight line, until it meets the even more sinuous Pearl river, which it follows until it reaches the Gulf of Mexico.
+Consequently, sentinels placed at equal distance intervals along this border will be more densely packed along the rivers, and sparsest along the straight segment.
+When averaging a function over the border, those sections become overrepresented.
+Troublingly, the sinuousness of the border therefore determines the estimand, even though the outcomes of interest will generally have nothing to do with river topologies.
+% In population terms, the result is that units near wigglier segments receive more weight.
+% Worse, the resolution of the border map used for the analysis affects the estimated LATE.
 
 
 \subsection{Inverse-variance Weighted LATE}
@@ -355,8 +354,8 @@ Worse, the resolution of the border map used for the analysis affects the estima
 
 % \begin{figure}[tbp]
     % \centering
-    % % \includegraphics{../figures/mississippi_counts.png}
-    % \includegraphics[height=0.5\textheight]{../figures/mississippi_counts.png}
+    % % \includegraphics{../figures/mississippi_counts.pdf}
+    % \includegraphics[height=0.5\textheight]{../figures/mississippi_counts.pdf}
     % \caption{\label{fig:mississippi_counts} 
         % Evenly spaced sentinels along the border between Mississippi and Louisiana.
         % From north to south, the border first follows the Mississippi river, becomes a straight line from west to east, and then follows the Pearl river.
@@ -364,8 +363,8 @@ Worse, the resolution of the border map used for the analysis affects the estima
     % }
 % \end{figure}
 
-This unwelcome dependence of the \(\unifavg\) estimand on the border topology is a symptom of the geometry of the problem: the border treatment effect function \(\tau\) is defined on a 1-dimensional manifold \(\border\), which itself is embedded in a Euclidean 2-dimensional space.
-The dependencies induced by this geometric fact are reflected in the covariance \(\Sigma_{\sentinels \mid Y}\): neighboring sentinels on a straight segment of the border will be less strongly correlated with each other than those on a sinuous segment.
+This unwelcome dependence of the \(\unifavg\) and \(\taurho\) estimands on the border topology is a symptom of the geometry of the GeoRDD: the border treatment effect function \autoref{eq:functional_estimand} is defined on a 1-dimensional manifold \(\border\), which itself is embedded in a Euclidean 2-dimensional space.
+The dependencies induced by this geometry are reflected in the covariance \(\Sigma_{\sentinels \mid Y}\): neighboring sentinels on a straight segment of the border will be less strongly correlated with each other than those on a sinuous segment.
 The more correlated sentinels individually carry less information about the local treatment effect.
 Instead of averaging the posterior treatment effect along the border based on geometry or population, we consider averaging the information contained therein.
 This motivates the inverse-variance weighted mean \(\invvar\):
@@ -381,11 +380,11 @@ This estimator efficiently extracts the information from the posterior treatment
 It automatically gives more weight to sentinels in dense areas (as the variance will be lower there), and to sentinels in straight sections of the border (as the correlations between sentinels will be lower).
 
 The estimand is still a weighted mean, with weights for the sentinels given by \(\weightb(\sentinels) = \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}\).
-This can put negative weights on some sentinels, and generally this estimand does not lend itself to an intuitive interpretation.
-The estimand is not chosen on scientific grounds, but rather dictated by the observed data.
+This can put negative weights on some sentinels, and this estimand does not lend itself to an intuitive interpretation.
+It is not chosen on scientific grounds, but rather dictated by the observed data.
 This is counter to the conventional approach in causal inference, that the estimand should be chosen based on substantive grounds, ideally before collecting any data.
 While perhaps unorthodox, analogous ``estimands of convenience'' have been proposed in other settings, for example matching methods that exclude some unmatched units from the analysis \citep[discussed in][]{crump2009dealing}, or in the context of balancing treatment and control populations with little overlap in their covariate distributions \citep{li2016balancing}.
-The classical RDD could be said to provide another example, as the estimand \autoref{eq:rdd_univ_estimand} focuses on the treatment effect near the threshold not because those units are of particular substantive interest, but because the available data restricts estimation of the treatment effect elsewhere.
+The 1D RDD could be said to provide another example, as the estimand \autoref{eq:rdd_univ_estimand} focuses on the treatment effect near the threshold not because those units are of particular substantive interest, but because the available data restricts estimation of the treatment effect elsewhere.
 
 \subsection{Projected Finite-Population LATE}
 All LATE estimators considered so far presuppose evenly spaced sentinel points, which are then given weights.
@@ -587,7 +586,7 @@ We therefore ask: can we measure a discontinuous jump in house prices across the
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=\textwidth,height=0.5\textheight,keepaspectratio]{../NYC/NYC_plots/NYC_sales_4.png}
+    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{../NYC/NYC_plots/sales_map.pdf}
     \caption{\label{fig:sales_map}Map of property sales in New York City. Each dot is a sale, and its color indicates the price per square foot. White crosses indicate sales of properties with missing square footage, which are therefore excluded from the analysis. School district boundaries are shown, and each district is labeled by its number.}
 \end{figure}
 
@@ -646,7 +645,7 @@ Since it is not captured by the available covariates, this added value is folded
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=0.5\textwidth]{../NYC/NYC_plots/sales_histogram_19-27.png}
+    \includegraphics[width=0.5\textwidth]{../NYC/NYC_plots/sales_histogram_19-27.pdf}
     \caption{\label{fig:NYC_histogram}Histogram of log sale prices per square foot of houses sold in NYC school districts 19 and 27.}
 \end{figure}
 
@@ -667,17 +666,18 @@ We therefore proceed with this two-step approach.
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[height=0.4\textheight]{../NYC/NYC_plots/NYC_cliff_face.png}
+    \includegraphics[height=0.35\textheight]{../NYC/NYC_plots/NYC_cliff_face.pdf}
     \caption{\label{fig:NYC_cliff_face}
         (a)
-        Cliff face estimator for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
-        The left axis is in the scale of log prices per square foot; positive values correspond to houses near the border being more expensive in district 19 than 27.
-        The right axis shows the corresponding ratio of the price of a house near the border in district 19 over its price in district 27.
+        Cliff face estimator \autoref{eq:postvar2gp} for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
+        The left \(y\)-axis shows the difference in log prices per square foot; positive values mean prices are higher in district 19.
+        The right \(y\)-axis shows the corresponding ratio of the price of a house in district 19 over its price in district 27.
         A few draws from the posterior are shown in lighter color to show the posterior correlations between sentinels.
-        Note the decorrelation from sentinels 77 to 78, and 84 to 85, where the border crosses the water from Long Island to islands in Jamaica Bay.  These islands are sparsely populated, and the width of the envelope becomes correspondingly higher.
+        Note the decorrelation from sentinels 6 to 7, and 19 to 20, where the border crosses the water between sparsely populated islands in Jamaica Bay and then onto Long Island.
         (b)
-        The map of sentinels, evenly spaced along the border between school districts 27 and 19.
-    The northernmost sentinel (shown as a blue circle in both plots) has index 1, while the last sentinels (shown in yellow) is on Rulers Bar Hassock.}
+        A map of sentinel locations, evenly spaced along the border between school districts 27 and 19.
+    	The southernmost sentinel (shown as a blue circle in both plots) has index 1, while the northernmost sentinel (shown in yellow) has index 100.
+	}
 \end{figure}
 
 Following the inference procedure outlined in \autoref{sec:twogp}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at \(R=100\) sentinel locations evenly spaced along the border.
@@ -686,7 +686,7 @@ However, the credible envelope is fairly wide, especially in the southern sectio
 
 \subsection{Average Log-Price Increase}
 The cliff face \autoref{fig:NYC_cliff_face} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
-Our two recommended estimators, based on inverse-variance weighting and finite-population projection, yield LATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
+Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=2\ell\) of the border, yield LATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
 By contrast, treating each district and building class as a fixed effect in an ordinary least squares (OLS) model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East-West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
 All LATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
@@ -700,17 +700,19 @@ In this example the different estimators yield similar answers, as the border is
         & \multicolumn{3}{c}{Posterior} \\
         Estimand & Mean & Standard Dev. & Tail Prob. \\
         \hline
-	      $\unifavg$ & -0.17 & 0.08 & 1.98\% \\
-	      $\taurho$ & -0.19 & 0.06 & 0.04\% \\
-	      $\invvar$ & -0.19 & 0.06 & 0.03\% \\
-	      $\tauproj$ & -0.18 & 0.06 & 0.13\% \\
-		  % $\taugeo$ & -0.16 & 0.09 & 3.80\% \\
-		  % $\taupop$ & -0.18 & 0.06 & 0.15\% \\
+	      \(\unifavg\) & -0.17 & 0.08 & 1.98\% \\
+	      \(\taurho\) & -0.19 & 0.06 & 0.04\% \\
+	      \(\invvar\) & -0.19 & 0.06 & 0.03\% \\
+	      \(\tauproj~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.13\% \\
+		  \(\taugeo~(\buffer=2\ell)\) & -0.16 & 0.09 & 3.80\% \\
+		  \(\taupop~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.15\% \\
         \hline
     \end{tabular}
     \caption{
     \label{table:NYC_ate}
-Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr(\tau > 0 \mid Y, \hat{\beta}, \hyperparam)\) of the LATE being greater than zero. Negative LATEs correspond to district 27 being more expensive.}
+Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr(\tau > 0 \mid Y, \hat{\beta}, \hyperparam)\). 
+Negative LATEs correspond to district 27 being more expensive.
+}
 \end{table}
 
 \subsection{Significant Difference in Price?}
@@ -720,7 +722,7 @@ For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, whi
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=\textwidth,height=0.3\textheight,keepaspectratio]{../NYC/NYC_plots/placebo_invvar.png}
+    \includegraphics[width=\textwidth,height=0.3\textheight,keepaspectratio]{../NYC/NYC_plots/placebo_invvar.pdf}
     \caption{\label{fig:placebo_invvar} Placebo tests for calibrated inverse-variance test of difference in house prices at the border between NYC school districts 19 and 27. 
     (a) the placebo \(p\)-value as a function of the border angle;
     (b) histogram of the placebo \(p\)-values, with the black vertical line indicating the uniform distribution.}

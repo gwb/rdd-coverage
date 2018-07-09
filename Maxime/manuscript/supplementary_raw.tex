@@ -55,7 +55,8 @@ A visual inspection of \autorefexternal{fig:sales_map} showing the locations of 
         \label{fig:confounding}}
 \end{figure}
 
-\section{Characterizing and Estimating the Average Treatment Effect}
+\section{Additional LATE Estimands and Simulations}
+\label{sec:additional_late}
 
 	In the paper, we presented and characterized four choices of local average treatment effect (LATE) estimands (and corresponding estimators): the uniformly-weighted \(\unifavg\), population-weighted \(\taurho\), inverse-weighted \(\invvar\), and finite population projected \(\tauproj\).
 We here present two other estimands of interest not directly presented in the paper, which extend the projection population idea of \(\tauproj\) to superpopulations.
@@ -130,18 +131,16 @@ The resulting weight function is:
 	We illustrate all of our LATE estimators with a simulation.
 200 units are placed in a square area delimited by spatial coordinates \(\svec_1 \in \cbr{0,2}\) and \(\svec_2 \in \cbr{-1, 1}\).
 A border at \(\svec_2=0\) divides units vertically into a control and treatment region,
-which are then further divided horizontally at \(\svec_1=0.5\) and \(\svec_1=1.5\) into three bands:
-
+which are then further divided horizontally at \(\svec_1=0.5\) and \(\svec_1=1.5\) into three blocks
 \begin{itemize}
 \item
-  The leftmost band \(\svec_1 < 0.5\) has a weak treatment effect.
+  The leftmost block \(\svec_1 < 0.5\) has a weak treatment effect and density defined to be equal to \(\rho=1\).
 \item
-  The middle band \(0.5 \ge \svec_1 < 1.5\) has a much lower population density, and a stronger treatment effect.
+  The middle block \(0.5 \ge \svec_1 < 1.5\) has a much lower population density \(\rho=0.3\), and a stronger treatment effect.
 \item
-  The rightmost band \(\svec_1 \ge 1.5\), has a much higher population density, and a very strong treatment effect.
+  The rightmost block \(\svec_1 \ge 1.5\), has a much higher population density \(\rho=2\), and a very strong treatment effect.
 \end{itemize}
-
-	Furthermore, the border in the leftmost band is a triangular wave, to create ``wiggliness.''
+Furthermore, the border in the leftmost block is a triangular wave, to create ``wiggliness.''
 We increase the number of wiggles from 0 to 1000 to observe the effect on the estimates.
 The simulation setting is summarized in \autoref{table:wiggly_setup}.
 We draw a single set of spatial coordinates, shown in \autoref{fig:wiggly_boundaries_setup}, then draw 10,000 simulations of the outcomes \(Y\) from a Gaussian process with squared exponential kernel (\(\ell=0.4\), \(\sigma=0.5\)).
@@ -158,7 +157,7 @@ To units above the border we add a treatment effect \(\tau(\svec_1, \svec_2) = \
 & Left \(\svec_1< 0.5\) & Middle \(0.5 \ge \svec_1 < 1.5\) & Right \(1.5 \ge \svec_1\)\tabularnewline
 \hline
 \textbf{Border} & wiggly & straight & straight\tabularnewline
-\textbf{Density} & low \(\rho=1.0\) & very low \(\rho=0.3\) & high \(\rho=2.0\)\tabularnewline
+\textbf{Density} & \(\rho=1\) & very low \(\rho=0.3\) & high \(\rho=2\)\tabularnewline
 \(\taubold\) & weak & medium & strong\tabularnewline
 \hline
 \end{tabular}
@@ -171,6 +170,7 @@ To units above the border we add a treatment effect \(\tau(\svec_1, \svec_2) = \
 	We fit the Gaussian process model \autorefexternal{eq:spec2gp},
 using the known hyperparameters of the covariance kernel and a weak prior on the mean parameter of each region,
 and estimate the LATE using the six methods proposed above.
+For projection-based methods, the buffer distance \(\buffer\) is infinite, so all of \(\area\) is included.
 In \autoref{fig:wiggly_boundaries_posteriors}(a) we show, for each estimator, the corresponding estimand and average posterior mean estimate evolving as the number of border wiggles increases.
 The behavior of the posterior standard deviation is shown in \autoref{fig:wiggly_boundaries_posteriors}(b).
 The simulations results can also be found in \autoref{table:wiggly_results}.
@@ -211,8 +211,6 @@ band get automatically downweighted as their correlation rises.
 The estimators that rely on projection
 \(\tauproj\), \(\taugeo\), and \(\taupop\) also remain stable,
 because the projected sentinels hardly move.
-These robust estimands show only a slight displacement when the first wiggles are introduced,
-caused by the presence of some sentinels nearer to the observed units.
     
 \begin{figure}[ptb]
 \centering
@@ -221,7 +219,6 @@ caused by the presence of some sentinels nearer to the observed units.
 	\label{fig:weight_functions}
 	Weight functions and induced weights on the observations for the six weight functions proposed in this paper. The weight function plots show the weight \(\weightb(\sentinel)\) against each sentinel's \(\svec_1\) coordinate. Sentinels with coinciding or nearly coinciding (within 0.005 of each other) coordinate \(\svec_1\) were merged and their weights summed. The induced weight plots show a circle for each unit, with the area of the circle proportional to its weight (\(\wt\) and \(\wc\) for treatment and control units respectively), and colored in blue for positive weights and orange for negative weights.}
 \end{figure}
-    
 
 	In \autoref{fig:weight_functions}(a-f), we illustrate the behavior of border weights \(\weightb(\sentinel)\) and unit weights (\(\wt\) and \(\wc\)) in this simulation setting with 3 wiggles.
 Note how evenly spaced sentinels (for \(\unifavg\), \(\taurho\), and \(\invvar\)) are more densely packed along \(\svec_1\) in the leftmost area because of the zig-zagging border.
@@ -378,7 +375,7 @@ The results of the three tests proposed so far are shown in the first three rows
 
 	We see that under the null, the \(\chi^2\) and likelihood ratio tests are valid (rejection of the null in 5\% of simulations up to simulation error).
 This is enforced by the parametric bootstrap, which draws test statistics from the same null distribution to calibrate the tests.
-However, the \(p\)-values for the inverse-variance test are biased down, so that we will falsely reject the null \(6.7\%\) instead of \(5\%\) of the time.
+However, the \(p\)-values for the inverse-variance test are biased down, so that we will falsely reject the null \(9\%\) instead of \(5\%\) of the time.
 While unfortunate, this is unsurprising, since the inverse-variance test was derived heuristically rather than from a rigorous frequentist procedure.
 
 \begin{table}
@@ -391,11 +388,11 @@ While unfortunate, this is unsurprising, since the inverse-variance test was der
         & \multicolumn{2}{c}{Power under} \\
         Test & \(\tau=0\) & \(\tau=1.2\) \\
         \hline
-        Marginal log-likelihood & 0.048 & 0.656 \\
-        \(\chi^2\) & 0.047 & 0.635 \\
-        \(\invvar\) uncalibrated & 0.085 & 0.866 \\
-        \(\invvar\) bootstrap calibrated & 0.050 & 0.799 \\
-        \(\invvar\) analytically uncalibrated & 0.051 & 0.801 \\
+	    Marginal log-likelihood bootstrap & 0.05 & 0.72 \\
+	    \(\chi^2\) bootstrap & 0.05 & 0.63 \\
+	    \(\invvar\) uncalibrated & 0.09 & 0.87 \\
+	    \(\invvar\) bootstrap calibrated & 0.05 & 0.80 \\
+	    \(\invvar\) analytically calibrated & 0.05 & 0.80 \\
         \hline
     \end{tabular}
     \egroup
@@ -421,10 +418,10 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
         \hline
         Test                   & \(p\)-value \\
         \hline
+        Marginal log-likelihood bootstrap & 0.002     \\
         \(\chi^2\) bootstrap     & 0.012     \\
-        mLL bootstrap          & 0.002     \\
         \(\invvar\) uncalibrated & 0.0007    \\
-        \(\invvar\) calibrated   & 0.002 \\
+        \(\invvar\) analytically calibrated   & 0.002 \\
         \hline
     \end{tabular}
     \egroup
