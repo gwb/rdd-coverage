@@ -141,8 +141,6 @@ This can be visualized as the height of a cliff along the border \(\border\) sep
 In this specification, the hyperparameters \(\ell\), \(\sigmaf\), and \(\sigman\) are the same in the treatment and control regions, so we assume that the spatial smoothness of the responses is not affected by the treatment.
 We expect that this assumption will be reasonable in many applications, but it can be easily relaxed, as discussed in \cite{Branson:2017qy}.
 
-
-
 \subsection{Inference of the Treatment Effect}
 \label{sec:inference}
 If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu^2\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
@@ -177,7 +175,7 @@ Since the two surfaces are modeled as independent, the treatment effect \(\tau(\
     \end{split}
     \label{eq:postvar2gp}
 \end{equation}
-The posterior mean and covariance of the ``cliff height'' \(\tau(\sentinels)\) are the primary output of our GeoRDD analysis, and we refer to \autoref{eq:postvar2gp} as the ``cliff face'' estimator.
+The posterior mean and covariance of the \(\tau(\sentinels)\) are the primary output of our GeoRDD analysis, and we refer to \autoref{eq:postvar2gp} as the ``cliff height'' estimator.
 
 This leaves the choice of the hyperparameters: \(\hyperparam=\ell\), \(\sigmaf\), \(\sigman\), and \(\sigmamu\).
 For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak.
@@ -204,7 +202,7 @@ Our model becomes:
 and \(f_\treat\) and \(f_\ctrol\) as in \autoref{eq:spec2gp}.
 
 Unfortunately, the linear term induces a covariance between the treatment and control region; \(\SigmaMat_Y\) is no longer black diagonal, which roughly quadruples the computational cost of the analysis, as it requires the inversion of an \((n_\treat{}+n_\ctrol{}) \times (n_\treat{}+n_\ctrol{})\) covariance matrix instead of (in the absence of correlations between the treatment and control units) the separate inversions of the \(n_\treat{} \times n_\treat{}\) covariance matrix \(\STT\), and \(n_\ctrol{} \times n_\ctrol{}\) covariance matrix \(\SCC\).
-The introduction of the linear term modifies the cliff face estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
+The introduction of the linear term modifies the cliff height estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
 \begin{equation}
     \begin{split}
         \muvec_{\sentinels \mid Y, D} &= 
@@ -392,7 +390,7 @@ Alternatively, we can project the positions of treatment and control units that 
 For any point \(\svec\), we use the notation \(\proj_{\border}\del{\svec}\) to give the coordinates of the point on the border \(\border\) that is closest to \(\svec\) (assuming uniqueness), and \(\dist_{\border}\del{\svec}\) for the distance between the point and the border.
 Let \(\vicinity{\svec} = \allowbreak \Ind\cbr{\dist_{\border}\del{\svec} \le \buffer} \) indicate inclusion in the border vicinity.
 The projected finite-population \(\tauproj\) is then the uniformly weighted mean applied with the projected unit locations instead of the evenly spaced sentinels.
-We can therefore modify \autoref{eq:unifavg}, replacing the cliff face mean vector \(\muvec_{\sentinels \mid Y}\)
+We can therefore modify \autoref{eq:unifavg}, replacing the cliff height mean vector \(\muvec_{\sentinels \mid Y}\)
 and covariance matrix \(\Sigma_{\sentinels \mid Y}\)
 with their equivalents obtained at the projected unit locations,
 to obtain the posterior mean and covariance of \(\tauproj\):
@@ -485,7 +483,7 @@ and sidesteps the choice of a distance cutoff for projected units.
 
 \section{Testing for Non-Zero Effect}
 \label{sec:hypothesis_testing}
-Once we have obtained the ``cliff face'' estimate \autoref{eq:postvar2gp} and estimated a LATE, we might also naturally wonder whether we can claim to have detected a significant treatment effect at the border.
+Once we have obtained the ``cliff height'' estimate \autoref{eq:postvar2gp} and estimated a LATE, we might also naturally wonder whether we can claim to have detected a significant treatment effect at the border.
 In the hypothesis testing framework, we have two possible choices of null hypotheses.
 The sharp null specifies that the treatment effect is zero everywhere along the border:
 \(\tau(\sentinel)=0\) for all \(\sentinel \in \border\).
@@ -656,10 +654,10 @@ We fit the hyperparameters \(\sigma_\beta\), \(\sigmaf\), \(\ell\) and \(\sigman
 We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
 The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigma_\beta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\).
 
-\subsection{Cliff Face Estimator}
+\subsection{Cliff Height Estimator}
 
 We seek to estimate the treatment effect function \(\tau\) on the border between the two districts.
-We could proceed by computing the cliff face estimator with covariates \autoref{eq:cliff_with_covariates}.
+We could proceed by computing the cliff height estimator with covariates \autoref{eq:cliff_with_covariates}.
 But to simplify the analysis as discussed in \autoref{sec:covariates}, we can instead obtain the posterior means of the \(\beta\) coefficients (following the procedure outlined in \autoref{sec:betahat}, but extended to \(J_\district\) rather than just two areas in accordance with~\autoref{eq:nyc_model}), extract the residuals \(\Yvec{}-\Dmat \hat{\betavec}\), which we then treat as the observed outcomes in a GeoRDD analysis with no non-spatial covariates.
 In this example, we find that the posterior variance of \(\betavec\) is low, and therefore the two approaches yield very similar results, but conditioning on the estimate of \(\betavec\) is computationally convenient.
 We therefore proceed with this two-step approach.
@@ -667,9 +665,9 @@ We therefore proceed with this two-step approach.
 \begin{figure}[tb]
     \centering
     \includegraphics[height=0.35\textheight]{figures/NYC_cliff_face.pdf}
-    \caption{\label{fig:NYC_cliff_face}
+    \caption{\label{fig:NYC_cliff_height}
         (a)
-        Cliff face estimator \autoref{eq:postvar2gp} for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
+        Cliff height estimator \autoref{eq:postvar2gp} for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
         The left \(y\)-axis shows the difference in log prices per square foot; positive values mean prices are higher in district 19.
         The right \(y\)-axis shows the corresponding ratio of the price of a house in district 19 over its price in district 27.
         A few draws from the posterior are shown in lighter color to show the posterior correlations between sentinels.
@@ -681,11 +679,11 @@ We therefore proceed with this two-step approach.
 \end{figure}
 
 Following the inference procedure outlined in \autoref{sec:twogp}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at \(R=100\) sentinel locations evenly spaced along the border.
-The cliff face is shown in \autoref{fig:NYC_cliff_face}, and shows that \(\tau\) is estimated as negative everywhere along the border, which corresponds to higher property prices in district 27.
+The cliff height is shown in \autoref{fig:NYC_cliff_height}, and shows that \(\tau\) is estimated as negative everywhere along the border, which corresponds to higher property prices in district 27.
 However, the credible envelope is fairly wide, especially in the southern section of the border, so we cannot visually rule out the null hypothesis that \(\tau=0\).
 
 \subsection{Average Log-Price Increase}
-The cliff face \autoref{fig:NYC_cliff_face} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
+The cliff height \autoref{fig:NYC_cliff_height} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
 Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=2\ell\) of the border, yield LATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
 By contrast, treating each district and building class as a fixed effect in an ordinary least squares (OLS) model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East-West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
@@ -916,7 +914,7 @@ Under \(\modnull\), the joint distribution of \(\muvec_{\sentinels \mid T}\) and
     \WC \KTC\trans \WT\trans & \WC \SCC \WC\trans
 \end{bmatrix}\,.
 \end{equation}
-Continuing in this fashion, the cliff face \autoref{eq:postvar2gp} estimate 
+Continuing in this fashion, the cliff height \autoref{eq:postvar2gp} estimate 
 \(\muvec_{\sentinels \mid Y} = \WT \yt - \WC \yc\)
 is yet another zero-mean multivariate normal with covariance given by:
 \begin{equation}

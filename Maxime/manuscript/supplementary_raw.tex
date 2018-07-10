@@ -327,7 +327,7 @@ But it may seem odd that the test aims to detect a non-zero treatment effect at 
 The test statistic and \(p\)-values can be computed without access to the sentinel positions, using only the treatment and control indicators.
 If the test is significant, there is no guarantee that this is due to a discontinuity at the border.
 
-	To address this oddity, we can derive a test statistic directly from the cliff face estimator \autorefexternal{eq:postvar2gp}.
+	To address this oddity, we can derive a test statistic directly from the cliff height estimator \autorefexternal{eq:postvar2gp}.
 We use \(\muvec\) and \(\SigmaMat\) as shorthand for the posterior mean \(\muvec_{\sentinels \mid Y}\)
 and covariance matrix \(\SigmaMat_{\sentinels \mid Y}\) throughout this section.
 If a \(k\)-vector \(\yvec\) is distributed \(\normal\del{\muvec, \SigmaMat}\), with mean vector \(\muvec\) unknown and covariance \(\SigmaMat\) known, then under the null hypothesis that \(\mu=0\), the test statistic \(\yvec\trans \SigmaMat^{-1} \yvec\) has distribution \(\chi^2_k\).
@@ -351,7 +351,7 @@ With B bootstrap samples, the \(p\)-value is obtained as
         S_{(b)}^2 &= (\muvec_{(b)} )\trans \SigmaMat^{-1} \muvec_{(b)}\,,
     \end{split}
 \end{equation}
-where \(\muvec_{(b)}\) is the result of applying the cliff face estimator \autorefexternal{eq:postvar2gp} to the bootstrap sample \(\Yvec^{(b)}\).
+where \(\muvec_{(b)}\) is the result of applying the cliff height estimator \autorefexternal{eq:postvar2gp} to the bootstrap sample \(\Yvec^{(b)}\).
 
 	Because calculating \(S^2\) involves inverting a matrix \(\SigmaMat\) that is mathematically of full rank, but numerically of low rank, we may worry about the numerical stability of computing \(S\).
 We verified in simulated examples that regularizing \(\SigmaMat\) by adding a small constant to its diagonal does not greatly affect the computed \(S^2\).
