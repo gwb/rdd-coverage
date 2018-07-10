@@ -171,7 +171,7 @@ and their posterior mean and covariance denoted respectively by \(\muvec_{\senti
 Since the two surfaces are modeled as independent, the treatment effect \(\tau(\sentinels)=g_\treat{}(\sentinels)-g_\ctrol{}(\sentinels)\) has posterior
 \begin{equation}
     \begin{split}
-        & \tau(\sentinels) \mid Y, \hyperparam \sim \normal\del{\muvec_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}} \,\text{, with}\\
+        & \tau(\sentinels) \mid \Yvec, \hyperparam \sim \normal\del{\muvec_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}} \,\text{, with}\\
         & \muvec_{\sentinels \mid Y} = \muvec_{\sentinels \mid \treat} - \muvec_{\sentinels \mid \ctrol} \quad\text{and}\quad
         \Sigma_{\sentinels \mid Y} = \Sigma_{\sentinels \mid \treat} + \Sigma_{\sentinels \mid \ctrol} \,.
     \end{split}
@@ -181,7 +181,7 @@ The posterior mean and covariance of the ``cliff height'' \(\tau(\sentinels)\) a
 
 This leaves the choice of the hyperparameters: \(\hyperparam=\ell\), \(\sigmaf\), \(\sigman\), and \(\sigmamu\).
 For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak.
-The rest are optimized by maximizing the marginal likelihood of the observations \(\Pr\del{\yt, \yc \mid \ell, \sigmaf, \sigman}\), which is available analytically and easily computed for GPR.
+The rest are optimized by maximizing the marginal likelihood of the observations \(\Pr\del{\Yvec \mid \ell, \sigmaf, \sigman}\), which is available analytically and easily computed for GPR.
 This empirical Bayes approach is common in spatial and machine learning applications of Gaussian processes.
 An alternative would be to also specify a prior on the hyperparameters, which would be preferable in order to fully account for the uncertainty in the model, but fully Bayesian inference of large Gaussian process models tends to be computationally expensive.
 
@@ -266,7 +266,7 @@ For each estimator obtained in \autoref{eq:weighted_estimator} as a weighted mea
 An alternative perspective on these estimators is given by the weights induced on the observations.
 Indeed, combining equations \autoref{eq:postvar2gp_t_or_c}, \autoref{eq:postvar2gp}, and \autoref{eq:weighted_estimator}, we obtain that the posterior mean of \(\tauw\) is a linear combination
 \begin{equation}
-    \E\del{\tauw \mid Y} = \wt\trans \yt + \wc\trans \yc
+    \E\del{\tauw \mid \Yvec} = \wt\trans \yt + \wc\trans \yc
     \label{eq:unit_weights}
 \end{equation}
 of the observed data, with ``unit weights'' given by
@@ -304,7 +304,7 @@ Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
     &\unifavg = \oint_\border \tau(\sentinel) \dif\sentinel
         \ \big/ \ 
         \oint_\border \dif{\sentinel}  \,, \\
-    &\unifavg \mid \yt, \yc, \hyperparam \sim \normal\del{\mu_{\unifavg \mid Y}, \Sigma_{\unifavg \mid Y}}\,\text{, with} \\
+    &\unifavg \mid \Yvec, \hyperparam \sim \normal\del{\mu_{\unifavg \mid Y}, \Sigma_{\unifavg \mid Y}}\,\text{, with} \\
     &\mu_{\unifavg \mid Y} = \del{\ones_{\numsent}\trans \muvec_{\sentinels \mid Y}} / \numsent \quad\text{and}\quad
     \Sigma_{\unifavg \mid Y} = \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y} \ones_{\numsent}} / \numsent^2 \,.
 \end{split}
@@ -370,7 +370,7 @@ Instead of averaging the posterior treatment effect along the border based on ge
 This motivates the inverse-variance weighted mean \(\invvar\):
 \begin{equation}
     \begin{split}
-        & \left. \invvar \mid Y, \hyperparam \right. \sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} \,\text{, with} \\
+        & \left. \invvar \mid \Yvec, \hyperparam \right. \sim \normal\del{\mu_{\invvar \mid Y}, \Sigma_{\invvar \mid Y}} \,\text{, with} \\
         & \mu_{\invvar \mid Y} = \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \muvec_{\sentinels \mid Y}} \big/ \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}} \quad\text{and}\quad
         \Sigma_{\invvar \mid Y} = 1 \big/ \del{\ones_{\numsent}\trans \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}} \,.
     \end{split}
@@ -397,7 +397,7 @@ and covariance matrix \(\Sigma_{\sentinels \mid Y}\)
 with their equivalents obtained at the projected unit locations,
 to obtain the posterior mean and covariance of \(\tauproj\):
 \begin{equation}\begin{split}
-    &\tauproj \mid \yt{}, \yc{}, \hyperparam \sim \normal\del{\mu_{\tauproj \mid Y}, \Sigma_{\tauproj \mid Y}}\,\text{, with} \\
+    &\tauproj \mid \Yvec, \hyperparam \sim \normal\del{\mu_{\tauproj \mid Y}, \Sigma_{\tauproj \mid Y}}\,\text{, with} \\
     &\mu_{\tauproj \mid Y} = 
     \sum_{i=1}^{n}
     \vicinity{\svec_i}
@@ -405,7 +405,7 @@ to obtain the posterior mean and covariance of \(\tauproj\):
         \tau\del{
             \proj_{\border}\del{\svec_i}
         }
-        \mid Y, \hyperparam
+        \mid \Yvec, \hyperparam
     } 
     \ 
     \Big/
@@ -426,7 +426,7 @@ to obtain the posterior mean and covariance of \(\tauproj\):
             \tau\del{
                 \proj_{\border}\del{\svec_j}
             }
-            \mid Y, \hyperparam
+            \mid \Yvec, \hyperparam
         }
     }{
         \del{
@@ -530,7 +530,7 @@ with the same kernel and hyperparameters values obtained through the procedure o
 \(\modnull\) is smooth and continuous at the border,
 and therefore accords with both the sharp and weak null hypotheses.
 We now choose the posterior mean of the inverse-variance LATE \(\mu_{\invvar \mid Y}\) as a test statistic.
-For \(b=1,\dotsc,B\) iterations, we draw \(Y^{(b)}\) from \(\modnull\),
+For \(b=1,\dotsc,B\) iterations, we draw \(\Yvec^{(b)}\) from \(\modnull\),
 using the same spatial locations as the original data,
 and compute \(\mu_{\invvar \mid Y^{(b)}}\) according to \autoref{eq:invvar} applied to the simulated data rather than the true data.
 The proportion of \(\mu_{\invvar \mid Y^{(b)}}\) with absolute value greater than the observed \(\mu_{\tauw \mid Y^{obs}}\) estimates the \(p\)-value:
@@ -649,7 +649,7 @@ Since it is not captured by the available covariates, this added value is folded
     \caption{\label{fig:NYC_histogram}Histogram of log sale prices per square foot of houses sold in NYC school districts 19 and 27.}
 \end{figure}
 
-The histogram in \autoref{fig:NYC_histogram} of outcomes \(Y\) in both districts shows that marginally the house prices are very different.
+The histogram in \autoref{fig:NYC_histogram} of log prices per square foot for sales in both districts shows that marginally the house prices are very different.
 Our goal is to establish whether this difference is measurable at the border, and not merely an underlying trend that spans both districts.
 
 We fit the hyperparameters \(\sigma_\beta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
@@ -710,7 +710,7 @@ In this example the different estimators yield similar answers, as the border is
     \end{tabular}
     \caption{
     \label{table:NYC_ate}
-Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr(\tau > 0 \mid Y, \hat{\beta}, \hyperparam)\). 
+Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\Pr(\tau > 0 \mid \Yvec, \hat{\beta}, \hyperparam)\). 
 Negative LATEs correspond to district 27 being more expensive.
 }
 \end{table}

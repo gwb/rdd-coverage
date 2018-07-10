@@ -301,21 +301,23 @@ the likelihood of the observations should be lower under \(\modnull\) than under
 the \(\GP\) model as specified in \autorefexternal{eq:spec2gp}.
 We therefore choose the difference in log-likelihoods as our test statistic
 \begin{equation}
-    t = \log \Pr\del{\yt{}, \yc{} \mid \modalt} - \log \Pr\del{\yt{}, \yc{} \mid \modnull} \,,
+    t = \log \Pr\del{\Yvec \mid \modalt} - \log \Pr\del{\Yvec \mid \modnull} \,,
 \end{equation}
 and wish to reject the sharp null hypothesis when its observed value \(t_{obs}\) is high.
 
-	A parametric bootstrap approach is used to quantify what ``high'' means. We draw \(\yt{}^*,\yc{}^*\) from \(\modnull\),
-using the same spatial locations as in the original data,
+	A parametric bootstrap approach is used to quantify what ``high'' means. We draw \(B\) bootstrap samples \(\Yvec^{(b)}\) from \(\modnull\),
+using the same spatial locations as the original data,
 and then fit the two competing models to the simulated data in order to obtain the bootstrapped test statistic
 \begin{equation}
-    t^* = \log \Pr\del{\yt{}^*, \yc{}^* \mid \modalt} - \log \Pr\del{\yt{}^*, \yc{}^* \mid \modnull}\,.
+    t^{(b)} = \log \Pr\del{\Yvec^{(b)} \mid \modalt} - \log \Pr\del{\Yvec^{(b)} \mid \modnull}\,.
 \end{equation}
 Repeating this procedure, we obtain a distribution of \(t\) under \(\modnull\),
 which we can then compare to the observed \(t\).
-More precisely, we can interpret the proportion of \(t^*\) drawn above \(t_{obs}\) as a \(p\)-value
+More precisely, we can interpret the proportion of \(t^{(b)}\) drawn above \(t_{obs}\) as a \(p\)-value
 \begin{equation}
-    p^{\mathrm{lik}} = \Pr\del{t^* > t_{obs} \mid \modnull}\,.
+    p^{\mathrm{lik}} = \Pr\del{t^{(b)} > t_{obs} \mid \modnull}
+                     \approx \frac{1}{B} \sum_{b=1}^B \Ind\cbr{t^{(b)} > t_{obs}}
+                     \,.
 \end{equation}
 Computationally, because the hyperparameters and locations of the units are held constant during the bootstrap, we can reuse the Cholesky decomposition of the covariance matrix, allowing the test to be performed in seconds even with hundreds of units and thousands of bootstrap samples.
 
@@ -328,7 +330,7 @@ If the test is significant, there is no guarantee that this is due to a disconti
 	To address this oddity, we can derive a test statistic directly from the cliff face estimator \autorefexternal{eq:postvar2gp}.
 We use \(\muvec\) and \(\SigmaMat\) as shorthand for the posterior mean \(\muvec_{\sentinels \mid Y}\)
 and covariance matrix \(\SigmaMat_{\sentinels \mid Y}\) throughout this section.
-If a \(k\)-vector \(\yvec\) is distributed \(\normal\del{\muvec, \Sigma}\), with mean vector \(\muvec\) unknown and covariance \(\SigmaMat\) known, then under the null hypothesis that \(\mu=0\), the test statistic \(\yvec\trans \SigmaMat^{-1} \yvec\) has distribution \(\chi^2_k\).
+If a \(k\)-vector \(\yvec\) is distributed \(\normal\del{\muvec, \SigmaMat}\), with mean vector \(\muvec\) unknown and covariance \(\SigmaMat\) known, then under the null hypothesis that \(\mu=0\), the test statistic \(\yvec\trans \SigmaMat^{-1} \yvec\) has distribution \(\chi^2_k\).
 See for example \cite{rencher2003methods} Section 5.2.2 for a classical derivation of this test.
 This suggests that we could use \(S^2=\muvec\trans \SigmaMat^{-1} \muvec\) as a test statistic,
 and obtain a \(p\)-value from a \(\chi^2_\numsent\) distribution function evaluated at \(S^2\), where \(\numsent\) is the number of sentinels.
@@ -345,14 +347,14 @@ However, in our work, we found the resulting \(p\)-value to be sensitive to the 
 With B bootstrap samples, the \(p\)-value is obtained as
 \begin{equation}
     \begin{split}
-        p &= \frac{1}{B} \sum_{t=1}^T \Ind\cbr{S_{(b)}^2 < S^2}\  \text{, with}\\
+        p &= \frac{1}{B} \sum_{b=1}^B \Ind\cbr{S_{(b)}^2 < S^2}\  \text{, with}\\
         S_{(b)}^2 &= (\muvec_{(b)} )\trans \SigmaMat^{-1} \muvec_{(b)}\,,
     \end{split}
 \end{equation}
-where \(\muvec_{(b)}\) is the result of applying \autorefexternal{eq:postvar2gp} to \(\yt^{(b)}\) and \(\yc^{(b)}\), themselves drawn from \(\modnull\) at the same locations as the observations \(\yt\) and \(\yc\).
+where \(\muvec_{(b)}\) is the result of applying the cliff face estimator \autorefexternal{eq:postvar2gp} to the bootstrap sample \(\Yvec^{(b)}\).
 
-	Because calculating \(S^2\) involves inverting a matrix \(\Sigma\) that is mathematically of full rank, but numerically of low rank, we may worry about the numerical stability of computing \(S\).
-We verified in simulated examples that regularizing \(\Sigma\) by adding a small constant to its diagonal does not greatly affect the computed \(S^2\).
+	Because calculating \(S^2\) involves inverting a matrix \(\SigmaMat\) that is mathematically of full rank, but numerically of low rank, we may worry about the numerical stability of computing \(S\).
+We verified in simulated examples that regularizing \(\SigmaMat\) by adding a small constant to its diagonal does not greatly affect the computed \(S^2\).
 The parametric bootstrap ensures the frequentist validity of the test
 regardless of the regularization.
 
