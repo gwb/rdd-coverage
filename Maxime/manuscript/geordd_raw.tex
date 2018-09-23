@@ -66,7 +66,7 @@ We obtain Bayesian estimators for multiple possible LATE estimands and discuss t
 In \autoref{sec:hypothesis_testing} we turn to hypothesis testing, and propose a method to test against the null hypothesis of no treatment effect along the border.
 
 In \autoref{sec:NYC_example}, we apply our methodology to a publicly available dataset of property sales in NYC to determine whether school districts affect property prices.
-Focusing on a single border between two school districs, we estimate the treatment effect everywhere along the border, obtain estimates of the LATE, and perform and validate a hypothesis test.
+Focusing on a single border between two school districts, we estimate the treatment effect everywhere along the border, obtain estimates of the LATE, and perform and validate a hypothesis test.
 We find a statistically significant difference in price across the border with a \(p\)-value of 0.002, and estimate that the same house located near the border will on average fetch an almost 20\% higher price in district 27 than in district 19.
 However, this effect can not be attributed solely to the reputation of the school district, as this border also separates the boroughs of Brooklyn and Queens, thus confounding the causal effect of the districts.
 
@@ -83,7 +83,7 @@ Under the potential outcomes framework for causal inference, each unit \(i\) has
 Let \(\treatind_i\) denote the treatment indicator, which is equal to one if unit \(i\) is in the treatment area, and zero if it is in the control area.
 Unlike traditional randomized experiments, treatment assignment is a deterministic function of a unit's geographical coordinates \(\svec_i\): \(\treatind_i = \Ind\cbr{\svec_i \in \treatarea}\).
 The observed outcome for unit \(i\) is \(Y_i = \treatind_i Y_{i\treat} + (1 - \treatind_i) Y_{i\ctrol}\).
-We denote the vector of observed outcomes of the treatment units and control units respectively by \(\yt\) and \(\yc\), and \(\Yvec\) the vector formed by concatening \(\yt\) and \(\yc\).
+We denote the vector of observed outcomes of the treatment units and control units respectively by \(\yt\) and \(\yc\), and \(\Yvec\) the vector formed by concatenating \(\yt\) and \(\yc\).
 
 For 1D RDDs, because the treatment and control regions do not overlap, the treatment effect is typically only inferred at the threshold \(X=b\).
 As was already recognized by \cite{thistlethwaite1960regression}, this choice requires the least extrapolation of the fitted regression functions, which makes the estimated treatment more credible.
@@ -444,7 +444,7 @@ The resulting estimator has desirable properties: densely populated regions rece
 While it lacks the information efficiency of the inverse-variance estimator,
 the projected estimand is easier to understand and interpret,
 and may feel more familiar to practitioners used to finite-population inference.
-The averaging is over the observed units in the vicinity of the border, although with their locations projected to the border.
+The averaging is over the observed units in the vicinity of the border, after they have been moved to the nearest point on the border.
 
 In our experience, the choice of \(\buffer\) does not have a large effect on the estimate yielded by \autoref{eq:tauproj}.
 A reasonable heuristic is to set \(\buffer\) to a small multiple of the Gaussian process lengthscale \(\ell\).
