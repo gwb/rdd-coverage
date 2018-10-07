@@ -1,5 +1,11 @@
 \section{Introduction}\label{introduction}
 
+\subsection{Estimating the effect of school quality on house prices}
+
+There has been a long-standing interest in the economics literature in estimating the implicit price of school quality by measuring its effect on house prices.
+
+\subsection{The geographic regression discontinuity design}
+
 Regression discontinuity designs (RDDs) are natural experiments characterized by the treatment assignment being fully determined by some covariates, which are termed ``forcing'' variables.
 A typical RDD scenario arises when a treatment is given to all units with a forcing variable that falls below (or above) an arbitrary threshold value, and is withheld from units on the other side of the threshold.
 If, as is often the case, the forcing variable is also predictive of the outcome of interest, then treatment assignment and outcomes are confounded, but by focusing on units near the threshold, a causal treatment effect can nonetheless be estimated.
@@ -234,7 +240,7 @@ We show how to obtain the posterior mean of \(\betavec\) in \autoref{sec:betahat
 We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\betavec=\hat\betavec\).
 This is an approximation, as it ignores the uncertainty in the estimate of \(\betavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
 
-\section{Estimating the Local Average Treatment Effect}
+\subsection{Estimating the Local Average Treatment Effect}
 \label{sec:ate}
 
 Once we have obtained the posterior of \(\tau\) \eqref{eq:postvar2gp}, estimating the local average treatment effect (LATE) along the border will often be of interest.
@@ -294,7 +300,7 @@ In \autorefexternal{sec:additional_late} of the Supplementary Materials, we disc
 We also provide a simulation study to better understand the characteristics of the different LATE choices.
 A summary of their properties is provided in \autoref{table:estimator_properties}.
 
-\subsection{Uniform LATE}
+\subsubsection{Uniform LATE}
 The simplest choice is uniform weights \(\weightb(\sentinel)=1\), a seemingly reasonable and unopinionated decision.
 The uniformly weighted LATE \(\unifavg\) is estimated by averaging the entries of the mean posterior at the sentinels.
 Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
@@ -311,7 +317,7 @@ Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
 The uniformly weighted estimand takes on a geometric interpretation: equal-length segments of the border are given equal weight.
 Unfortunately, uniform weights suffer from several issues that we describe and address in \autoref{sec:tau_rho} and \autoref{sec:invvar}.
 
-\subsection{Density Weighted LATE}
+\subsubsection{Density Weighted LATE}
 \label{sec:tau_rho}
 
 With uniform border weights, parts of the border adjoining dense populations are given equal weights to those in sparsely populated areas.
@@ -347,7 +353,7 @@ Troublingly, the sinuousness of the border therefore determines the estimand, ev
 % Worse, the resolution of the border map used for the analysis affects the estimated LATE.
 
 
-\subsection{Inverse-variance Weighted LATE}
+\subsubsection{Inverse-variance Weighted LATE}
 \label{sec:invvar}
 
 % \begin{figure}[tbp]
@@ -384,7 +390,7 @@ This is counter to the conventional approach in causal inference, that the estim
 While perhaps unorthodox, analogous ``estimands of convenience'' have been proposed in other settings, for example matching methods that exclude some unmatched units from the analysis \citep[discussed in][]{crump2009dealing}, or in the context of balancing treatment and control populations with little overlap in their covariate distributions \citep{li2016balancing}.
 The 1D RDD could be said to provide another example, as the estimand \autoref{eq:rdd_univ_estimand} focuses on the treatment effect near the threshold not because those units are of particular substantive interest, but because the available data restricts estimation of the treatment effect elsewhere.
 
-\subsection{Projected Finite-Population LATE}
+\subsubsection{Projected Finite-Population LATE}
 All LATE estimators considered so far presuppose evenly spaced sentinel points, which are then given weights.
 Alternatively, we can project the positions of treatment and control units that are within a distance \(\buffer\) of the border onto the border, and use those projected unit locations without weights (see \autorefexternal{fig:mississippi_projection_methods} of the Supplementary Materials for an illustration).
 For any point \(\svec\), we use the notation \(\proj_{\border}\del{\svec}\) to give the coordinates of the point on the border \(\border\) that is closest to \(\svec\) (assuming uniqueness), and \(\dist_{\border}\del{\svec}\) for the distance between the point and the border.
@@ -450,7 +456,7 @@ In our experience, the choice of \(\buffer\) does not have a large effect on the
 A reasonable heuristic is to set \(\buffer\) to a small multiple of the Gaussian process lengthscale \(\ell\).
 It should be noted that this choice only affects the location and density of projected units on the border; the \(\tauproj\) estimator assigns non-zero unit weights \autoref{eq:unit_weights} to all units, whether or not they fall within \(\buffer\) of the border.
 
-\subsection{Summary}
+\subsubsection{Summary}
 \label{sec:summary}
 
 The properties of the four LATE definitions proposed in this paper, and two additional choices presented in the Supplementary Materials, are summarized in \autoref{table:estimator_properties}.
@@ -481,7 +487,7 @@ and sidesteps the choice of a distance cutoff for projected units.
     Summary of local average treatment effect estimator and estimand properties.}
 \end{table}
 
-\section{Testing for Non-Zero Effect}
+\subsection{Testing for Non-Zero Effect}
 \label{sec:hypothesis_testing}
 Once we have obtained the ``cliff height'' estimate \autoref{eq:postvar2gp} and estimated a LATE, we might also naturally wonder whether we can claim to have detected a significant treatment effect at the border.
 In the hypothesis testing framework, we have two possible choices of null hypotheses.
@@ -560,7 +566,7 @@ The calibrated inverse-variance test “targets” the weak null hypothesis in t
 
 \label{eq:calib_test}
 
-\subsection{Placebo Tests}
+\subsubsection{Placebo Tests}
 \label{sec:placebo}
 Gaussian process models are almost always misspecified.
 We do not believe that the Gaussian process with stationary squared exponential kernel is the true data-generating process, although we hope that the model is sufficiently flexible to represent reality well.
