@@ -1,35 +1,6 @@
 % Nicer default font (+ math font) than Computer Modern for most use cases
-\usepackage{mathrsfs}
-\usepackage{graphicx}
-\usepackage{xr-hyper} % cross-references (between documents)
-\usepackage{xcolor} % Allow colors to be defined
-\usepackage{geometry} % Used to adjust the document margins
-\usepackage{amsmath} % Equations
-\usepackage{amssymb} % Equations
-% The hyperref package gives us a pdf with properly built
-% internal navigation ('pdf bookmarks' for the table of contents,
-% internal cross-reference links, web links for URLs, etc.)
-\usepackage[hyphens]{url}
-\usepackage[hypertexnames=false]{hyperref}
-\usepackage[title,toc]{appendix}
-\newcommand{\georddtitle}{
-    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
-    Do School Districts Affect NYC House Prices?
-}
-\hypersetup{
-    colorlinks=true,
-    pdfborder=0 0 1,
-    pdftitle=\georddtitle{},
-    allcolors=[rgb]{0.00,0.38,0.59},
-    allbordercolors=[rgb]{0.60,0.76,0.86}
-}
-\usepackage{natbib}
-\usepackage{bm}
-\usepackage{mathtools}
-\usepackage{pdflscape}
-\usepackage[nodisplayskipstretch]{setspace}
 % only use if doublespacing:
-\renewcommand*{\arraystretch}{0.8} % https://tex.stackexchange.com/questions/183562/how-to-reduce-vertical-space-in-matrix
+% \renewcommand*{\arraystretch}{0.8} % https://tex.stackexchange.com/questions/183562/how-to-reduce-vertical-space-in-matrix
 \def\SmallColSep{\setlength{\arraycolsep}{3pt}}
 % \usepackage{authblk}
 
@@ -152,7 +123,7 @@
 \newcommand*{\WT}{\Wmat_{\treat}}
 \newcommand*{\WC}{\Wmat_{\ctrol}}
 
-\geometry{tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+% \geometry{tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
 \def\sectionautorefname{Section}
 \def\subsectionautorefname{Section}
 \def\figureautorefname{Figure}
@@ -160,26 +131,26 @@
 \def\tableautorefname{Table}
 \def\equationautorefname~#1\null{(#1)\null}
 
-\newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
-\hypersetup{pdfkeywords=\georddkeywords{}}
-\hypersetup{pdfauthor=Maxime Rischard}
-\newcommand{\georddauthor}{
-    Maxime Rischard
-    \thanks{
-This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
-    \vspace{-0.5em}
-    \\
-    Department of Statistics, Harvard University \\
+% \newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
+% \hypersetup{pdfkeywords=\georddkeywords{}}
+% \hypersetup{pdfauthor=Maxime Rischard}
+% \newcommand{\georddauthor}{
+    % Maxime Rischard
+    % \thanks{
+% This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
+    % \vspace{-0.5em}
+    % \\
+    % Department of Statistics, Harvard University \\
 
-    Zach Branson \vspace{-0.5em} \\
-    Department of Statistics, Harvard University \\
+    % Zach Branson \vspace{-0.5em} \\
+    % Department of Statistics, Harvard University \\
 
-    Luke Miratrix \vspace{-0.5em} \\
-    Graduate School of Education, Harvard University \\
+    % Luke Miratrix \vspace{-0.5em} \\
+    % Graduate School of Education, Harvard University \\
 
-    Luke Bornn \vspace{-0.5em} \\
-    Department of Statistics and Actuarial Science, Simon Fraser University 
-}
+    % Luke Bornn \vspace{-0.5em} \\
+    % Department of Statistics and Actuarial Science, Simon Fraser University 
+% }
 % Authors using authblk package
     % \author[a]{Maxime Rischard
         % \thanks{
