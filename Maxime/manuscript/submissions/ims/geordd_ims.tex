@@ -1,0 +1,150 @@
+\documentclass[aoas,preprint]{imsart}
+
+\RequirePackage[OT1]{fontenc}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{xr-hyper} % cross-references (between documents)
+\usepackage{xcolor} % Allow colors to be defined
+\usepackage{geometry} % Used to adjust the document margins
+\usepackage{amsmath} % Equations
+\usepackage{amssymb} % Equations
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage[hyphens]{url}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage[title,toc]{appendix}
+\newcommand{\georddtitle}{
+    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
+    Do School Districts Affect NYC House Prices?
+}
+\hypersetup{
+    colorlinks=true,
+    pdfborder=0 0 1,
+    pdftitle=\georddtitle{},
+    allcolors=[rgb]{0.00,0.38,0.59},
+    allbordercolors=[rgb]{0.60,0.76,0.86}
+}
+\usepackage{natbib}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{pdflscape}
+
+\startlocaldefs
+\input{preamble.tex}
+\newcommand{\autorefexternal}[1]{\autoref{#1}}
+\endlocaldefs
+\arxiv{arXiv:1807.04516}
+
+\begin{document}
+    \begin{frontmatter}
+        \title{
+            \georddtitle
+        }
+        \runtitle{
+            A Bayesian Nonparametric Approach to Geographic RDDs
+        }
+    \begin{aug}
+        \author{\fnms{Maxime} \snm{Rischard}\thanksref{m1}\ead[label=e1]{mrischard@g.harvard.edu}},
+        \author{\fnms{Zach} \snm{Branson}\thanksref{m1}\ead[label=e2]{zbranson@g.harvard.edu}}
+        \author{\fnms{Luke} \snm{Miratrix}\thanksref{m1}\ead[label=e3]{lmiratrix@g.harvard.edu}}
+        \and
+        \author{\fnms{Luke} \snm{Bornn}\thanksref{m2}\ead[label=e4]{lbornn@sfu.ca}}
+
+        % \thankstext{t1}{This research was supported by the National Science Foundation under Grant No. 1461435.}
+        % \thankstext{t2}{First supporter of the project}
+        % \thankstext{t3}{Second supporter of the project}
+        \thankstext{t1}{
+            This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.
+        }
+        \runauthor{M. Rischard et al.}
+
+        \affiliation{{Harvard University}\thanksmark{m1}
+                     and {Simon Fraser University}\thanksmark{m2}}
+        \address{M. Rischard and Z. Branson
+                 Department of Statistics\\
+                 Harvard University\\
+                 Cambridge, MA\\
+                 USA \\
+                \printead{e1}\\
+                \phantom{E-mail:\ }\printead*{e2}
+        }
+        \address{Luke Miratrix
+                 Graduate School of Education\\
+                 Harvard University\\
+                 Cambridge, MA\\
+                 USA \\
+                \printead{e3}
+        }
+        \address{Luke Bornn
+                 Department of Statistics and Actuarial Science\\
+                 Simon Fraser University\\
+                 Burnaby, B.C.\\
+                 Canada \\
+                \printead{e4}
+        }
+    \end{aug}
+
+    \begin{abstract}
+        Most research on regression discontinuity designs (RDDs) has focused on univariate cases, where only those units with a ``forcing'' variable on one side of a threshold value receive a treatment.
+        Geographical regression discontinuity designs (GeoRDDs) extend the RDD to multivariate settings with spatial forcing variables.
+        We propose a framework for analysing GeoRDDs, which we implement using Gaussian process regression. 
+        This yields a Bayesian posterior distribution of the treatment effect at every point along the border.
+        We address nuances of having a functional estimand defined on a border with potentially intricate topology, particularly when defining and estimating causal estimands of the local average treatment effect (LATE).
+        The Bayesian estimate of the LATE can also be used as a test statistic
+        in a hypothesis test with good frequentist properties, 
+        which we validate using simulations and placebo tests.
+        We demonstrate our methodology with a dataset of property sales in New York City,
+        to assess whether there is a discontinuity in housing prices at the border between two school district.
+        We find a statistically significant difference in price across the border between the districts with \(p\)=0.002, and estimate a 20\%  higher price on average for a house on the more desirable side.
+    \end{abstract}
+
+    \begin{keyword}[class=MSC]
+    \kwd[Primary ]{60K35}
+    \kwd{60K35}
+    \kwd[; secondary ]{60K35}
+    \end{keyword}
+
+    \begin{keyword}
+    \kwd{sample}
+    \kwd{\LaTeXe}
+    \end{keyword}
+
+\end{frontmatter}
+\input{geordd_raw}
+
+\begin{appendices}
+    \input{geordd_appendices}
+\end{appendices}
+
+\bibliographystyle{chicago}
+\bibliography{GeoRDD}
+
+%%%%%%%%%% Merge with supplemental materials %%%%%%%%%%
+% https://tex.stackexchange.com/questions/168169/options-for-supplementary-materials-in-preprint-version-revtex-arxiv#169606
+\pagebreak
+\begin{center}
+\phantomsection
+    \addcontentsline{toc}{section}{Supplementary Materials}
+    \bf 
+    \LARGE
+    Supplementary Materials
+    \\*
+    \large
+    \georddtitle
+\end{center}
+%%%%%%%%%% Merge with supplemental materials %%%%%%%%%%
+%%%%%%%%%% Prefix a "S" to all equations, figures, tables and reset the counter %%%%%%%%%%
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{section}{0}
+\newcommand{\sprefix}{S-}
+\renewcommand{\theequation}{\sprefix\arabic{equation}}
+\renewcommand{\thesection}{\sprefix\arabic{section}}
+\renewcommand{\thefigure}{\sprefix\arabic{figure}}
+\renewcommand{\thetable}{\sprefix\arabic{table}}
+
+\input{supplementary_raw.tex}
+
+\end{document}

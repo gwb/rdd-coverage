@@ -1,0 +1,51 @@
+\documentclass[12pt]{article}
+
+\newcommand{\blind}{1}
+\pdfminorversion=4
+\input{preamble.tex}
+% disable hyperlinks between documents
+\newcommand{\autorefexternal}[1]{\autoref*{#1}}
+
+\begin{document}
+\doublespacing
+
+\externaldocument{"supplementary_materials"}
+
+\if0\blind
+{
+\title{
+    \Large
+    \bf
+    \georddtitle
+}
+\author{\georddauthor}
+\maketitle
+} \fi
+
+\if1\blind
+{
+  \bigskip
+  \bigskip
+  \bigskip
+  \begin{center}
+    {\LARGE\bf \georddtitle}
+\end{center}
+  \medskip
+} \fi
+% \if1\blind
+% {
+    % \author{\vspace{-3em}}
+% } \fi
+\begin{abstract}
+    \input{geordd_abstract}
+\end{abstract}
+
+\noindent%
+{\it Keywords}: \georddkeywords
+\vfill
+\newpage
+
+\input{geordd_raw}
+
+
+\end{document}
