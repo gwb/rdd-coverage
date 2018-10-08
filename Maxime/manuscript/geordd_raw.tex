@@ -1,8 +1,7 @@
 \section{Introduction}\label{introduction}
 
-\subsection{Estimating the effect of school quality on house prices}
 
-There has been a long-standing interest in the economics literature in estimating the implicit price of school quality by measuring its effect on house prices.
+
 
 \subsection{The geographic regression discontinuity design}
 
@@ -64,6 +63,23 @@ Reusing the same methodological skeleton and applying it to geographical RDDs, o
 We believe this approach to be particularly suitable to GeoRDDs, as GPR is a well-established tool in spatial statistics (where it is known as kriging) for fitting smoothly varying spatial processes.
 See \cite{banerjee2014hierarchical} for a textbook introduction to kriging for spatial data, and \cite{rasmussen2006gaussian} for a machine learning perspective.
 
+\subsection{Estimating the effect of school quality on house prices}
+
+There has been a long-standing interest in the economics literature in estimating the implicit price of school quality by measuring its effect on house prices.
+The theoretical underpinning of this literature is the hedonic valuation model \citep{rosen1974hedonic,sheppard1999hedonic}, and often takes the form of a linear model on the logarithm of the price $p$ of a house with characteristics $x(\svec)$ in a location $\svec$
+\begin{equation}
+    \log p = s(\svec)\beta + x(\svec)\gamma + g(\svec) + \epsilon
+    \,,
+    \label{eq:hedonic}
+\end{equation}
+where $s(\svec_i)$ is the expected quality, reputation, or funding (depending on the focus of the research) of the schools that local residents can access, $g(\svec)$ represents the effect of unobserved covariates that influence house prices in a spatially correlated manner (for example proximity to a good public transportation link or to a popular park), and $\epsilon$ captures the additional unobserved factors that affected the sale prices of this house.
+The estimation of $\beta$, the effect of a unit of school quality on the price of a house, is made difficult by the unobserved  $g$, and so ordinary least squares (OLS) estimates are confounded by factors that 
+
+\cite{black2011housing} review the existing research that attempts to value school quality through house prices, and classify the various identification strategies and methodologies that have been used to estimate $\beta$.
+Most germane to this paper are the contributions of \citet{black1999better}, who is the first to deploy the regression discontinuity design (RDD) in this context, and \citet{gibbons2013valuing} and \citet{fack2010better}, who develop matching methodologies to address the issue of spatial confounding.
+
+\subsection{Structure of the paper}
+
 In \autoref{sec:geordd_model}, we use GPR to estimate the treatment effect along the border by extending the model of \cite{Branson:2017qy} to geographical settings.
 A peculiarity of GeoRDDs is that the estimand is a function defined everywhere along the border, which is a one-dimensional manifold embedded in two-dimensional space.
 Furthermore, geographical borders, whether they be political or natural, are rarely simple straight lines.
@@ -76,7 +92,7 @@ Focusing on a single border between two school districts, we estimate the treatm
 We find a statistically significant difference in price across the border with a \(p\)-value of 0.002, and estimate that the same house located near the border will on average fetch an almost 20\% higher price in district 27 than in district 19.
 However, this effect can not be attributed solely to the reputation of the school district, as this border also separates the boroughs of Brooklyn and Queens, thus confounding the causal effect of the districts.
 
-\section{GeoRDD Modeling with Gaussian processes}
+\section{GeoRDD estimation with Gaussian processes}
 \label{sec:geordd_model}
 
 We largely adopt the setup and notation for GeoRDDs laid out in \cite{keele_titiunik_2015}.
@@ -116,7 +132,7 @@ We denote by \(\tau(\sentinels)\) the \(\numsent\)-vector with \(r^\mathrm{th}\)
 
 
 \subsection{Model Specification}
-\label{sec:twogp}
+\label{sec:gpmodel}
 Our GeoRDD framework allows any method to be used to fit the outcomes on either side of the border.
 In this paper we use Gaussian process regression (GPR) for this purpose.
 GPR, known as kriging in the spatial statistics literature, is a Bayesian non-parametric method for fitting smooth functions. 
@@ -618,6 +634,11 @@ The 27,394 residential properties with missing square footage information are al
 these are almost all coops and condos, which explains the clustering of missing data in areas of higher density.
 
 \subsection{Model for Property Prices}
+
+One restriction of the hedonic model \autoref{eq:hedonic} is the assumption that the effect size $\beta$ is constant.
+It also models the effect of the school district as a linear function of the school quality observable covariates $s(\svec)$.
+To allow for heterogenous effects, 
+
 The outcome of interest is price per square foot.
 As is commonly done in analyses of real estate prices, we take its logarithm to reduce the skew of the outcome.
 The complete model is then a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\district\)) over the spatial covariates \(\svec\), super-imposed with a linear regression on the property covariates (which are \(L_\building\) building categories encoded as dummy variables).
@@ -706,14 +727,14 @@ In this example, we find that the posterior variance of \(\betavec\) is low, and
 	}
 \end{figure}
 
-Following the inference procedure outlined in \autoref{sec:twogp}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at \(R=100\) sentinel locations evenly spaced along the border.
+Following the inference procedure outlined in \autoref{sec:gpmodel}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at \(R=100\) sentinel locations evenly spaced along the border.
 The cliff height is shown in \autoref{fig:NYC_cliff_height}, and shows that \(\tau\) is estimated as negative everywhere along the border, which corresponds to higher property prices in district 27.
 However, the credible envelope is fairly wide, especially in the southern section of the border, so we cannot visually rule out the null hypothesis that \(\tau=0\).
 
 \subsection{Average Log-Price Increase}
 The cliff height \autoref{fig:NYC_cliff_height} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
 Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=2\ell\) of the border, yield LATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
-By contrast, treating each district and building class as a fixed effect in an ordinary least squares (OLS) model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
+By contrast, treating each district and building class as a fixed effect in an OLS model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East to West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
 All LATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
 In this example the different estimators yield similar answers, as the border is fairly straight and short relative to the fitted lengthscale.
