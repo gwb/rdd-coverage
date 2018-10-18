@@ -12,5 +12,9 @@ GeoRDD*2018*.pdf
 *.toc
 *.fls
 *.key
-JASA
-arxiv*
+submissions/*/*.pdf
+submissions/*/*.bib
+submissions/*/geordd_raw.tex
+submissions/*/geordd_abstract.tex
+submissions/*/geordd_appendices.tex
+submissions/*/figures
