@@ -14,7 +14,10 @@ GeoRDD*2018*.pdf
 *.key
 submissions/*/*.pdf
 submissions/*/*.bib
+submissions/*/*.zip
 submissions/*/geordd_raw.tex
+submissions/*/supplementary_raw.tex
 submissions/*/geordd_abstract.tex
 submissions/*/geordd_appendices.tex
+submissions/*/preamble.tex
 submissions/*/figures

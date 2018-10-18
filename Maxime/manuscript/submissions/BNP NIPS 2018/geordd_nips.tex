@@ -1,0 +1,335 @@
+\documentclass{article}
+
+% if you need to pass options to natbib, use, e.g.:
+\PassOptionsToPackage{sort&compress, numbers}{natbib}
+% before loading nips_2018
+
+% ready for submission
+\usepackage{nips_2018}
+
+% to compile a preprint version, e.g., for submission to arXiv, add
+% add the [preprint] option:
+% \usepackage[preprint]{nips_2018}
+
+% to compile a camera-ready version, add the [final] option, e.g.:
+% \usepackage[final]{nips_2018}
+
+% to avoid loading the natbib package, add option nonatbib:
+% \usepackage[nonatbib]{nips_2018}
+
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{xr-hyper} % cross-references (between documents)
+\usepackage{xcolor} % Allow colors to be defined
+\usepackage{geometry} % Used to adjust the document margins
+\usepackage{amsmath} % Equations
+\usepackage{amssymb} % Equations
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage[hyphens]{url}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage[title,toc]{appendix}
+\usepackage{natbib}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{pdflscape}
+
+\input{preamble.tex}
+\newcommand{\autorefexternal}[1]{\autoref*{#1}}
+
+\title{Bayesian Nonparametrics for Geographic RDDs}
+
+\author{
+  Maxime Rischard \\
+  Statistics Department \\
+  Harvard University \\
+  Cambridge, MA \\
+  \texttt{mrischard@g.harvard.edu} \\
+  \And
+  Zach Branson \\
+  Statistics Department \\
+  Harvard University \\
+  Cambridge, MA \\
+  \And
+  Luke Miratrix \\
+  Graduate School of Education \\
+  Harvard University \\
+  Cambridge, MA \\
+  \And
+  Luke Bornn \\
+  Department of Statistics and Actuarial Science\\
+  Simon Fraser University\\
+  Burnaby, B.C.\\
+  Canada
+}
+
+\begin{document}
+
+\externaldocument{"supplementary_nips"}
+
+\maketitle
+
+\begin{abstract}
+    Most research on regression discontinuity designs (RDDs) has focused on univariate cases, where only those units with a ``forcing'' variable on one side of a threshold value receive a treatment.
+    Geographical regression discontinuity designs (GeoRDDs) extend the RDD to multivariate settings with spatial forcing variables.
+    We propose a framework for analysing GeoRDDs, implemented using Gaussian process regression. 
+    This yields a Bayesian posterior distribution of the treatment effect at every point along the border.
+    We address nuances of having a functional estimand defined on a border with potentially intricate topology when defining and estimating causal estimands of the local average treatment effect.
+    We demonstrate our methodology to assess whether there is a discontinuity in housing prices at the border between two school districts in New York City.
+\end{abstract}
+
+\section{Introduction}\label{introduction}
+
+Regression discontinuity designs (RDDs) are natural experiments characterized by the treatment assignment being fully determined by some covariates, which are termed ``forcing'' variables.
+Geographical regression discontinuity designs (GeoRDDs) are multivariate RDDs where the forcing variables are spatial.
+Practitioners often wish to use the well-established methods and software developed for 1D~RDDs with spatial data,
+and reduce a GeoRDD problem to a 1D~RDD by using the signed distance from the boundary as the forcing variable.
+However, this method fails to capture spatial variation in the outcomes, resulting in spatial confoundedness of the estimator.
+See Section~4.2 of \cite{keele_titiunik_2015} for a further discussion of this issue.
+
+A more principled treatment of the GeoRDD is offered by \cite{keele_titiunik_2015}, who build theoretical foundations for the analysis of GeoRDDs.
+They extend the identification assumptions that were formalized by \cite{hahn2001identification} for 1D~RDDs, and \cite{imbens2011regression} for multivariate RDDs, to GeoRDDs.
+Several methods for estimating the treatment effect in GeoRDDs have been proposed.
+\cite{keele_titiunik_2015} and \cite{keeleoverview} estimate the treatment effect using a modification of the signed distance 1D~RDD method by applying it locally around each point along the border, which alleviates the problem of spatial confounding.
+\cite{keele2015enhancing} propose an alternative approach: they deploy the matching methods of \cite{zubizarreta2012using} to units on opposite sides of the border that are near each other geographically and in other covariates.
+
+\label{sec:framework}
+In this paper, we propose a framework for analysing GeoRDDs that is a spatial analogue of 1D~RDD methods.
+Broadly, 1D~RDD methodologies are composed of three steps:
+\begin{flatlist}
+    \item
+        fit a smooth \emph{function} to the outcomes against the forcing variable on each side of the threshold,
+    \item
+        extrapolate the functions to the \emph{threshold point}, and
+    \item
+        take the difference between the two extrapolations to estimate the treatment effect at the threshold point.
+\end{flatlist}
+Reusing the same methodological skeleton and applying it to geographical RDDs, our framework proceeds analogously:
+\begin{flatlist}
+    \item
+        fit a smooth \emph{surface} to the outcomes against the geographical covariates in each region,
+    \item
+        extrapolate the surfaces to the \emph{border curve}, and
+    \item
+        take the \emph{pointwise} difference between the two extrapolations to estimate the treatment effect along the border.
+\end{flatlist}
+
+Recently, \cite{Branson:2017qy} proposed a Gaussian process regression (GPR) methodology that exhibits promising coverage and MSE properties compared to local linear regression for 1D~RDDs.
+We believe this approach to be particularly suitable to GeoRDDs, as GPR is a well-established tool in spatial statistics (where it is known as kriging) for fitting smoothly varying spatial processes.
+
+\section{GeoRDD estimation with Gaussian processes}
+\label{sec:geordd_model}
+
+We largely adopt the setup and notation for GeoRDDs laid out in \cite{keele_titiunik_2015}.
+The outcomes \(Y_i\) of \(n\) units with spatial coordinates \(\svec_i\) are observed within an area \(\area\) of 2-dimensional coordinate space.
+The units are separated by the border \(\border\) into \(n_\treat\) treatment units in area \(\treatarea \subset \area\)
+and \(n_\ctrol\) units in the control area \(\ctrolarea\).
+Throughout this paper, points on the border are denoted by \(\sentinel\).
+Under the potential outcomes framework for causal inference, each unit \(i\) has potential outcomes \(Y_{i\treat}\) and \(Y_{i\ctrol}\) under treatment and control respectively.
+In the GeoRDD, \(Y_{i\treat}\) is observed if \(\svec_i \in \treatarea\), and \(Y_{i\ctrol}\) if \(\svec_i \in \ctrolarea\).
+
+Analogously to 1D~RDDs, we focus on the treatment effect at the border \(\border\) between the treatment and control regions:
+\begin{equation}
+\tau\colon \border \rightarrow \mathbb{R}
+\quad\text{defined as}\quad
+\tau\del{\sentinel} = \E\sbr{Y_{i\treat} - Y_{i\ctrol} \mid \svec_i = \sentinel}
+\,.
+\label{eq:functional_estimand}
+\end{equation}
+This is the functional estimand defined in \cite{imbens2011regression} and \cite{keele_titiunik_2015}.
+For any \(\sentinel \in \border\), \(\tau(\sentinel)\) can be obtained as the difference of the two limits of the expected outcomes, approaching \(\sentinel\) from the treatment or the control side of the border, under the assumption that the conditional regression functions \(\E\sbr{Y_{i\treat} \mid \svec_i=\svec}\) and \(\E\sbr{Y_{i\ctrol} \mid \svec_i=\svec}\) are continuous in \(\svec\) within \(\area\)
+(see Assumption~2.2.2 in \cite{imbens2011regression} and Assumption~1 in \cite{keele_titiunik_2015}).
+For computational purposes, we represent the border as a set \(\sentinels=\sentinelset\), \(\sentinel_\isent \in \border\) of \(\numsent\) ``sentinel points'' along the border.
+We denote by \(\tau(\sentinels)\) the \(\numsent\)-vector with \(r^\mathrm{th}\) entry \(\tau(\sentinel_r)\) of the treatment effect evaluated at \(\sentinel_r\).
+
+\label{sec:gpmodel}
+Our GeoRDD framework allows any spatial method to be used to fit and extrapolate the outcomes on either side of the border.
+In this paper we use GPR \citep{banerjee2014hierarchical,rasmussen2006gaussian} for this purpose.
+On each side of the border, we model the observed outcomes \(Y_i\) at location \(\svec_i\) as the sum of an intercept \(m\), a spatial Gaussian process \(f(\svec)\), and iid normal noise \(\epsilon\).
+The Gaussian process has zero mean, and we choose to use the squared exponential covariance kernel:
+\begin{equation}
+    \begin{split}
+        & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \epsilon_i \quad\text{and}\quad
+        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i \,; \\
+        & f_\treat{}, f_\ctrol{} \overset{\indep}{\sim} \GP\del{0, k(\svec, \svec')} \quad\text{with}\quad
+        k(\svec,\svec') = \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \,.
+    \end{split}
+    \label{eq:spec2gp}
+\end{equation}
+The treatment effect at \(\sentinel\) is then the difference between the two noise-free surfaces:
+    \(\tau(\sentinel) = g_\treat{}(\sentinel) - g_\ctrol{}(\sentinel)\)
+.
+\label{sec:inference}
+If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu^2\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
+Given hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), the posterior distribution of \(g_\treat\) at \(\sentinels=\sentinelset\) is multivariate normal:
+\begin{equation}\begin{split}
+    & g_\treat{}(\sentinels) \mid \yt{}, \hyperparam \sim \normal\del{\muvec_{\sentinels \mid T}, \Sigma_{\sentinels \mid T}} \,\text{, with} \\
+    & \muvec_{\sentinels \mid T} =
+    \KBT
+    \STT^{-1} 
+    \yt{} 
+    \quad\text{and}\quad
+    \Sigma_{\sentinels \mid T} =
+    \KBB - \KBT \STT^{-1} \KBT\trans \,.
+\end{split}
+\label{eq:postvar2gp_t_or_c}
+\end{equation}
+with all the covariance matrices derived from the model specification (see \autorefexternal{sec:covariances} in Supplements).
+We denote the vector of observed outcomes of the treatment units and control units respectively by \(\yt\) and \(\yc\).
+Similarly, the posterior of \(g_\ctrol{}(\sentinels)\) is multivariate normal with mean and covariance denoted respectively by \(\muvec_{\sentinels \mid C}\) and \(\Sigma_{\sentinels \mid C}\).
+Since the two surfaces are modeled as independent, the treatment effect has posterior
+\begin{equation}
+    \begin{split}
+        & \tau(\sentinels) \mid \yt, \yc, \hyperparam \sim \normal\del{\muvec_{\sentinels \mid Y}, \Sigma_{\sentinels \mid Y}} \,\text{, with}\\
+        & \muvec_{\sentinels \mid Y} = \muvec_{\sentinels \mid \treat} - \muvec_{\sentinels \mid \ctrol} \quad\text{and}\quad
+        \Sigma_{\sentinels \mid Y} = \Sigma_{\sentinels \mid \treat} + \Sigma_{\sentinels \mid \ctrol} \,.
+    \end{split}
+    \label{eq:postvar2gp}
+\end{equation}
+This leaves the choice of the hyperparameters \(\hyperparam\).
+For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak, while the other parameters are fitted by maximizing the marginal likelihood.
+
+\subsection{Estimating the Local Average Treatment Effect}
+\label{sec:ate}
+
+Once we have obtained the posterior of \(\tau\) \eqref{eq:postvar2gp}, estimating the local average treatment effect (LATE) along the border is of interest.
+We consider the class of weighted means of the functional treatment effect \(\tau\del{\sentinel}\),
+with weight function \(\weightb(\sentinel)\) defined everywhere on the border \(\border\).
+The weighted mean integral can be approximated as a weighted sum at the (evenly spaced) sentinels \(\sentinels\):
+\begin{equation}
+    \tauw = \frac{\oint_\border \left. \weightb(\sentinel) \tau(\sentinel) \dif\sentinel \right.}
+    {\oint_\border \left. \weightb(\sentinel) \dif\sentinel \right.}
+    \approx \frac{\sum_{\isent=1}^\numsent \weightb(\sentinel_\isent) \tau(\sentinel_\isent)}
+    {\sum_{\isent=1}^\numsent \weightb(\sentinel_\isent) } \,.
+\label{eq:weighted_estimand}
+\end{equation}
+Since \(\tauw\) is a linear combination of \(\tau(\sentinels)\), its posterior is normal, with mean \(\mu_{\tauw \mid Y}\) and variance \(\Sigma_{\tauw \mid Y}\) given by:
+\begin{equation}
+    \mu_{\tauw \mid Y} = \frac{\weightb(\sentinels)\trans \muvec_{\sentinels \mid Y}}
+    {\weightb(\sentinels)\trans  \ones_\numsent}\quad\text{and}\quad
+    \Sigma_{\tauw \mid Y} = \frac{\weightb(\sentinels)\trans \Sigma_{\sentinels \mid Y} \weightb(\sentinels)}
+    { \del{\weightb(\sentinels)\trans  \ones_\numsent }^2 } \,,
+\label{eq:weighted_estimator}
+\end{equation}
+where \(\weightb(\sentinels)\) is the \(\numsent\)-vector of weights evaluated at the sentinels, and \(\ones_\numsent\) is an \(\numsent\)-vector of ones.
+
+The simplest choice is uniform weights \(\weightb(\sentinel)=1\), but this suffers from two main drawbacks.
+Firstly, parts of the border adjoining dense populations are given equal weights to those in sparsely populated areas;
+\(\tau(\sentinel)\) in emptier areas will have large posterior variances, which will dominate the posterior variance of \(\unifavg\), potentially jeopardizing the successful detection of otherwise strong treatment effects.
+Secondly, the estimand and estimator depend on the topology of the border.
+If a section of the border has more twists and turns---for example if it follows the course of a meandering river---then that section will receive disproportionately more sentinels.
+To address these issues, we suggest using the inverse-variance weighted mean \(\invvar\) with weights 
+\(\weightb(\sentinels) = \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}\).
+This estimator efficiently extracts the information from the posterior treatment effect, as it can be shown to minimize the posterior variance amongst weighted averages of the form \autoref{eq:weighted_estimand}.
+It automatically gives more weight to sentinels in dense areas (as the variance will be lower there), and to sentinels in straight sections of the border (as the correlations between sentinels will be lower).
+
+\section{Application: NYC School Districts}
+\label{sec:NYC_example}
+
+We illustrate the analysis of a GeoRDD with house sales data in New York City.
+The city publishes information pertaining to property sales within the city in the last 12 months on a rolling basis \citep{nyc_data}, which we downloaded on September~15, 2016.
+The dataset includes columns for the sale price, building class, and the address of the property.
+It is a common belief that school districts have an impact on real estate price, as parents are willing to pay more to live in districts with better schools.
+We therefore ask: can we measure a discontinuous jump in house prices across the borders separating school districts?
+After geocoding the address of each sale, removing sales with missing data and all sales other than houses, we obtain a dataset of 19,578 sales.
+
+The outcome $Y$ is the logarithm of the price per square foot, 
+modeled as a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\district\)) over the spatial covariates \(\svec\), super-imposed with a linear regression on the property covariates (\(L_\building\) building categories encoded as dummy variables), and an error term $\epsilon_i$:
+\begin{equation}
+    \begin{aligned}
+        & Y_i = % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
+        	m_{\district\sbr{i}} + \beta_{\building\sbr{i}}
+        	+ f_{\district\sbr{i}}(\svec_i) + \epsilon_i 
+			\,,\quad
+ 			\epsilon_i \sim \normal\del{0, \sigma_y^2} 
+			\,,
+			\phantom{\hspace{-10cm}} % for alignment
+            \\
+        & \beta_{l} \sim \normal\del{0, \sigma_\beta^2}
+			\,,
+			&&
+			\forall
+			l=1,\dotsc,L_\building \,, \\
+        & m_{j} \sim \normal\del{0, \sigmamu^2}
+        \,,\ 
+        f_j \sim \GP\del{0, k(\svec, \svec')}
+			\,,
+			&&
+			\forall
+			j=1,\dotsc,J_\district
+		\,.
+        % k(\svec, \svec') &= \sigmaf^2 \exp\cbr{ - \frac{(\svec-\svec')\trans(\svec-\svec')}{2\ell^2}} \,,
+    \end{aligned}
+    \label{eq:nyc_model}
+\end{equation}
+
+\begin{figure}
+  \begin{minipage}[c]{0.5\textwidth}
+    \includegraphics[width=\textwidth]{figures/NYC_cliff_face.png}
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.5\textwidth}
+    \caption{
+        (a)
+        Posterior treatment effect \autoref{eq:postvar2gp} for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
+        The left \(y\)-axis shows the difference in log prices per square foot; positive values mean prices are higher in district 19.
+        The right \(y\)-axis shows the corresponding ratio of the price of a house in district 19 over its price in district 27.
+        A few draws from the posterior are shown in lighter color to show the posterior correlations between sentinels.
+        (b)
+        A map of sentinel locations, evenly spaced along the border between school districts 27 and 19.
+    	The southernmost sentinel (shown as a blue circle) has index 1, while the northernmost sentinel (shown in yellow) has index 100.\label{fig:NYC_cliff_height}
+    } 
+  \end{minipage}
+\end{figure}
+
+We illustrate the results with a single pair of neighboring districts: 19 (``treatment'') and 27 (``control'').
+We fit the hyperparameters \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigma_\beta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\)
+by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29,
+and set \(\sigmamu=20\) to give the district means \(m_j\) a weak prior.
+After fitting the coefficients $\beta$ (see \autorefexternal{sec:covariates} in Supplements for details) and extracting residuals, we obtain the posterior treatment effect \autoref{eq:postvar2gp} shown in \autoref{fig:NYC_cliff_height}.
+
+The posterior mean in \autoref{fig:NYC_cliff_height} indicates a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
+Our two estimators, based on uniform weights and inverse-variance weights, yield LATE estimates (posterior mean \(\pm\) std. deviation) of \(-0.17\pm 0.08\) and \(-0.19 \pm 0.06\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
+By contrast, treating each district and building class as a fixed effect in an OLS model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
+
+\section{Discussion}
+
+Geographic regression discontinuity designs (GeoRDDs) arise when a treatment is assigned to one region, but not to another adjacent region.
+Under smoothness assumptions, units adjacent to the border are comparable, and form a natural experiment.
+The same idea underpins causal interpretations of one-dimensional regression discontinuity designs (1D RDDs), where a single ``forcing'' variable controls the treatment assignment.
+We use this similarity to motivate a framework for the analysis of GeoRDDs.
+
+We emphasize the importance of the spatial aspect of GeoRDDs, 
+using GPR (kriging) to fit smooth surfaces to the outcomes, and to extrapolate to the border.
+Our approach yields a multivariate normal posterior on the treatment effect at a set of ``sentinel'' locations along the border.
+The use of GPR to analyse GeoRDDs is flexible and presents opportunities for future extensions, 
+inspired by developments in spatial statistics and machine learning that are based on Gaussian processes.
+For example, if the outcomes are binary, proportions, or counts, then binomial or Poisson likelihoods could be substituted instead of the normal likelihood used in this paper.
+We also expect that methodological advances that improve the extrapolating behavior of Gaussian processes \citep[e.g.][]{wilson2013gaussian} would improve the robustness of our method.
+
+Averaging the treatment effect along the border turns out to have surprising pitfalls.
+Simply integrating the treatment effect uniformly along the border yields an estimand that is inefficient and undesirably sensitive to the topology of the border.
+The inverse-variance weighted estimator is robust to this effect and uses the information available in the data more efficiently.
+
+We applied our method to a publicly available dataset of one year of New York City property sales, to examine whether school district cause difference in property prices.
+Focusing on the border between school districts 19 and 27, we estimated a roughly 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
+However, the border between these two districts is also the border between the NYC boroughs of Brooklyn and Queens, so we cannot attribute this difference to the causal effect of the school districts.
+In the Supplements, we extend the GeoRDD analysis to other pairs of adjacent school districts, and find significant effects between many of these pairs.
+
+\newpage
+\subsubsection*{Acknowledgments}
+This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.
+
+
+\bibliographystyle{alpha}
+\bibliography{GeoRDD}
+
+
+\end{document}
