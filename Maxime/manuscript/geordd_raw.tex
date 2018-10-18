@@ -1,6 +1,6 @@
 \section{Introduction}\label{introduction}
 
-It is a commonly held belief that the quality of schools has a significant effect on the price of nearby housing.
+It is commonly believed that the quality of schools has a significant effect on the price of nearby housing.
 Economists have long been interested in measuring and using this effect to estimate the implicit price of school quality.
 \cite{black2011housing} review the existing literature on this topic, and classify the various identification strategies and methodologies that have been proposed.
 Typically, the theoretical underpinning of this literature is the hedonic valuation model \citep{rosen1974hedonic,sheppard1999hedonic}, whereby the price of a house is decomposed into (usually log-linear) contributions from characteristics of the house, of the neighborhood, and of the schools that local residents can access.
@@ -21,7 +21,7 @@ Until relatively recently, most theory and applications of RDDs were for univari
 but beginning with \cite{papay2011extending}, methods have been developed to analyse multivariate RDDs.
 \cite{imbens2011regression} extend the local linear regression methods \citep[see][]{imbensrdd} that are popular for analysing univariate RDDs (1D~RDDs) to settings with multiple forcing variables.
 % Most germane to this paper are the contributions of \citet{black1999better}, who is the first to deploy the regression discontinuity design (RDD) in this context, and \citet{gibbons2013valuing} and \citet{fack2010better}, who anticipate \citet{keele2015enhancing} in proposing matching methodologies to address the issue of spatial confounding.
-When these forcing variables are spatial, i.e. treatment and control units are separated by a geographical border, we face a Geographical regression discontinuity design (GeoRDD).
+When these forcing variables are spatial, i.e. treatment and control units are separated by a geographical border, this becomes a Geographical regression discontinuity design (GeoRDD).
 % meaning that units within a certain region are assigned to treatment, while units in a neighboring region are assigned to control.
 A convenient approach to GeoRDDs sometimes seen in applied work \citep[e.g.][]{macdonald2015effect,chen2013evidence,magruder2012high,holmes1998effect} is to 
 reduce it to a 1D~RDD by using the signed minimum distance to the boundary (positive for treatment and negative for control) as the forcing variable, a method we refer to as ``projected 1D~RDD.''
@@ -35,7 +35,7 @@ To estimate the treatment effect, \cite{keele_titiunik_2015} and \cite{keeleover
 % In \cite{chen2013evidence}, a policy applies south of the Huai River in China but not in the north, and pollution levels and life expectancies are measured to infer environmental and health impacts of the policy.
 For valuing school quality, \citet{gibbons2013valuing} and \citet{fack2010better} propose matching methodologies to address the issue of spatial confounding.
 By matching similar units on opposite sides of the border that are near each other geographically, the difference in their outcomes can plausibly be attributed to the presence of the border.
-\cite{keele2015enhancing} formalize this approach, and use the matching methods of \cite{zubizarreta2012using} to estimate the effect of ballot initiatives on voter turnout in Milwaukee, Wisconsin.
+Similarly, \cite{keele2015enhancing} use the matching methods of \cite{zubizarreta2012using} in a GeoRDD to estimate the effect of ballot initiatives on voter turnout in Milwaukee, Wisconsin.
 
 Spatial statistics, the branch of statistics dedicated to inference for geographical units with spatially correlated outcomes, has been mostly absent from this literature.
 In this paper, we propose a framework for analysing GeoRDDs that is a spatial analogue of 1D~RDD methods.
@@ -60,10 +60,10 @@ Reusing the same methodological skeleton and applying it to geographical RDDs, o
 \label{sec:framework}
 The potential contribution of spatial models is then evident;
 we propose to use kriging, also known as Gaussian process regression (GPR), to fit and extrapolate the outcomes, 
-but other spatial models could also be suitable.
-See \cite{banerjee2014hierarchical} for a textbook introduction to kriging for spatial data, and \cite{rasmussen2006gaussian} for a machine learning perspective.
+but other spatial methods could also be suitable.
 For 1D~RDDs, \cite{Branson:2017qy} proposed a Gaussian process regression (GPR) methodology that exhibits promising coverage and MSE properties compared to local linear regression.
 We believe this approach to be particularly suitable to GeoRDDs, as GPR is a well-established tool in spatial statistics for fitting smoothly varying spatial processes.
+See \cite{banerjee2014hierarchical} for a textbook introduction to kriging for spatial data, and \cite{rasmussen2006gaussian} for a machine learning perspective.
 
 \autoref{sec:geordd_estimation} explains our GeoRDD methodology.
 In \autoref{sec:gpmodel}, we use GPR to estimate the treatment effect along the border by extending the model of \cite{Branson:2017qy} to geographical settings.
@@ -198,56 +198,6 @@ The rest are optimized by maximizing the marginal likelihood of the observations
 This empirical Bayes approach is common in spatial and machine learning applications of Gaussian processes.
 An alternative would be to also specify a prior on the hyperparameters, which would be preferable in order to fully account for the uncertainty in the model, but fully Bayesian inference of large Gaussian process models tends to be computationally expensive.
 
-\subsection{Handling Nonspatial Covariates}
-\label{sec:covariates}
-
-The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on non-spatial covariates.
-The models are modified by the addition of the linear regression term \(\Dmat \betavec\) on the \(n \times p\) matrix of covariates \(\Dmat\), where \(p\) is the number of non-spatial covariates.
-We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigma_\beta^2 \Dmat \Dmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\).
-Let \(\dvec_i\) be the \(p\)-vector of non-spatial covariates of unit \(i\).
-Our model becomes:
-\begin{equation}
-    \begin{split}
-        & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i \quad\text{and}\quad
-        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i \,\text{, with} \\
-        & \beta_j \overset{\indep}{\sim} \normal\del{0,\sigmabeta^2}\,\text{, for }j=1,2,\dotsc,p \,,
-    \end{split}
-    \label{eq:covariates_model}
-\end{equation}
-and \(f_\treat\) and \(f_\ctrol\) as in \autoref{eq:spec2gp}.
-
-Unfortunately, the linear term induces a covariance between the treatment and control region; \(\SigmaMat_Y\) is no longer black diagonal, which roughly quadruples the computational cost of the analysis, as it requires the inversion of an \((n_\treat{}+n_\ctrol{}) \times (n_\treat{}+n_\ctrol{})\) covariance matrix instead of (in the absence of correlations between the treatment and control units) the separate inversions of the \(n_\treat{} \times n_\treat{}\) covariance matrix \(\STT\), and \(n_\ctrol{} \times n_\ctrol{}\) covariance matrix \(\SCC\).
-The introduction of the linear term modifies the cliff height estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
-\begin{equation}
-    \begin{split}
-        \muvec_{\sentinels \mid Y, D} &= 
-        \begingroup\SmallColSep
-        \begin{bmatrix}
-            \KBT & -\KBC
-        \end{bmatrix}
-        \SigmaMat_Y^{-1}
-        \Yvec
-        \endgroup
-        \,\text{, and}\\
-        \Sigma_{\sentinels \mid Y, D} &=
-        \begingroup\SmallColSep
-        2 \KBB -
-        \begin{bmatrix}
-            \KBT & -\KBC
-        \end{bmatrix}
-        \SigmaMat_Y^{-1}
-        \begin{bmatrix}
-            \KBT & -\KBC
-        \end{bmatrix}\trans
-        \endgroup
-        \,.
-    \end{split}
-    \label{eq:cliff_with_covariates}
-\end{equation}
-To avoid the complexity caused by the correlation between \(\yt\) and \(\yc\) that the linear term induces, we suggest first obtaining an estimate \(\hat\betavec\) of the coefficients.
-We show how to obtain the posterior mean of \(\betavec\) in \autoref{sec:betahat}.
-We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\betavec=\hat\betavec\).
-This is an approximation, as it ignores the uncertainty in the estimate of \(\betavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
 
 \subsection{Estimating the Local Average Treatment Effect}
 \label{sec:ate}
@@ -265,7 +215,7 @@ The weighted mean integral can be approximated as a weighted sum at the sentinel
 \end{equation}
 Note that the approximation assumes that the sentinels are evenly spaced, otherwise each term in the sum needs to be re-weighted by the length of the border that the sentinel occupies.
 We have shown the posterior distribution of \(\tau(\sentinels)\) to be multivariate normal, with mean \(\muvec_{\sentinels \mid Y}\) and covariance \(\Sigma_{\sentinels \mid Y}\) given in \autoref{eq:postvar2gp}.
-Since \(\tauw\) is a linear transformation of \(\tau(\sentinels)\), its posterior is also multivariate normal, with mean \(\mu_{\tauw \mid Y}\) and covariance \(\Sigma_{\tauw \mid Y}\) given by
+Since \(\tauw\) is a linear combination of \(\tau(\sentinels)\), its posterior is normal, with mean \(\mu_{\tauw \mid Y}\) and variance \(\Sigma_{\tauw \mid Y}\) given by
 \begin{equation}
     \mu_{\tauw \mid Y} = \frac{\weightb(\sentinels)\trans \muvec_{\sentinels \mid Y}}
     {\weightb(\sentinels)\trans  \ones_\numsent}\quad\text{and}\quad
@@ -303,13 +253,12 @@ of the observed data, with ``unit weights'' given by
 \end{equation}
 for treatment and control units respectively.
 
-The question remains: what is the most appropriate choice of weights?
 We next motivate and consider four possible choices of \(\weightb(\sentinel)\), and explore interpretations, advantages, and drawbacks. 
 In \autorefexternal{sec:additional_late} of the Supplementary Materials, we discuss two further choices, the projected land LATE \(\taugeo\), and the projected superpopulation LATE \(\taupop\).
 We also provide a simulation study to better understand the characteristics of the different LATE choices.
 A summary of their properties is provided in \autoref{table:estimator_properties}.
 
-\subsubsection{Uniform LATE}
+% \subsubsection{Uniform LATE}
 The simplest choice is uniform weights \(\weightb(\sentinel)=1\), a seemingly reasonable and unopinionated decision.
 The uniformly weighted LATE \(\unifavg\) is estimated by averaging the entries of the mean posterior at the sentinels.
 Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
@@ -324,14 +273,15 @@ Following \autoref{eq:weighted_estimand} and \autoref{eq:weighted_estimator}:
 \label{eq:unifavg}
 \end{equation}
 The uniformly weighted estimand takes on a geometric interpretation: equal-length segments of the border are given equal weight.
-Unfortunately, uniform weights suffer from several issues that we describe and address in \autoref{sec:tau_rho} and \autoref{sec:invvar}.
+Unfortunately, uniform weights suffer from two issues that we now describe and address.
+%in \autoref{sec:tau_rho} and \autoref{sec:invvar}.
 
-\subsubsection{Density Weighted LATE}
-\label{sec:tau_rho}
+% \subsubsection{Density Weighted LATE}
+% \label{sec:tau_rho}
 
 With uniform border weights, parts of the border adjoining dense populations are given equal weights to those in sparsely populated areas.
 But if the border goes through an unpopulated area, such as a lake or a public park, then the treatment effect there has little meaning and importance.
-Furthermore, \(\tau(\sentinel)\) in those empty areas will have large posterior variances, which will dominate the posterior variance of \(\unifavg\), potentially jeopardizing the successful detection of otherwise strong treatment effects.
+Furthermore, \(\tau(\sentinel)\) in these empty areas will have large posterior variances, which will dominate the posterior variance of \(\unifavg\), potentially jeopardizing the successful detection of otherwise strong treatment effects.
 
 We can address this issue by weighting the treatment effect at each sentinel location by the local population density \(\rho\),
 i.e.\ choosing \(\weightb(\sentinel) = \rho(\sentinel)\).
@@ -344,26 +294,25 @@ This is the estimand used by \cite{keele_titiunik_2015}, who themselves follow i
 
 In practice, the local density needs to be estimated.
 A simple kernel density estimator can be used,
-though one could also deploy a more sophisticated spatial point process model.
+or any spatial point process model.
 Strictly speaking, the uncertainty of the local density estimate should then be propagated to the estimate of \(\taurho\), which may therefore no longer have a normally distributed or analytically tractable posterior.
 
-These inconveniences certainly reduce the appeal of the density-weighted estimator,
-but there is a deeper issue affecting this choice of estimand: its susceptibility to the topology of the border.
+Furthermore, the uniform and density-weighted estimators are both undesirably susceptible to the topology of the border.
 If a section of the border has more twists and turns---for example if it follows the course of a meandering river---then that section will receive disproportionately more sentinels.
 The unweighted and density-weighted mean treatment estimands are both affected by this effect,
 which gives higher weight to wigglier sections of the border.
 See \autorefexternal{sec:wiggly_border} of the Supplementary Materials for a simulation demonstrating this susceptibility to border topology.
-Consider, for illustration purposes, the border separating the two American states of Louisian and Mississippi, depicted in \autorefexternal{fig:mississippi_counties} of the Supplementary Materials.
-From North to South, it follows the meandering Mississippi river, then takes a sharp turn to the East and becomes a straight line, until it meets the even more sinuous Pearl river, which it follows until it reaches the Gulf of Mexico.
-Consequently, sentinels placed at equal distance intervals along this border will be more densely packed along the rivers, and sparsest along the straight segment.
-When averaging a function over the border, those sections become overrepresented.
-Troublingly, the sinuousness of the border therefore determines the estimand, even though the outcomes of interest will generally have nothing to do with river topologies.
+% Consider, for illustration purposes, the border separating the two American states of Louisian and Mississippi, depicted in \autorefexternal{fig:mississippi_counties} of the Supplementary Materials.
+% From North to South, it follows the meandering Mississippi river, then takes a sharp turn to the East and becomes a straight line, until it meets the even more sinuous Pearl river, which it follows until it reaches the Gulf of Mexico.
+% Consequently, sentinels placed at equal distance intervals along this border will be more densely packed along the rivers, and sparsest along the straight segment.
+% When averaging a function over the border, these sections become overrepresented.
+% Troublingly, the sinuousness of the border therefore determines the estimand, even though the outcomes of interest will generally have nothing to do with river topologies.
 % In population terms, the result is that units near wigglier segments receive more weight.
 % Worse, the resolution of the border map used for the analysis affects the estimated LATE.
 
 
-\subsubsection{Inverse-variance Weighted LATE}
-\label{sec:invvar}
+% \subsubsection{Inverse-variance Weighted LATE}
+% \label{sec:invvar}
 
 % \begin{figure}[tbp]
     % \centering
@@ -397,11 +346,11 @@ This can put negative weights on some sentinels, and this estimand does not lend
 It is not chosen on scientific grounds, but rather dictated by the observed data.
 This is counter to the conventional approach in causal inference, that the estimand should be chosen based on substantive grounds, ideally before collecting any data.
 While perhaps unorthodox, analogous ``estimands of convenience'' have been proposed in other settings, for example matching methods that exclude some unmatched units from the analysis \citep[discussed in][]{crump2009dealing}, or in the context of balancing treatment and control populations with little overlap in their covariate distributions \citep{li2016balancing}.
-The 1D RDD could be said to provide another example, as the estimand \autoref{eq:rdd_univ_estimand} focuses on the treatment effect near the threshold not because those units are of particular substantive interest, but because the available data restricts estimation of the treatment effect elsewhere.
+The 1D RDD could be said to provide another example, as the estimand \autoref{eq:rdd_univ_estimand} focuses on the treatment effect near the threshold not because these units are of particular substantive interest, but because the available data restricts estimation of the treatment effect elsewhere.
 
-\subsubsection{Projected Finite-Population LATE}
+% \subsubsection{Projected Finite-Population LATE}
 All LATE estimators considered so far presuppose evenly spaced sentinel points, which are then given weights.
-Alternatively, we can project the positions of treatment and control units that are within a distance \(\buffer\) of the border onto the border, and use those projected unit locations without weights (see \autorefexternal{fig:mississippi_projection_methods} of the Supplementary Materials for an illustration).
+Alternatively, we can project onto the border the treatment and control units that are within a pre-chosen distance \(\buffer\) of the border, and use these projected unit locations without weights (see \autorefexternal{fig:mississippi_projection_methods} of the Supplementary Materials for an illustration).
 For any point \(\svec\), we use the notation \(\proj_{\border}\del{\svec}\) to give the coordinates of the point on the border \(\border\) that is closest to \(\svec\) (assuming uniqueness), and \(\dist_{\border}\del{\svec}\) for the distance between the point and the border.
 Let \(\vicinity{\svec} = \allowbreak \Ind\cbr{\dist_{\border}\del{\svec} \le \buffer} \) indicate inclusion in the border vicinity.
 The projected finite-population \(\tauproj\) is then the uniformly weighted mean applied with the projected unit locations instead of the evenly spaced sentinels.
@@ -499,10 +448,10 @@ and sidesteps the choice of a distance cutoff for projected units.
 \subsection{Testing for Non-Zero Effect}
 \label{sec:hypothesis_testing}
 Once we have obtained the ``cliff height'' estimate \autoref{eq:postvar2gp} and estimated a LATE, we might also naturally wonder whether we can claim to have detected a significant treatment effect at the border.
-In the hypothesis testing framework, we have two possible choices of null hypotheses.
-The sharp null specifies that the treatment effect is zero everywhere along the border:
-\(\tau(\sentinel)=0\) for all \(\sentinel \in \border\).
-Meanwhile, the weak null only requires the LATE to be zero.
+In the hypothesis testing framework, we distinguish two possible choices of null hypotheses:
+the sharp null specifies that the treatment effect is zero everywhere along the border,
+\(\tau(\sentinel)=0\:\forall\,\sentinel \in \border\), 
+whereas the weak null only requires the LATE to be zero.
 We focus on a test of the weak null hypothesis here, but also provide two tests of the sharp null hypothesis based on the marginal likelihood and a chi-squared statistic in \autorefexternal{sec:alternate_tests} of the Supplementary Materials.
 We found through simulations and in our applied example that the test presented in this paper has superior power and robustness to model misspecification, and therefore recommend its use.
 
@@ -514,8 +463,8 @@ While the posterior is a Bayesian object, we can use it heuristically to derive 
     % \begin{split}
         % & Z_0 \sim \normal\del{0, \Sigma_{\invvar \mid Y}} \,, \\
         % & 
-	\tilde{p}^{\mathrm{INV}} 
-		% = \prob\del{ 
+    \tilde{p}^{\mathrm{INV}} 
+        % = \prob\del{ 
             % \abs{Z_0} > 
             % \abs{
                 % \mu_{
@@ -523,29 +472,29 @@ While the posterior is a Bayesian object, we can use it heuristically to derive 
                 % }
             % } 
         % }
-        = \allowbreak 2\Phi\del{-
-            \abs{
+        = \allowbreak 2\Phi ( % \del{-
+            | %\abs{
                 \mu_{
                     \invvar \mid Y
                 }
-            }
-            \big/
+            | %}
+            \,/\,
             \allowbreak
             \sqrt{
                 \Sigma_{\invvar \mid Y}
             }
-    }
+    ) %}
 % \end{split}
 % \end{equation}
 \).
 However, this pseudo-\(p\)-value obtained from the Bayesian posterior may not have good frequentist properties.
-In particular, there is no guarantee that under the null hypothesis, \(p^{\mathrm{INV}}\) is below 0.05 less than 5\% of the time.
+In particular, there is no guarantee that under the null hypothesis, \(\tilde{p}^{\mathrm{INV}}\) is below 0.05 less than 5\% of the time.
 
 To turn it into a valid frequentist test, it can be calibrated using a parametric bootstrap under the null.
 We specify a parametric null model \(\modnull\)
 as a single Gaussian process spanning the control and treatment regions,
 with the same kernel and hyperparameters values obtained through the procedure of \autoref{sec:inference}.
-\(\modnull\) is smooth and continuous at the border,
+Under \(\modnull\), the expected outcomes surface is smooth and continuous at the border,
 and therefore accords with both the sharp and weak null hypotheses.
 We now choose the posterior mean of the inverse-variance LATE \(\mu_{\invvar \mid Y}\) as a test statistic.
 For \(b=1,\dotsc,B\) iterations, we draw \(\Yvec^{(b)}\) from \(\modnull\),
@@ -587,21 +536,23 @@ in order to verify that the returned \(p\)-values are uniformly distributed.
 In our spatial setting, we use the treatment and control regions separately as placebo groups.
 Within each placebo group, we repeatedly draw an arbitrary geographical border, creating new treatment and control groups.
 Here we drew lines that split the placebo units in half at a sequence of angles \(1\degree,2\degree,3\degree,\dotsc,180\degree\) counter-clockwise from horizontal, each positioned so that half of the units fall on either side of the line in order to maximize power.
-Because the border was chosen arbitrarily by us, without reference to the outcomes, we should not expect to see a discontinuous jump in outcomes at this border.
-We apply the calibrated inverse-variance test procedure described above to this arbitrarily divided data, store the results, and hope to obtain a roughly uniform distribution of \(p\)-values.
-The resulting \(p\)-values will obviously be highly correlated, so we should only expect a very roughly uniform distribution (because of the small effective sample size), but at the very least, this procedure allows us to visually verify that the \(p\)-values are not blatantly biased.
+Because the borders are drawn arbitrarily, without reference to the outcomes, we should not expect to observe a discontinuous jump in outcomes.
+We apply the calibrated inverse-variance test procedure described above to the data arbitrarily divided by each placebo border, and hope to obtain a roughly uniform distribution of \(p\)-values.
+The placebo \(p\)-values are highly correlated, resulting in a small effective sample size, but this procedure nonetheless allows us to visually verify that the \(p\)-values are not blatantly biased.
+\citet{gibbons2013valuing} perform a falsification test that is similar in spirit to our procedure. They shift the locations of the housing transactions 10~km North and East, and show that their matching method, unlike OLS, no longer yields a significant estimate of the effect of school quality on house prices.
 
-\section{Application: NYC School Districts}
+\section{Valuing NYC School Districts}
 \label{sec:NYC_example}
 
-We illustrate the analysis of a GeoRDD with house sales data in New York City.
+We now use our methodology to study the effect
+of school districts on house prices in New~York City.
 The city publishes information pertaining to property sales within the city in the last 12 months on a rolling basis,
 available at \url{https://www1.nyc.gov/site/finance/taxes/property-rolling-sales-data.page},
 which we downloaded on September~15, 2016.
 The dataset includes columns for the sale price, building class, and the address of the property.
 Public schools in the city are all part of the City School District of the City of New York, but the city-wide district is itself divided into 32 sub-districts.
 It is a common belief that school districts have an impact on real estate price, as parents are willing to pay more to live in districts with better schools.
-We therefore ask: can we measure a discontinuous jump in house prices across the borders separating school districts?
+We therefore ask whether we can measure a discontinuous jump in house prices across the borders separating school districts.
 
 \begin{figure}[tb]
     \centering
@@ -628,81 +579,96 @@ these are almost all coops and condos, which explains the clustering of missing 
 
 \subsection{Model for Property Prices}
 
-One restriction of the hedonic model \autoref{eq:hedonic} is the assumption that the effect size $\beta$ is constant.
-It also models the effect of the school district as a linear function of the school quality observable covariates $s(\svec)$.
-To allow for heterogenous effects, 
+Our application relates to the economics literature on valuing school quality \citep{black2011housing}, 
+based on the hedonic valuation model \citep{rosen1974hedonic,sheppard1999hedonic} which typically takes the form of a linear model for the log of the sale price $p$ of a property at location \(\svec\) \citep[see for example][]{gibbons2013valuing}:
+\begin{equation}
+    p = s(\svec)\beta + x(\svec)\gamma + g(\svec) + \epsilon
+    \,,
+    \label{eq:hedonic}
+\end{equation}
+where \(s(\svec)\) is the expected quality of the schools that residents near $\svec$ can access,
+$x$ is a set of observed property and neighborhood covariates, $g(\svec)$ captures spatially correlated unobserved covariates, and $\epsilon$ represents unobserved characteristics of the property and errors that are independent of $x$ and $\svec$.
+``School quality'' is variously defined and estimated \citep{black2011housing}: average standardized test scores, survey responses, funding levels, pass rates, publicly, etc.
 
-The outcome of interest is price per square foot.
-As is commonly done in analyses of real estate prices, we take its logarithm to reduce the skew of the outcome.
-The complete model is then a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\district\)) over the spatial covariates \(\svec\), super-imposed with a linear regression on the property covariates (which are \(L_\building\) building categories encoded as dummy variables).
-This model can be written:
+Most research focuses on estimating $\beta$, the effect of a unit of school quality on the log-price, while addressing confounding due to $g(\svec)$.
+Imagine moving a property sale an infinitesimal distance from one side of the border to the other; 
+the difference in prices is then:
+\begin{equation}
+    \Delta(p) = \Delta(s(\svec) \beta) + \Delta(x(\svec)\gamma)+ \Delta{g(\svec)} + \Delta{\epsilon}
+    \,.
+    \label{eq:hedonic_diff}
+\end{equation}
+The last three terms on the right-hand-side equal zero: the property has not changed, and $x$ and $g$ are assumed smooth and continuous, so only the change in attendance districts can explain the change in price.
+The GeoRDD uses this idea to identify $\Delta(s(\svec) \beta)$, the jump in price attributable to the difference between school districts.
+However, to estimate $\beta$, the hedonic model requires the further assumptions that school quality is well-defined and measured, and that its effect on log-prices is linear and constant.
+In this paper, we avoid these assumptions by seeking to directly estimate the jump in prices at the border, without attempting to attribute the jump to measures of school quality.
+
+In our application, the outcome of interest is price per square foot of a property sale.
+As is commonly done in analyses of real estate prices, we take its logarithm to reduce the skew in the outcomes.
+The complete model is then a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\district\)) over the spatial covariates \(\svec\), super-imposed with a linear regression on the property covariates (which are \(L_\building\) building categories encoded as dummy variables):
 \begin{equation}
     \begin{aligned}
-        Y_i &= % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
-        	m_{\district\sbr{i}} + \beta_{\building\sbr{i}}
-        	+ f_{\district\sbr{i}}(\svec_i) + \epsilon_i 
-			\,,\quad
- 			\epsilon_i \sim \normal\del{0, \sigma_y^2} 
-			\,,
-			\phantom{\hspace{-10cm}} % for alignment
+        & Y_i = % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
+            m_{\district\sbr{i}} + \gamma_{\building\sbr{i}}
+            + f_{\district\sbr{i}}(\svec_i) + \epsilon_i 
+            \,,\quad
+             \epsilon_i \sim \normal\del{0, \sigma_y^2} 
+            \,,
+            \phantom{\hspace{-10cm}} % for alignment
             \\
-        \beta_{l} &\sim \normal\del{0, \sigma_\beta^2}
-			\,,
-			&&
-			\text{ for }
-			l=1,\dotsc,L_\building \,, \\
-        m_{j} &\sim \normal\del{0, \sigmamu^2}
-			\,,
-			&&
-			\text{ for }
-			j=1,\dotsc,J_\district \,, \\
-        f_j &\sim \GP\del{0, k(\svec, \svec')}
-			\,,
-			&&
-			\text{ for }
-			j=1,\dotsc,J_\district \,,
+        & \gamma_{l} \sim \normal\del{0, \sigma_\gamma^2}
+            \,,
+            &&
+            \text{for }
+            l=1,\dotsc,L_\building \,, \\
+        & m_{j} \sim \normal\del{0, \sigmamu^2}
+        \,,\ 
+        f_j \sim \GP\del{0, k(\svec, \svec')}
+            \,,
+            &&
+            \text{for }
+            j=1,\dotsc,J_\district
+        \,.
         % k(\svec, \svec') &= \sigmaf^2 \exp\cbr{ - \frac{(\svec-\svec')\trans(\svec-\svec')}{2\ell^2}} \,,
     \end{aligned}
     \label{eq:nyc_model}
 \end{equation}
 where \(k\) is the squared exponential covariance function as in \autoref{eq:spec2gp}.
 
-A visual inspection of the house sales map in \autoref{fig:sales_map} drew our attention towards the border between districts 19 and 27.
-We arbitrarily designate district 19 as the ``treatment'' area and district 27 as the ``control'' area.
-Importantly, the border between the two districts is also part of the border between Brooklyn and Queens, so we will not be able to attribute a difference in price solely to the causal effect of the school districts.
+A visual inspection of the house sales map in \autoref{fig:sales_map} drew our attention towards the border between districts 19 and 27, which we arbitrarily designate as ``treatment'' and ``control'' respectively.
+Importantly, the border between the two districts is also part of the border between Brooklyn and Queens.
 This is an instance of what \cite{keele_titiunik_2015} term ``compound treatments,'' a frequent concern in GeoRDDs.
-Therefore, we are mainly \emph{measuring} a discontinuity in the house prices at the border.
-Attributing the discontinuity to a particular cause (school district or borough) is not directly supported by the data.
+Therefore, we are \emph{measuring} a discontinuity in the house prices at the border,
+but attributing the discontinuity to a particular cause (school district or borough) is not directly supported by the data.
 
 Another concern is units sorting around the border, which would violate the identification assumptions for GeoRDDs.
-If people move across the border to live in a better school district, does this invalidate the analysis?
 We take the view that the unit of analysis here is the tract of land on which houses are built, rather than the residents themselves.
 If a district becomes more attractive, people may move to it, whereas land does not move but its price adjusts.
 A sale gives a snapshot of the price of the land, made more accurate by correcting in our model \autoref{eq:nyc_model} for covariates that pertain to the building rather than land.
-Note that of course, the limited covariates provided by the data cannot fully capture the value of the building.
-For example, the wealthier residents who inhabit the more desirable school districts may also have more funds available to maintain and enhance their home, which will drive up the property's resale value.
-Since it is not captured by the available covariates, this added value is folded into the treatment effect by our analysis.
+% Note that the limited covariates provided by the data cannot fully capture the value of the building.
+% For example, the wealthier residents who inhabit the more desirable school districts may also have more funds available to maintain and enhance their home, which will drive up the property's resale value.
+% Since it is not captured by the available covariates, this added value is folded into the treatment effect by our analysis.
 
-\begin{figure}[tb]
-    \centering
-    \includegraphics[width=0.5\textwidth]{figures/sales_histogram_19-27.pdf}
-    \caption{\label{fig:NYC_histogram}Histogram of log sale prices per square foot of houses sold in NYC school districts 19 and 27.}
-\end{figure}
+% \begin{figure}[tb]
+    % \centering
+    % \includegraphics[width=0.5\textwidth]{figures/sales_histogram_19-27.pdf}
+    % \caption{\label{fig:NYC_histogram}Histogram of log sale prices per square foot of houses sold in NYC school districts 19 and 27.}
+% \end{figure}
 
-The histogram in \autoref{fig:NYC_histogram} of log prices per square foot for sales in both districts shows that marginally the house prices are very different.
-Our goal is to establish whether this difference is measurable at the border, and not merely an underlying trend that spans both districts.
-
-We fit the hyperparameters \(\sigma_\beta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
-We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
-The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigma_\beta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\).
+% The histogram in \autoref{fig:NYC_histogram} of log prices per square foot for sales in both districts shows that marginally the house prices are very different.
+% Our goal is to establish whether this difference is measurable at the border, and not merely an underlying trend that spans both districts.
 
 \subsection{Cliff Height Estimator}
 
+We fit the hyperparameters \(\sigmabeta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
+We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
+The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigmabeta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\).
+
 We seek to estimate the treatment effect function \(\tau\) on the border between the two districts.
 We could proceed by computing the cliff height estimator with covariates \autoref{eq:cliff_with_covariates}.
-But to simplify the analysis as discussed in \autoref{sec:covariates}, we can instead obtain the posterior means of the \(\beta\) coefficients (following the procedure outlined in \autoref{sec:betahat}, but extended to \(J_\district\) rather than just two areas), and extract the residuals \(\Yvec{}-\Dmat \hat{\betavec}\).
+But to simplify the analysis as discussed in \autorefexternal{sec:covariates} of the Supplementary Materials, we can instead obtain the posterior means of the \(\gamma\) coefficients, and extract the residuals \(\Yvec{}-\Xmat \hat{\gammavec}\).
 We then treat the residuals as the observed outcomes in a GeoRDD analysis with no non-spatial covariates.
-In this example, we find that the posterior variance of \(\betavec\) is low, and therefore the two approaches yield very similar results, but conditioning on the estimate of \(\betavec\) is computationally convenient.
+In this example, we find that the posterior variance of \(\gammavec\) is low, and therefore the two approaches yield very similar results, but conditioning on the estimate of \(\gammavec\) is computationally convenient.
 
 \begin{figure}[tb]
     \centering
@@ -716,8 +682,8 @@ In this example, we find that the posterior variance of \(\betavec\) is low, and
         Note the decorrelation from sentinels 6 to 7, and 19 to 20, where the border crosses the water between sparsely populated islands in Jamaica Bay and then onto Long Island.
         (b)
         A map of sentinel locations, evenly spaced along the border between school districts 27 and 19.
-    	The southernmost sentinel (shown as a blue circle in both plots) has index 1, while the northernmost sentinel (shown in yellow) has index 100.
-	}
+        The southernmost sentinel (shown as a blue circle in both plots) has index 1, while the northernmost sentinel (shown in yellow) has index 100.
+    }
 \end{figure}
 
 Following the inference procedure outlined in \autoref{sec:gpmodel}, we obtain the posterior distribution of the cliff height \(\tau(\sentinels)\) obtained at \(R=100\) sentinel locations evenly spaced along the border.
@@ -740,17 +706,17 @@ In this example the different estimators yield similar answers, as the border is
         & \multicolumn{3}{c}{Posterior} \\
         Estimand & Mean & Standard Dev. & Tail Prob. \\
         \hline
-	      \(\unifavg\) & -0.17 & 0.08 & 1.98\% \\
-	      \(\taurho\) & -0.19 & 0.06 & 0.04\% \\
-	      \(\invvar\) & -0.19 & 0.06 & 0.03\% \\
-	      \(\tauproj~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.13\% \\
-		  \(\taugeo~(\buffer=2\ell)\) & -0.16 & 0.09 & 3.80\% \\
-		  \(\taupop~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.15\% \\
+          \(\unifavg\) & -0.17 & 0.08 & 1.98\% \\
+          \(\taurho\) & -0.19 & 0.06 & 0.04\% \\
+          \(\invvar\) & -0.19 & 0.06 & 0.03\% \\
+          \(\tauproj~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.13\% \\
+          \(\taugeo~(\buffer=2\ell)\) & -0.16 & 0.09 & 3.80\% \\
+          \(\taupop~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.15\% \\
         \hline
     \end{tabular}
     \caption{
     \label{table:NYC_ate}
-Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\prob(\tau > 0 \mid \Yvec, \hat{\beta}, \hyperparam)\). 
+Average difference in log price per square foot between school districts 19 and 27. For each LATE estimand, we show the mean and standard deviation of its posterior distribution, and the tail probability \(\prob(\tau > 0 \mid \Yvec, \hat{\gamma}, \hyperparam)\). 
 Negative LATEs correspond to district 27 being more expensive.
 }
 \end{table}
@@ -775,11 +741,11 @@ Because these lines were drawn arbitrarily, we do not expect a discontinuous tre
 However, these tests will be highly correlated---there is in fact noticeable autocorrelation in the graph of the placebo \(p\)-value as a function of angle---and so the low effective sample size could lead to some apparent departures from uniformity.
 Nonetheless, we do not observe a flagrant bias in \autoref{fig:placebo_invvar}(b), which therefore does not discredit the calibrated inverse-variance test, and confirms the significance of the difference in price at the border between the two districts.
 
-\section{Conclusion}
+\section{Discussion}
 
 Geographic regression discontinuity designs (GeoRDDs) arise when a treatment is assigned to one region, but not to another adjacent region.
-For outcomes that vary spatially, a direct comparison of mean outcomes between \(\yt\) and \(\yc\), such as a \(t\)-test, is an invalid estimator of the treatment effect, as it is confounded by the spatial covariates.
-However, under smoothness assumptions, units adjacent to the border are comparable, and form a natural experiment.
+% For outcomes that vary spatially, a direct comparison of mean outcomes between \(\yt\) and \(\yc\), such as a \(t\)-test, is an invalid estimator of the treatment effect, as it is confounded by the spatial covariates.
+Under smoothness assumptions, units adjacent to the border are comparable, and form a natural experiment.
 The same idea underpins causal interpretations of one-dimensional regression discontinuity designs (1D RDDs), where a single ``forcing'' variable controls the treatment assignment instead of a border separating two geographical regions.
 We use this similarity to motivate a framework for the analysis of GeoRDDs, which proceeds in three steps:
 % One-dimensional methods can be abstracted to three steps: (1) fit a smooth function on either side of the threshold; (2) extrapolate the functions to the threshold; and (3) take the difference of the two extrapolations to estimate the treatment effect at the threshold.
@@ -789,8 +755,8 @@ We use this similarity to motivate a framework for the analysis of GeoRDDs, whic
 \item take the difference of the two extrapolations to estimate the treatment effect along the border.
 \end{flatlist}
 
-Previous research has focused on extending methods developed for 1D RDDs to GeoRDDs.
-In applied settings, some have used the signed distance from the border as the forcing variable in a 1D RDD, but the resulting estimator is spatially confounded.
+% Previous research has focused on extending methods developed for 1D RDDs to GeoRDDs.
+% In applied settings, some have used the signed distance from the border as the forcing variable in a 1D RDD, but the resulting estimator is spatially confounded.
 In this paper, we emphasize the importance of the spatial aspect of the design, and therefore draw from the spatial statistics literature, which brings a rich set of tools designed to model and exploit spatial correlations.
 We used Gaussian process regression, known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step (1) of our framework.
 Our approach yields a multivariate normal posterior distribution of the treatment effect for a collection of ``sentinel'' locations along the border.
@@ -806,12 +772,14 @@ We use the inverse-variance weighted LATE to attain high power, but the other LA
 To ensure good frequentist properties we “calibrate” the test, obtaining its distribution under the null model, either using a parametric bootstrap or analytically.
 
 We applied our method to a publicly available dataset of one year of New York City property sales, to examine whether school district cause difference in property prices.
-Focusing on the border between school districts 19 and 27, we estimated a roughly 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
+While this relates to the literature on valuing school quality through house prices, we focus on inferring the discontinuity in house prices at the border, without attempting to attribute it to a difference in various metrics of school quality.
+Focusing on a single border, we estimated a roughly 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
 However, the border between these two districts is also the border between the NYC boroughs of Brooklyn and Queens, so we cannot attribute this difference to the causal effect of the school districts.
 In the Supplementary Materials, we extend the GeoRDD analysis to other pairs of adjacent school districts, and find significant effects between many of these pairs.
-However, in some of these cases, physical barriers like parks, commercial zones, railways, and major roads can separate neighborhoods, keep data away from the borders, break the stationarity assumption of the spatial model, and increase the amount of extrapolation performed by the model, which casts doubt on the legitimacy of the estimated treatment effects.
-Missing data from condo sales which do not report square footage can also distort estimated effects.
-Overall, it seems that school district borders in Brooklyn and Queens are often accompanied by a discontinuity in house prices, but the causal attribution of this difference to the reputation of the school districts can be questionable.
+However, in some of these cases, physical barriers like parks, commercial zones, railways, and major roads can separate neighborhoods. 
+This keeps data away from the borders, breaks the stationarity assumption of the spatial model, and increases the extent of extrapolation performed by the model, which casts doubt on the legitimacy of the estimated treatment effects.
+% Missing data from condo sales which do not report square footage can also distort estimated effects.
+% Overall, it seems that school district borders in Brooklyn and Queens are often accompanied by a discontinuity in house prices, but the causal attribution of this difference to the reputation of the school districts can be questionable.
 
 The main limitation of our approach to GeoRDDs is the reliance on modeling assumptions.
 We modeled the response surfaces as two independent Gaussian processes, with iid normal noise for each observation.
@@ -819,7 +787,7 @@ As is common in spatial statistics, we use Gaussian process regression as a non-
 We believe care must therefore be taken not to lean heavily on modeling assumptions.
 In particular, we recommend that hypothesis tests always be accompanied by placebo tests:
 by applying the same procedure with arbitrary borders where no treatment was applied, we can verify that the test behaves appropriately under the null hypothesis, despite any potential model misspecification.
-We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and in particular we chose the squared exponential kernel.
+We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and we chose the squared exponential covariance kernel for simplicity.
 This kernel makes smoothness assumptions that are often considered unrealistic in geostatistical settings; the Mat\'ern covariance family is often recommended as a more robust alternative.
 The assumption of equal covariance parameters in the two areas can also be relaxed, by separately tuning the parameters within each area.
 
@@ -831,7 +799,7 @@ However, SM kernels are motivated by time series with some periodic or oscillato
 
 The use of GPR to analyse GeoRDDs gives flexibility and extensibility to the method.
 This presents many opportunities for future research, inspired by the past and future development of methods in spatial statistics and machine learning that are based on Gaussian processes.
-In spatial statistics, kriging has been used as the foundation for a plethora of spatial models, which may be adapted for the purposes of analyzing GeoRDDs.
+% In spatial statistics, kriging has been used as the foundation for a plethora of spatial models, which may be adapted for the purposes of analyzing GeoRDDs.
 \cite{banerjee2014hierarchical} provides a good introduction to the richness of the spatial statistics field.
 For example, if the outcomes are binary, proportions, or counts, then binomial or Poisson likelihoods could be substituted instead of the normal likelihood used in this paper.
 

@@ -55,10 +55,11 @@
 
 \newcommand*{\sigmaf}{\sigma_{\mathrm{GP}}}
 \newcommand*{\sigman}{\sigma_{\epsilon}}
-\newcommand*{\sigmabeta}{\sigma_{\beta}}
+\newcommand*{\sigmabeta}{\sigma_{\gamma}}
 \newcommand*{\sigmamu}{\sigma_{m}}
 \newcommand*{\svec}{\mathbold{s}}
 \newcommand*{\dvec}{\mathbold{d}}
+\newcommand*{\xvec}{\mathbold{x}}
 \newcommand*{\wvec}{\mathbold{w}}
 \newcommand*{\yvec}{\mathbold{y}}
 \newcommand*{\Yvec}{\mathbold{Y}}
@@ -66,7 +67,7 @@
 \newcommand*{\yc}{\Yvec_{\ctrol}}
 \newcommand*{\vvec}{\mathbold{v}}
 \newcommand*{\muvec}{\mathbold{\mu}}
-\newcommand*{\betavec}{\mathbold{\beta}}
+\newcommand*{\gammavec}{\mathbold{\gamma}}
 \newcommand*{\residvec}{\mathbold{R}}
 \newcommand*{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
@@ -123,9 +124,9 @@
 \newcommand*{\WT}{\Wmat_{\treat}}
 \newcommand*{\WC}{\Wmat_{\ctrol}}
 
-% \geometry{tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
 \def\sectionautorefname{Section}
 \def\subsectionautorefname{Section}
+\def\subsubsectionautorefname{Section}
 \def\figureautorefname{Figure}
 \def\Appendixautorefname{Appendix}
 \def\tableautorefname{Table}
@@ -134,23 +135,6 @@
 % \newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
 % \hypersetup{pdfkeywords=\georddkeywords{}}
 % \hypersetup{pdfauthor=Maxime Rischard}
-% \newcommand{\georddauthor}{
-    % Maxime Rischard
-    % \thanks{
-% This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
-    % \vspace{-0.5em}
-    % \\
-    % Department of Statistics, Harvard University \\
-
-    % Zach Branson \vspace{-0.5em} \\
-    % Department of Statistics, Harvard University \\
-
-    % Luke Miratrix \vspace{-0.5em} \\
-    % Graduate School of Education, Harvard University \\
-
-    % Luke Bornn \vspace{-0.5em} \\
-    % Department of Statistics and Actuarial Science, Simon Fraser University 
-% }
 % Authors using authblk package
     % \author[a]{Maxime Rischard
         % \thanks{

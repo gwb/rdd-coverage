@@ -55,6 +55,92 @@ A visual inspection of \autorefexternal{fig:sales_map} showing the locations of 
         \label{fig:confounding}}
 \end{figure}
 
+\section{Handling Nonspatial Covariates}
+\label{sec:covariates}
+
+The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on non-spatial covariates.
+The models are modified by the addition of the linear regression term \(\Xmat \gammavec\) on the \(n \times p\) matrix of covariates \(\Xmat\), where \(p\) is the number of non-spatial covariates.
+We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigmabeta^2 \Xmat \Xmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\).
+Let \(\xvec_i\) be the \(p\)-vector of non-spatial covariates of unit \(i\).
+Our model becomes:
+\begin{equation}
+    \begin{split}
+        & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \xvec_i\trans \gammavec + \epsilon_i \quad\text{and}\quad
+        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \xvec_i\trans \gammavec + \epsilon_i \,\text{, with} \\
+        & \gamma_j \overset{\indep}{\sim} \normal\del{0,\sigmabeta^2}\,\text{, for }j=1,2,\dotsc,p \,,
+    \end{split}
+    \label{eq:covariates_model}
+\end{equation}
+and \(f_\treat\) and \(f_\ctrol\) as in \autoref{eq:spec2gp}.
+
+Unfortunately, the linear term induces a covariance between the treatment and control region; \(\SigmaMat_Y\) is no longer black diagonal, which roughly quadruples the computational cost of the analysis, as it requires the inversion of an \((n_\treat{}+n_\ctrol{}) \times (n_\treat{}+n_\ctrol{})\) covariance matrix instead of (in the absence of correlations between the treatment and control units) the separate inversions of the \(n_\treat{} \times n_\treat{}\) covariance matrix \(\STT\), and \(n_\ctrol{} \times n_\ctrol{}\) covariance matrix \(\SCC\).
+The introduction of the linear term modifies the cliff height estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
+\begin{equation}
+    \begin{split}
+        \muvec_{\sentinels \mid Y, X} &= 
+        \begingroup\SmallColSep
+        \begin{bmatrix}
+            \KBT & -\KBC
+        \end{bmatrix}
+        \SigmaMat_Y^{-1}
+        \Yvec
+        \endgroup
+        \,\text{, and}\\
+        \Sigma_{\sentinels \mid Y, X} &=
+        \begingroup\SmallColSep
+        2 \KBB -
+        \begin{bmatrix}
+            \KBT & -\KBC
+        \end{bmatrix}
+        \SigmaMat_Y^{-1}
+        \begin{bmatrix}
+            \KBT & -\KBC
+        \end{bmatrix}\trans
+        \endgroup
+        \,.
+    \end{split}
+    \label{eq:cliff_with_covariates}
+\end{equation}
+To avoid the complexity caused by the correlation between \(\yt\) and \(\yc\) that the linear term induces, we suggest first obtaining an estimate \(\hat\gammavec\) of the coefficients.
+% We show how to obtain the posterior mean of \(\gammavec\) in \autoref{sec:betahat}.
+The posterior mean of \(\gammavec\) can be obtained analytically:
+\begin{equation}
+    \begin{split}
+        % \Yvec &= \begin{pmatrix}
+            % \yt \\
+            % \yc
+        % \end{pmatrix}
+        % \\
+        &
+        \cov\del{\Yvec \mid \gammavec }
+                = \begin{bmatrix}
+                    \STT & 0 \\
+                    0 & \SCC
+                  \end{bmatrix}
+            \,,\ 
+            \cov\del{\gammavec} = \sigmabeta^2 \eye_p 
+            \,,\  
+            \cov\del{\Yvec, \gammavec} = \sigmabeta^2 \Xmat \\&
+        \SigmaMat_Y = \cov\del{\Yvec} 
+            = \cov\del{\Yvec \mid \gammavec}
+                + \sigmabeta^2 \Xmat \Xmat\trans \\&
+        % &= \begin{bmatrix}
+            % \STT\!+\!\sigmabeta^2 \Xmat_{\treat} \Xmat_{\treat}\trans 
+            % & \! \sigmabeta^2 \Xmat_{\treat} \Xmat_{\ctrol}\trans \\
+            % \sigmabeta^2 \Xmat_{\ctrol} \Xmat_{\treat}\trans 
+            % & \! \SCC\!+\!\sigmabeta^2 \Xmat_{\ctrol} \Xmat_{\ctrol}\trans
+        % \end{bmatrix}\\
+        \hat\gammavec 
+            = \E\del{\gammavec \mid \Yvec} 
+            = \cov\del{\gammavec,\Yvec} \cov\del{\Yvec,\Yvec}^{-1} \Yvec
+            = \sigmabeta^2 \Xmat\trans\SigmaMat_{Y}^{-1} \Yvec
+    \end{split}
+\end{equation}
+The treatment and control residuals are obtained as \(\residvec = \Yvec - \Xmat \hat\gammavec\).
+We can then proceed with the GeoRDD analysis on the residuals:
+conditionally on \(\gammavec=\hat\gammavec\), the residuals of the treatment and control units have independent multivariate normal distributions with covariances \(\STT\) and \(\SCC\) respectively.
+This is an approximation, as it ignores the uncertainty in the estimate of \(\gammavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
+
 \section{Additional LATE Estimands and Simulations}
 \label{sec:additional_late}
 
@@ -472,7 +558,7 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
 
 \begin{figure}[!tb]
     \centering
-    \includegraphics[width=0.97\textwidth,height=0.8\textheight,keepaspectratio]{figures/pairwise_mean_se.pdf}
+    \includegraphics[width=0.97\textwidth,height=0.8\textheight,keepaspectratio]{figures/pairwise_mean_se.png}
     \caption{
 		\label{fig:NYC_pairwise}
         Pairwise estimates of the inverse variance LATE between adjacent districts.

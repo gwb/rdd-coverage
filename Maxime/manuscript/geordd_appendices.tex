@@ -1,6 +1,7 @@
 \section{Covariances for Gaussian Process Model}
 \label{sec:covariances}
 All covariances below are conditional on the hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), omitted for concision.
+We further define some shorthand notation, found in \autoref{table:notation}.
 \begin{equation}
     \begin{split}
         m_\treat, m_\ctrol   &\sim \normal\del{0,\sigmamu^2} \\
@@ -13,7 +14,6 @@ All covariances below are conditional on the hyperparameters \(\hyperparam = \de
     \end{split}
     \label{eq:covariances}
 \end{equation}
-We further define some shorthand notation, found in \autoref{table:notation}.
 
 \begin{table}[bp]
     \centering
@@ -39,50 +39,11 @@ and those of the \(j^\mathrm{th}\) control unit by \(\svec_{j\ctrol}\), while \(
     }
 \end{table}
 
-\section{Estimating Linear Regression Coefficients}
-\label{sec:betahat}
-
-We present the posterior mean of the linear regression coefficients vector \(\betavec\) for the model specified in \autoref{eq:covariates_model}.
-\begin{equation}
-    \begin{split}
-        % \Yvec &= \begin{pmatrix}
-            % \yt \\
-            % \yc
-        % \end{pmatrix}
-        % \\
-        &
-        \cov\del{\Yvec \mid \betavec }
-                = \begin{bmatrix}
-                    \STT & 0 \\
-                    0 & \SCC
-                  \end{bmatrix}
-            \,,\ 
-            \cov\del{\betavec} = \sigmabeta^2 \eye_p 
-            \,,\  
-            \cov\del{\Yvec, \betavec} = \sigmabeta^2 \Dmat \\&
-        \SigmaMat_Y = \cov\del{\Yvec} 
-            = \cov\del{\Yvec \mid \betavec}
-                + \sigmabeta^2 \Dmat \Dmat\trans \\&
-        % &= \begin{bmatrix}
-            % \STT\!+\!\sigmabeta^2 \Dmat_{\treat} \Dmat_{\treat}\trans 
-            % & \! \sigmabeta^2 \Dmat_{\treat} \Dmat_{\ctrol}\trans \\
-            % \sigmabeta^2 \Dmat_{\ctrol} \Dmat_{\treat}\trans 
-            % & \! \SCC\!+\!\sigmabeta^2 \Dmat_{\ctrol} \Dmat_{\ctrol}\trans
-        % \end{bmatrix}\\
-        \hat\betavec 
-            = \E\del{\beta \mid \Yvec} 
-            = \cov\del{\betavec,\Yvec} \cov\del{\Yvec,\Yvec}^{-1} \Yvec
-            = \sigmabeta^2 \Dmat\trans\SigmaMat_{Y}^{-1} \Yvec
-    \end{split}
-\end{equation}
-The treatment and control residuals can then be obtained as \(\residvec = \Yvec - \Dmat \hat\betavec\).
-Conditionally on \(\betavec=\hat\betavec\), the residuals of the treatment and control units then have independent multivariate normal distributions with covariances \(\STT\) and \(\SCC\) respectively.
-
 
 \section{Calibration of Inverse-variance Test}
 \label{sec:calibration}
 
-We seek to obtain a valid hypothesis test against the null hypothesis of zero treatment effect everywhere along the border by using the inverse-variance weighted LATE estimate obtained in \autoref{sec:invvar} as a test statistic.
+We seek to obtain a valid hypothesis test against the null hypothesis of zero treatment effect everywhere along the border by using the inverse-variance weighted LATE estimate \autoref{eq:invvar} as a test statistic.
 
 Under the parametric null hypothesis \(\modnull\), \(\yt\) and \(\yc\) are drawn from a single Gaussian process, with no discontinuity at the border.
 Their joint covariance is
