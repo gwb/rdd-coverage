@@ -71,7 +71,15 @@
 \newcommand*{\residvec}{\mathbold{R}}
 \newcommand*{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
 \def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
-\newcommand*{\iid}{iid}
+\makeatletter
+\newcommand*{\iid}{%
+    \@ifnextchar{.}%
+        {i.\,i.\,d}%
+        {i.\,i.\,d.\@}%
+}
+\makeatother
+\newcommand{\mathiid}{\text{\iid}}
+\newcommand{\simiid}{\overset{\mathiid}{\sim}}
 \newcommand*{\vectreat}{\Ind_{T}}
 
 \newcommand*{\border}{\mathcal{B}}

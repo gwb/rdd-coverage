@@ -5,7 +5,7 @@ Economists have long been interested in measuring and using this effect to estim
 \cite{black2011housing} review the existing literature on this topic, and classify the various identification strategies and methodologies that have been proposed.
 Typically, the theoretical underpinning of this literature is the hedonic valuation model \citep{rosen1974hedonic,sheppard1999hedonic}, whereby the price of a house is decomposed into (usually log-linear) contributions from characteristics of the house, of the neighborhood, and of the schools that local residents can access.
 The estimation of the causal effect of a unit of school quality on the price of a house is made difficult by unobserved neighborhood characteristics which correlate with both school quality and house prices.
-Consequently, ordinary least squares (OLS) estimates are confounded.
+Consequently, ordinary least squares (OLS) estimates are confounded by these unobserved factors \citep{black2011housing}.
 
 Starting with \citet{black1999better}, economists have recognized the opportunity offered by public school systems that rely on attendance districts to assign children to schools.
 If houses on opposite sides of the boundaries between districts have access to the same neighborhood amenities (public transport, parks, etc.) except for schools, then the price difference between otherwise similar houses can plausibly be attributed to difference in the quality of the schools that their residents can access.
@@ -18,8 +18,8 @@ The theory and methods for RDDs date from the 1960s, starting with \cite{thistle
 
 For house sales, the two forcing variables are their geographical coordinates, and the threshold is the border between attendance districts.
 Until relatively recently, most theory and applications of RDDs were for univariate cases,
-but beginning with \cite{papay2011extending}, methods have been developed to analyse multivariate RDDs.
-\cite{imbens2011regression} extend the local linear regression methods \citep[see][]{imbensrdd} that are popular for analysing univariate RDDs (1D~RDDs) to settings with multiple forcing variables.
+but beginning with \cite{papay2011extending}, methods have been developed to analyze multivariate RDDs.
+\cite{imbens2011regression} extend the local linear regression methods \citep[see][]{imbensrdd} that are popular for analyzing univariate RDDs (1D~RDDs) to settings with multiple forcing variables.
 % Most germane to this paper are the contributions of \citet{black1999better}, who is the first to deploy the regression discontinuity design (RDD) in this context, and \citet{gibbons2013valuing} and \citet{fack2010better}, who anticipate \citet{keele2015enhancing} in proposing matching methodologies to address the issue of spatial confounding.
 When these forcing variables are spatial, i.e. treatment and control units are separated by a geographical border, this becomes a Geographical regression discontinuity design (GeoRDD).
 % meaning that units within a certain region are assigned to treatment, while units in a neighboring region are assigned to control.
@@ -30,7 +30,7 @@ see \autorefexternal{sec:confounding} of the Supplementary Materials and
 Section~4.2 of \cite{keele_titiunik_2015}.
 Firmer theoretical foundations for GeoRDDs are built by \cite{keele_titiunik_2015},
 who extend the identification assumptions that were formalized by \cite{hahn2001identification} for 1D~RDDs, and by \cite{imbens2011regression} for multivariate RDDs.
-To estimate the treatment effect, \cite{keele_titiunik_2015} and \cite{keeleoverview} apply the projected 1D~RDD method by locally around points on the border, thus alleviating the problem of spatial confounding.
+To estimate the treatment effect, \cite{keele_titiunik_2015} and \cite{keeleoverview} apply the projected 1D~RDD method locally around points on the border, thus alleviating the problem of spatial confounding.
 % For example, in \cite{macdonald2015effect}, a private police force patrols a neighborhood, but stays out of surrounding areas, and a causal effect on crime rates is sought.
 % In \cite{chen2013evidence}, a policy applies south of the Huai River in China but not in the north, and pollution levels and life expectancies are measured to infer environmental and health impacts of the policy.
 For valuing school quality, \citet{gibbons2013valuing} and \citet{fack2010better} propose matching methodologies to address the issue of spatial confounding.
@@ -38,7 +38,7 @@ By matching similar units on opposite sides of the border that are near each oth
 Similarly, \cite{keele2015enhancing} use the matching methods of \cite{zubizarreta2012using} in a GeoRDD to estimate the effect of ballot initiatives on voter turnout in Milwaukee, Wisconsin.
 
 Spatial statistics, the branch of statistics dedicated to inference for geographical units with spatially correlated outcomes, has been mostly absent from this literature.
-In this paper, we propose a framework for analysing GeoRDDs that is a spatial analogue of 1D~RDD methods.
+In this paper, we propose a framework for analyzing GeoRDDs that is a spatial analogue of 1D~RDD methods.
 Broadly, 1D~RDD methodologies \citep{imbensrdd} are composed of three steps:
 \begin{flatlist}
     \item
@@ -58,10 +58,10 @@ Reusing the same methodological skeleton and applying it to geographical RDDs, o
         take the \emph{pointwise} difference between the two extrapolations to estimate the treatment effect along the border.
 \end{flatlist}
 \label{sec:framework}
-The potential contribution of spatial models is then evident;
+The usefulness of spatial models is then evident;
 we propose to use kriging, also known as Gaussian process regression (GPR), to fit and extrapolate the outcomes, 
 but other spatial methods could also be suitable.
-For 1D~RDDs, \cite{Branson:2017qy} proposed a Gaussian process regression (GPR) methodology that exhibits promising coverage and MSE properties compared to local linear regression.
+For 1D~RDDs, \cite{Branson:2017qy} proposed a GPR methodology that exhibits promising coverage and MSE properties compared to local linear regression.
 We believe this approach to be particularly suitable to GeoRDDs, as GPR is a well-established tool in spatial statistics for fitting smoothly varying spatial processes.
 See \cite{banerjee2014hierarchical} for a textbook introduction to kriging for spatial data, and \cite{rasmussen2006gaussian} for a machine learning perspective.
 
@@ -74,7 +74,7 @@ We obtain Bayesian estimators for multiple possible LATE estimands and discuss t
 In \autoref{sec:hypothesis_testing} we turn to hypothesis testing, and propose a method to test against the null hypothesis of no treatment effect along the border.
 
 In \autoref{sec:NYC_example}, our methodology is applied to the problem of valuing school quality, 
-using a publicly available dataset of property sales in NYC to determine whether school districts affect property prices.
+using publicly available data of property sales in NYC to determine whether school districts affect property prices.
 Focusing on a single border between two school districts, we estimate the treatment effect everywhere along the border, obtain estimates of the LATE, and perform and validate a hypothesis test.
 We find a statistically significant difference in price across the border with a \(p\)-value of 0.002, and estimate that the same house located near the border will on average fetch an almost 20\% higher price in district 27 than in district 19.
 However, this effect can not be attributed solely to the quality or reputation of the schools, as this border also separates the boroughs of Brooklyn and Queens, thus confounding the causal effect of the districts.
@@ -127,12 +127,12 @@ We denote by \(\tau(\sentinels)\) the \(\numsent\)-vector with \(r^\mathrm{th}\)
 \subsection{Model Specification}
 \label{sec:gpmodel}
 Our GeoRDD framework allows any method to be used to fit the outcomes on either side of the border.
-In this paper we use Gaussian process regression (GPR) for this purpose.
+In this paper we use GPR for this purpose.
 GPR, known as kriging in the spatial statistics literature, is a Bayesian non-parametric method for fitting smooth functions. 
 Recently, \cite{Branson:2017qy} showed GPR to be a promising approach for the analysis 1D RDDs.
 Further inspired by the popularity of GPR in spatial statistics, we extend the model of \cite{Branson:2017qy} to geographical RDDs.
 
-On each side of the border, we model the observed outcomes \(Y_i\) at location \(\svec_i\) as the sum of an intercept \(m\), a spatial Gaussian process \(f(\svec)\), and iid normal noise \(\epsilon\).
+On each side of the border, we model the observed outcomes \(Y_i\) at location \(\svec_i\) as the sum of an intercept \(m\), a spatial Gaussian process \(f(\svec)\), and \iid{} normal noise \(\epsilon\).
 The Gaussian process has zero mean, and its covariance function is a modeling choice.
 There is a rich literature of possible covariance functions, known as ``kernels'' in machine learning; see
 \cite{banerjee2014hierarchical} and \cite{rasmussen2006gaussian} for examples.
@@ -338,7 +338,7 @@ This motivates the inverse-variance weighted mean \(\invvar\):
     \end{split}
     \label{eq:invvar}
 \end{equation}
-This estimator efficiently extracts the information from the posterior treatment effect, as it can be shown to minimize the posterior variance amongst weighted averages of the form \autoref{eq:weighted_estimand}.
+This estimator efficiently extracts the information from the posterior treatment effect, as it can be shown to minimize the posterior variance among weighted averages of the form \autoref{eq:weighted_estimand}.
 It automatically gives more weight to sentinels in dense areas (as the variance will be lower there), and to sentinels in straight sections of the border (as the correlations between sentinels will be lower).
 
 The estimand is still a weighted mean, with weights for the sentinels given by \(\weightb(\sentinels) = \Sigma_{\sentinels \mid Y}^{-1} \ones_{\numsent}\).
@@ -580,17 +580,17 @@ these are almost all coops and condos, which explains the clustering of missing 
 \subsection{Model for Property Prices}
 
 Our application relates to the economics literature on valuing school quality \citep{black2011housing}, 
-based on the hedonic valuation model \citep{rosen1974hedonic,sheppard1999hedonic} which typically takes the form of a linear model for the log of the sale price $p$ of a property at location \(\svec\) \citep[see for example][]{gibbons2013valuing}:
+based on the hedonic valuation model \citep{rosen1974hedonic,sheppard1999hedonic} which typically takes the form of a linear model for the log of the sale price \(p\) of a property at location \(\svec\) \citep[see for example][]{gibbons2013valuing}:
 \begin{equation}
     p = s(\svec)\beta + x(\svec)\gamma + g(\svec) + \epsilon
     \,,
     \label{eq:hedonic}
 \end{equation}
-where \(s(\svec)\) is the expected quality of the schools that residents near $\svec$ can access,
-$x$ is a set of observed property and neighborhood covariates, $g(\svec)$ captures spatially correlated unobserved covariates, and $\epsilon$ represents unobserved characteristics of the property and errors that are independent of $x$ and $\svec$.
+where \(s(\svec)\) is the expected quality of the schools that residents near \(\svec\) can access,
+\(x\) is a set of observed property and neighborhood covariates, \(g(\svec)\) captures spatially correlated unobserved covariates, and \(\epsilon\) represents unobserved characteristics of the property and errors that are independent of \(x\) and \(\svec\).
 ``School quality'' is variously defined and estimated \citep{black2011housing}: average standardized test scores, survey responses, funding levels, pass rates, publicly, etc.
 
-Most research focuses on estimating $\beta$, the effect of a unit of school quality on the log-price, while addressing confounding due to $g(\svec)$.
+Most research focuses on estimating \(\beta\), the effect of a unit of school quality on the log-price, while addressing confounding due to \(g(\svec)\).
 Imagine moving a property sale an infinitesimal distance from one side of the border to the other; 
 the difference in prices is then:
 \begin{equation}
@@ -598,9 +598,9 @@ the difference in prices is then:
     \,.
     \label{eq:hedonic_diff}
 \end{equation}
-The last three terms on the right-hand-side equal zero: the property has not changed, and $x$ and $g$ are assumed smooth and continuous, so only the change in attendance districts can explain the change in price.
-The GeoRDD uses this idea to identify $\Delta(s(\svec) \beta)$, the jump in price attributable to the difference between school districts.
-However, to estimate $\beta$, the hedonic model requires the further assumptions that school quality is well-defined and measured, and that its effect on log-prices is linear and constant.
+The last three terms on the right-hand-side equal zero: the property has not changed, and \(x\) and \(g\) are assumed smooth and continuous, so only the change in attendance districts can explain the change in price.
+The GeoRDD uses this idea to identify \(\Delta(s(\svec) \beta)\), the jump in price attributable to the difference between school districts.
+However, to estimate \(\beta\), the hedonic model requires the further assumptions that school quality is well-defined and measured, and that its effect on log-prices is linear and constant.
 In this paper, we avoid these assumptions by seeking to directly estimate the jump in prices at the border, without attempting to attribute the jump to measures of school quality.
 
 In our application, the outcome of interest is price per square foot of a property sale.
@@ -758,7 +758,7 @@ We use this similarity to motivate a framework for the analysis of GeoRDDs, whic
 % Previous research has focused on extending methods developed for 1D RDDs to GeoRDDs.
 % In applied settings, some have used the signed distance from the border as the forcing variable in a 1D RDD, but the resulting estimator is spatially confounded.
 In this paper, we emphasize the importance of the spatial aspect of the design, and therefore draw from the spatial statistics literature, which brings a rich set of tools designed to model and exploit spatial correlations.
-We used Gaussian process regression, known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step (1) of our framework.
+We used Gaussian process regression (GPR), known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step (1) of our framework.
 Our approach yields a multivariate normal posterior distribution of the treatment effect for a collection of ``sentinel'' locations along the border.
 
 Averaging the treatment effect along the border turns out to have surprising pitfalls.
@@ -782,7 +782,7 @@ This keeps data away from the borders, breaks the stationarity assumption of the
 % Overall, it seems that school district borders in Brooklyn and Queens are often accompanied by a discontinuity in house prices, but the causal attribution of this difference to the reputation of the school districts can be questionable.
 
 The main limitation of our approach to GeoRDDs is the reliance on modeling assumptions.
-We modeled the response surfaces as two independent Gaussian processes, with iid normal noise for each observation.
+We modeled the response surfaces as two independent Gaussian processes, with \iid{} normal noise for each observation.
 As is common in spatial statistics, we use Gaussian process regression as a non-parametric smoothing device that flexibly captures spatial correlations, but do not claim that our model is a true representation of the stochastic mechanism generating the data.
 We believe care must therefore be taken not to lean heavily on modeling assumptions.
 In particular, we recommend that hypothesis tests always be accompanied by placebo tests:
@@ -797,13 +797,13 @@ We expect that methodological advances that improve the extrapolating behavior o
 For example, \cite{wilson2013gaussian} develop spectral mixture (SM) covariance kernels with good extrapolating behavior, which could be applied beneficially to GeoRDDs.
 However, SM kernels are motivated by time series with some periodic or oscillatory behavior, which is more unusual in spatial applications, and may therefore not be as well-suited for use with GeoRDDs.
 
-The use of GPR to analyse GeoRDDs gives flexibility and extensibility to the method.
+The use of GPR to analyze GeoRDDs gives flexibility and extensibility to the method.
 This presents many opportunities for future research, inspired by the past and future development of methods in spatial statistics and machine learning that are based on Gaussian processes.
 % In spatial statistics, kriging has been used as the foundation for a plethora of spatial models, which may be adapted for the purposes of analyzing GeoRDDs.
 \cite{banerjee2014hierarchical} provides a good introduction to the richness of the spatial statistics field.
 For example, if the outcomes are binary, proportions, or counts, then binomial or Poisson likelihoods could be substituted instead of the normal likelihood used in this paper.
 
-Furthermore, in some applications, it may be of substantive interest to know whether the treatment effect is constant (homogenous) or variable (heterogenous).
+Furthermore, in some applications, it may be of substantive interest to know whether the treatment effect is constant (homogeneous) or variable (heterogeneous).
 Hypothesis tests targeting the homogeneity of the treatment effect along the border would be an interesting possible extension of our framework.
 
 The framework and techniques of this paper could also be extended to spatio-temporal settings.

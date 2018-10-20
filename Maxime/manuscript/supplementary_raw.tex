@@ -1,7 +1,7 @@
 \section{Spatial Confounding of Projected 1D RDD}
 \label{sec:confounding}
 
-	Analysing GeoRDDs by using the signed distance from the border as a forcing variable in a 1D~RDD can lead to spatial confounding.
+    Analyzing GeoRDDs by using the signed distance from the border as a forcing variable in a 1D~RDD can lead to spatial confounding.
 We demonstrate this with a simple artificial example, depicted in \autoref{fig:confounding}.
 Suppose we have units in a 2D square, with spatial coordinates \(\svec_1 \in [0,2]\), and \(\svec_2 \in [-1,1]\), and with a straight border at \(\svec_2=0\) separating a treatment region from a control region.
 Let us impose the null hypothesis, with outcomes driven only by a linear spatial trend running parallel to the border:
@@ -51,11 +51,11 @@ A visual inspection of \autorefexternal{fig:sales_map} showing the locations of 
         A theoretical example illustrating the susceptibility of the projected 1D~RDD method to spatial confounding. 
         On the left, the background shows the density of units, while on the right it shows the linear spatial trend in outcomes.
         The locations of treatment and control units are shown with circles and crosses respectively, separated by a border at \(\svec_2 = 0\). 
-        Notice how treatment units are densest in an area with low outcomes, while control units units are densist in an area with high outcomes.
+        Notice how treatment units are densest in an area with low outcomes, while control units units are densest in an area with high outcomes.
         \label{fig:confounding}}
 \end{figure}
 
-\section{Handling Nonspatial Covariates}
+\section{Handling Non-spatial Covariates}
 \label{sec:covariates}
 
 The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on non-spatial covariates.
@@ -144,7 +144,7 @@ This is an approximation, as it ignores the uncertainty in the estimate of \(\ga
 \section{Additional LATE Estimands and Simulations}
 \label{sec:additional_late}
 
-	In the paper, we presented and characterized four choices of local average treatment effect (LATE) estimands (and corresponding estimators): the uniformly-weighted \(\unifavg\), population-weighted \(\taurho\), inverse-weighted \(\invvar\), and finite population projected \(\tauproj\).
+    In the paper, we presented and characterized four choices of local average treatment effect (LATE) estimands (and corresponding estimators): the uniformly-weighted \(\unifavg\), population-weighted \(\taurho\), inverse-weighted \(\invvar\), and finite population projected \(\tauproj\).
 We here present two other estimands of interest not directly presented in the paper, which extend the projection population idea of \(\tauproj\) to superpopulations.
 We then compare all the estimators in a simulated demonstration to illustrate their differences.
 
@@ -156,7 +156,7 @@ Remember that the ``geometry-based'' estimand \(\unifavg\) places uniform weight
 Instead, the ``geography-based'' projected land LATE estimand \(\taugeo\), illustrated in \autoref{fig:mississippi_projection_methods}(b), begins by placing uniform weights on the treatment and control areas \(\area_\treat\) and \(\area_\ctrol\) that are within distance \(\buffer\) of the border \(\border\), but then projects them onto the border to derive border weights.
 In other words, the projection method from \(\tauproj\) is applied to an infinite population of uniform density on both sides of the border, instead of the finite population of observed units.
 
-	We denote the border vicinity area by \(\area_\buffer\), defined as all points \(\svec\) such that \(\svec \in {\area_\treat \cup \area_\ctrol}\), and \(\dist_{\border}\del{\svec} < \buffer\).
+    We denote the border vicinity area by \(\area_\buffer\), defined as all points \(\svec\) such that \(\svec \in {\area_\treat \cup \area_\ctrol}\), and \(\dist_{\border}\del{\svec} < \buffer\).
 To estimate \(\taugeo\), a tight grid \(\grid\) of evenly spaced points separated by \(\gridres\) is first generated covering \(\area_\buffer\).
 Denote the number of grid points by \(L_\gridres\).
 Each point \(\grid_l\), \(l=1,\dotsc,L_\gridres\) in \(\grid\) is then projected onto the border to become a sentinel.
@@ -168,7 +168,7 @@ In other words, \(\taugeo\) is estimated by applying the \(\unifavg\) procedure 
     \weightb(\sentinel) = \lim_{\gridres \rightarrow 0}\frac{1}{L_\gridres}\sum_{l=1}^{L_\gridres} \delta\del{\sentinel - \proj_{\border}\del{\grid_l} }\,.
 \end{equation}
 
-	For certain applications, it may be desirable to further restrict \(\area_\buffer\) to only certain types of land, for example residential areas in social studies, or farmland in agricultural studies.
+    For certain applications, it may be desirable to further restrict \(\area_\buffer\) to only certain types of land, for example residential areas in social studies, or farmland in agricultural studies.
 It is important to note that \(\taugeo\) is never interpretable as the average treatment effect in the vicinity of the border, that is \(\taugeo \neq \int_{\area_\buffer} \tau(\svec) \dif \svec\).
 Estimating the latter estimand would require predicting the conditional regression function at grid locations within the treatment or control region using only observations on the \emph{other} side of the border, which increases the extent of extrapolation required and thus makes the analysis more vulnerable to model misspecification.
 
@@ -178,27 +178,27 @@ Estimating the latter estimand would require predicting the conditional regressi
     \centering
     \includegraphics[width=\textwidth]{figures/mississippi_projection_methods.pdf}
     \caption{
-		\label{fig:mississippi_projection_methods}
+        \label{fig:mississippi_projection_methods}
         Illustration of (a) projected finite-population LATE \(\tauproj\), and (b) projected land LATE \(\taugeo\), using the border separating Mississippi and Louisiana near Baton Rouge, with units at the centroid of each county.
         The border vicinity \(\area_\buffer\) is defined as all land within \(\buffer=50\,\mathrm{km}\) of the border.
     With both methods, every projected sentinel has equal weight in the LATE, but the tight grid in (b) causes sentinels to coincide or nearly coincide, which we depict by scaling up the size of the marker by the number of coinciding sentinels.}
 \end{figure}
 
-	The purely geographical estimand \(\taugeo\) can be modified by weighting the grid points \(\grid_l\), \(l=1,\dotsc,L_\buffer\) by the population density \(\rho(\grid_l)\).
+    The purely geographical estimand \(\taugeo\) can be modified by weighting the grid points \(\grid_l\), \(l=1,\dotsc,L_\buffer\) by the population density \(\rho(\grid_l)\).
 This gives the projected superpopulation LATE \(\taupop\).
 Similarly to the density-weighted LATE \(\taurho\), estimating \(\taupop\) requires an estimate of the density \(\rho(\grid_l)\) at every grid point.
 As before, the uncertainty in the estimate of \(\rho\) should in principle be propagated to the estimate of \(\taupop\), which generally will make the posterior distribution of \(\taupop\) neither normal nor analytically tractable.
 
-	The estimand \(\taupop\) can be interpreted as giving equal weight to each unit in the superpopulation of units within the border vicinity \(\area_\buffer\), but then moving each unit from its original location to the nearest point on the border (where the GeoRDD is best able to estimate the treatment effect without undue extrapolation) and then averaging the treatment effect of each unit in this displaced superpopulation.
+    The estimand \(\taupop\) can be interpreted as giving equal weight to each unit in the superpopulation of units within the border vicinity \(\area_\buffer\), but then moving each unit from its original location to the nearest point on the border (where the GeoRDD is best able to estimate the treatment effect without undue extrapolation) and then averaging the treatment effect of each unit in this displaced superpopulation.
 The resulting weight function is:
 \begin{equation}
     \weightb(\sentinel) = 
-		\lim_{\gridres \rightarrow 0}
-		\frac{1}{L_\gridres}
-		\sum_{l=1}^{L_\gridres}
-			\delta\del{\sentinel - \proj_{\border}\del{\grid_l} } 
-			\rho(\grid_l) 
-		\,.
+        \lim_{\gridres \rightarrow 0}
+        \frac{1}{L_\gridres}
+        \sum_{l=1}^{L_\gridres}
+            \delta\del{\sentinel - \proj_{\border}\del{\grid_l} } 
+            \rho(\grid_l) 
+        \,.
 \end{equation}
 
 \subsection{Wiggly Border Simulation}
@@ -208,12 +208,12 @@ The resulting weight function is:
 \centering
 \includegraphics[height=0.35\textheight]{figures/wiggly_boundaries_setup.pdf}
 \caption{
-	\label{fig:wiggly_boundaries_setup}
-	Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population LATE are shown in light gray.}
+    \label{fig:wiggly_boundaries_setup}
+    Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population LATE are shown in light gray.}
 \end{figure}
     
 
-	We illustrate all of our LATE estimators with a simulation.
+    We illustrate all of our LATE estimators with a simulation.
 200 units are placed in a square area delimited by spatial coordinates \(\svec_1 \in \cbr{0,2}\) and \(\svec_2 \in \cbr{-1, 1}\).
 A border at \(\svec_2=0\) divides units vertically into a control and treatment region,
 which are then further divided horizontally at \(\svec_1=0.5\) and \(\svec_1=1.5\) into three blocks:
@@ -248,11 +248,11 @@ To units above the border we add a treatment effect \(\tau(\svec_1, \svec_2) = \
 \end{tabular}
 \egroup
 \caption{
-	Summary of wiggly border simulation setup. 
-	\label{table:wiggly_setup}}
+    Summary of wiggly border simulation setup. 
+    \label{table:wiggly_setup}}
 \end{table}
 
-	We fit the Gaussian process model \autorefexternal{eq:spec2gp},
+    We fit the Gaussian process model \autorefexternal{eq:spec2gp},
 using the known hyperparameters of the covariance kernel and a weak prior on the mean parameter of each region,
 and estimate the LATE using the six methods proposed above.
 For projection-based methods, the buffer distance \(\buffer\) is infinite, so all of \(\area\) is included.
@@ -263,27 +263,27 @@ The simulations results can also be found in \autoref{table:wiggly_results}.
 
 
 \begin{figure}[!tb]
-	\centering
-	\includegraphics[height=0.6\textheight]{figures/wiggly_boundaries_posteriors.pdf}
-	\caption{
-		\label{fig:wiggly_boundaries_posteriors}
-		Results of the simulations of \autoref{sec:wiggly_border}, showing for each LATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.
-	}
+    \centering
+    \includegraphics[height=0.6\textheight]{figures/wiggly_boundaries_posteriors.pdf}
+    \caption{
+        \label{fig:wiggly_boundaries_posteriors}
+        Results of the simulations of \autoref{sec:wiggly_border}, showing for each LATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.
+    }
 \end{figure}
     
-	When the border is a straight line and because \(\treatarea\) and \(\ctrolarea\) are rectangles, the density-weighted estimand \(\taurho\) equals the projected superpopulation estimand \(\taupop\).
+    When the border is a straight line and because \(\treatarea\) and \(\ctrolarea\) are rectangles, the density-weighted estimand \(\taurho\) equals the projected superpopulation estimand \(\taupop\).
 They are in fact both equal to the infinite-population average treatment effect since the treatment effect does not depend on \(\svec_2\).
 Correspondingly, the posteriors of \(\taurho\) and \(\taupop\) are identical.
 \(\taupop\) and the finite-population projected LATE \(\tauproj\) are also similar, but the latter has the advantage of not requiring local estimates of the population density.
 
-	The geometry- and geography-based LATE \(\unifavg\) and \(\taugeo\) are also equivalent when the border is a straight line.
+    The geometry- and geography-based LATE \(\unifavg\) and \(\taugeo\) are also equivalent when the border is a straight line.
 They give equal weight to the sparsely populated middle band, which produces a lower estimate with higher variance than the posteriors of \(\taurho\) and \(\taupop\).
 
-	Lastly, the information-based inverse-variance estimand \(\invvar\) does not exactly coincide with any others.
+    Lastly, the information-based inverse-variance estimand \(\invvar\) does not exactly coincide with any others.
 The estimand and mean estimate change slightly from 0 to 1 wiggles, but remains stable thereafter, demonstrating the robustness of this estimator to border topology.
 Weighting by the inverse variance gives the lowest posterior variance within the class of LATEs under consideration, which can indeed be seen in \autoref{fig:wiggly_boundaries_posteriors}(b).
 
-	As we introduce wiggles into the leftmost band,
+    As we introduce wiggles into the leftmost band,
 \(\taurho\) and \(\unifavg\) show their susceptibility to the border topology.
 Proportionally more sentinels are packed into the leftmost section of the border,
 upweighting the lower treatment effect of that band,
@@ -299,20 +299,20 @@ because the projected sentinels hardly move.
 \centering
 \includegraphics[width=\textwidth]{figures/weight_functions.pdf}
 \caption{
-	\label{fig:weight_functions}
-	Weight functions and induced weights on the observations for the six weight functions proposed in this paper. The weight function plots show the weight \(\weightb(\sentinel)\) against each sentinel's \(\svec_1\) coordinate. Sentinels with coinciding or nearly coinciding (within 0.005 of each other) coordinate \(\svec_1\) were merged and their weights summed. The induced weight plots show a circle for each unit, with the area of the circle proportional to its weight (\(\wt\) and \(\wc\) for treatment and control units respectively), and colored in blue for positive weights and orange for negative weights.}
+    \label{fig:weight_functions}
+    Weight functions and induced weights on the observations for the six weight functions proposed in this paper. The weight function plots show the weight \(\weightb(\sentinel)\) against each sentinel's \(\svec_1\) coordinate. Sentinels with coinciding or nearly coinciding (within 0.005 of each other) coordinate \(\svec_1\) were merged and their weights summed. The induced weight plots show a circle for each unit, with the area of the circle proportional to its weight (\(\wt\) and \(\wc\) for treatment and control units respectively), and colored in blue for positive weights and orange for negative weights.}
 \end{figure}
 
-	In \autoref{fig:weight_functions}(a-f), we illustrate the behavior of border weights \(\weightb(\sentinel)\) and unit weights (\(\wt\) and \(\wc\)) in this simulation setting with 3 wiggles.
+    In \autoref{fig:weight_functions}(a-f), we illustrate the behavior of border weights \(\weightb(\sentinel)\) and unit weights (\(\wt\) and \(\wc\)) in this simulation setting with 3 wiggles.
 Note how evenly spaced sentinels (for \(\unifavg\), \(\taurho\), and \(\invvar\)) are more densely packed along \(\svec_1\) in the leftmost area because of the zig-zagging border.
 The inverse-variance weighted estimator border weights can be seen to respond to this change in the border topology, though it is difficult to interpret their oscillating behavior.
 While these border-weights look unreasonable and unstable, the induced unit weights for \(\invvar\) are well-behaved, and in fact quite similar to those of the projected finite- and infinite-population estimators.
 Furthermore, note that all estimators can give some small negative weights \(\wt\) to treatment units, and small positive weights \(\wc\) to control units.
 For Gaussian processes, this can be understood in terms of the negative side-lobes of the equivalent kernel (see \cite{rasmussen2006gaussian} Section 2.6).
 The high variance of \(\unifavg\) and \(\taugeo\) manifests itself as large weights given to a small number of units.
-All other estimators spread the weights more evenly amongst the units near the border, which reduces their variance.
+All other estimators spread the weights more evenly among the units near the border, which reduces their variance.
     
-	For comparison, the weights placed on units by the projected 1D RDD are shown in \autoref{fig:weight_functions}(g).
+    For comparison, the weights placed on units by the projected 1D RDD are shown in \autoref{fig:weight_functions}(g).
 A triangular kernel in \(\svec_2\) was used with bandwidth selected using the MSE-minimizing method proposed by \cite{imbens2012optimal}.
 The Projected 1D~RDD estimator can also be written as a linear combination of the observed outcomes \autorefexternal{eq:unit_weights}, and the unit weight vectors can be derived as:
 \begin{equation}
@@ -334,38 +334,38 @@ Strikingly, almost all of the positive weights are given to units in the rightmo
 Consequently, any trend in the outcomes across \(\svec_1\) would confound the estimated treatment effect.
 
 \begin{landscape}
-	\begin{table}[p]
-    	\begin{tabular}{r|rrrrrrrrrrrr}
-        	\hline
-        	\(n_{\mathrm{wiggles}}\) & \(\widehat{\unifavg}\) & \(\unifavg\) & \(\widehat{\invvar}\) & \(\invvar\) & \(\widehat{\taurho}\) & \(\taurho\) & \(\widehat{\tauproj}\) & \(\tauproj\) & \(\widehat{\taugeo}\) & \(\taugeo\) & \(\widehat{\taupop}\) & \(\taupop\)\\
-        	\hline
-			0 & 1.02 (0.14) & 1.00 & 1.24 (0.10) & 1.23 & 1.21 (0.10) & 1.21 & 1.23 (0.10) & 1.24 & 1.02 (0.14) & 1.00 & 1.21 (0.10) & 1.21 \\
-			1 & 1.01 (0.13) & 0.99 & 1.14 (0.09) & 1.16 & 1.19 (0.10) & 1.19 & 1.24 (0.10) & 1.24 & 1.02 (0.14) & 1.00 & 1.21 (0.10) & 1.21 \\
-			2 & 0.98 (0.13) & 0.95 & 1.14 (0.09) & 1.15 & 1.15 (0.10) & 1.14 & 1.24 (0.10) & 1.24 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			3 & 0.94 (0.13) & 0.91 & 1.14 (0.09) & 1.15 & 1.09 (0.10) & 1.08 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			5 & 0.86 (0.13) & 0.82 & 1.14 (0.09) & 1.15 & 0.98 (0.11) & 0.96 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			10 & 0.72 (0.14) & 0.67 & 1.14 (0.09) & 1.15 & 0.80 (0.13) & 0.76 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			20 & 0.58 (0.15) & 0.52 & 1.14 (0.09) & 1.15 & 0.63 (0.14) & 0.58 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			40 & 0.48 (0.16) & 0.41 & 1.14 (0.09) & 1.15 & 0.50 (0.16) & 0.44 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			80 & 0.41 (0.17) & 0.34 & 1.14 (0.09) & 1.15 & 0.42 (0.17) & 0.35 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			160 & 0.37 (0.18) & 0.30 & 1.14 (0.09) & 1.15 & 0.38 (0.18) & 0.30 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.20 (0.10) & 1.21 \\
-			320 & 0.36 (0.18) & 0.27 & 1.14 (0.09) & 1.15 & 0.36 (0.18) & 0.28 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			640 & 0.34 (0.18) & 0.26 & 1.14 (0.09) & 1.15 & 0.35 (0.18) & 0.26 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			1000 & 0.35 (0.18) & 0.26 & 1.15 (0.09) & 1.15 & 0.35 (0.18) & 0.26 & 1.24 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
-			\hline
-    	\end{tabular}
-    	\caption{
-        	\textbf{Wiggly Border Simulation Results.} 
-        	Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each LATE estimand as the wiggliness of the border is increased in the simulations of \autoref{sec:wiggly_border}.
-        	\label{table:wiggly_results}
-        	}
-	\end{table}
+    \begin{table}[p]
+        \begin{tabular}{r|rrrrrrrrrrrr}
+            \hline
+            \(n_{\mathrm{wiggles}}\) & \(\widehat{\unifavg}\) & \(\unifavg\) & \(\widehat{\invvar}\) & \(\invvar\) & \(\widehat{\taurho}\) & \(\taurho\) & \(\widehat{\tauproj}\) & \(\tauproj\) & \(\widehat{\taugeo}\) & \(\taugeo\) & \(\widehat{\taupop}\) & \(\taupop\)\\
+            \hline
+            0 & 1.02 (0.14) & 1.00 & 1.24 (0.10) & 1.23 & 1.21 (0.10) & 1.21 & 1.23 (0.10) & 1.24 & 1.02 (0.14) & 1.00 & 1.21 (0.10) & 1.21 \\
+            1 & 1.01 (0.13) & 0.99 & 1.14 (0.09) & 1.16 & 1.19 (0.10) & 1.19 & 1.24 (0.10) & 1.24 & 1.02 (0.14) & 1.00 & 1.21 (0.10) & 1.21 \\
+            2 & 0.98 (0.13) & 0.95 & 1.14 (0.09) & 1.15 & 1.15 (0.10) & 1.14 & 1.24 (0.10) & 1.24 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            3 & 0.94 (0.13) & 0.91 & 1.14 (0.09) & 1.15 & 1.09 (0.10) & 1.08 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            5 & 0.86 (0.13) & 0.82 & 1.14 (0.09) & 1.15 & 0.98 (0.11) & 0.96 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            10 & 0.72 (0.14) & 0.67 & 1.14 (0.09) & 1.15 & 0.80 (0.13) & 0.76 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            20 & 0.58 (0.15) & 0.52 & 1.14 (0.09) & 1.15 & 0.63 (0.14) & 0.58 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            40 & 0.48 (0.16) & 0.41 & 1.14 (0.09) & 1.15 & 0.50 (0.16) & 0.44 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            80 & 0.41 (0.17) & 0.34 & 1.14 (0.09) & 1.15 & 0.42 (0.17) & 0.35 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            160 & 0.37 (0.18) & 0.30 & 1.14 (0.09) & 1.15 & 0.38 (0.18) & 0.30 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.20 (0.10) & 1.21 \\
+            320 & 0.36 (0.18) & 0.27 & 1.14 (0.09) & 1.15 & 0.36 (0.18) & 0.28 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            640 & 0.34 (0.18) & 0.26 & 1.14 (0.09) & 1.15 & 0.35 (0.18) & 0.26 & 1.23 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            1000 & 0.35 (0.18) & 0.26 & 1.15 (0.09) & 1.15 & 0.35 (0.18) & 0.26 & 1.24 (0.10) & 1.23 & 1.01 (0.13) & 0.99 & 1.21 (0.10) & 1.21 \\
+            \hline
+        \end{tabular}
+        \caption{
+            \textbf{Wiggly Border Simulation Results.} 
+            Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each LATE estimand as the wiggliness of the border is increased in the simulations of \autoref{sec:wiggly_border}.
+            \label{table:wiggly_results}
+            }
+    \end{table}
 \end{landscape}
 
 \section{Alternate Tests for Non-Zero Treatment Effect}
 \label{sec:alternate_tests}
 
-	In our main paper, we present the calibrated inverse-variance test, which targets the weak null hypothesis of zero LATE.
+    In our main paper, we present the calibrated inverse-variance test, which targets the weak null hypothesis of zero LATE.
 It can be generalized to any other choice of LATE estimand defined as a weighted mean over the border, as in \autoref{eq:weighted_estimand}.
 Tests of the sharp null hypothesis, that is \(\tau(\sentinel)=0\) for all \(\sentinel \in \border\), are also of interest, and we present two such tests in this section.
 We provide a simulation comparing the power of the three tests when the treatment effect is constant, and apply each test to the NYC school district application of the main paper.
@@ -373,16 +373,16 @@ We advocate for the use of the calibrated inverse-variance test in most situatio
 
 \subsection{Marginal Likelihood Test}
 
-	Recall the null model \(\modnull\) defined in \autoref{sec:hypothesis_testing}; the unified Gaussian process is smooth and continuous at the border, and therefore accords with the sharp null hypothesis.
+    Recall the null model \(\modnull\) defined in \autoref{sec:hypothesis_testing}; the unified Gaussian process is smooth and continuous at the border, and therefore accords with the sharp null hypothesis.
 Intuitively, if there is a treatment effect, the likelihood of the observations should be lower under \(\modnull\) than under \(\modalt\),
 the \(\GP\) model as specified in \autorefexternal{eq:spec2gp}.
-We therefore choose the difference in log-likelihoods as our test statistic
+We therefore choose the difference in marginal log-likelihood (mLL) as our test statistic
 \begin{equation}
     t = \log \Pr\del{\Yvec \mid \modalt} - \log \Pr\del{\Yvec \mid \modnull} \,,
 \end{equation}
 and wish to reject the sharp null hypothesis when its observed value \(t_{obs}\) is high.
 
-	A parametric bootstrap approach is used to quantify what ``high'' means. We draw \(B\) bootstrap samples \(\Yvec^{(b)}\) from \(\modnull\),
+    A parametric bootstrap approach is used to quantify what ``high'' means. We draw \(B\) bootstrap samples \(\Yvec^{(b)}\) from \(\modnull\),
 using the same spatial locations as the original data,
 and then fit the two competing models to the simulated data in order to obtain the bootstrapped test statistic
 \begin{equation}
@@ -404,7 +404,7 @@ But it may seem odd that the test aims to detect a non-zero treatment effect at 
 The test statistic and \(p\)-values can be computed without access to the sentinel positions, using only the treatment and control indicators.
 If the test is significant, there is no guarantee that this is due to a discontinuity at the border.
 
-	To address this oddity, we can derive a test statistic directly from the cliff height estimator \autorefexternal{eq:postvar2gp}.
+    To address this oddity, we can derive a test statistic directly from the cliff height estimator \autorefexternal{eq:postvar2gp}.
 We use \(\muvec\) and \(\SigmaMat\) as shorthand for the posterior mean \(\muvec_{\sentinels \mid Y}\)
 and covariance matrix \(\SigmaMat_{\sentinels \mid Y}\) throughout this section.
 If a \(k\)-vector \(\yvec\) is distributed \(\normal\del{\muvec, \SigmaMat}\), with mean vector \(\muvec\) unknown and covariance \(\SigmaMat\) known, then under the null hypothesis that \(\mu=0\), the test statistic \(\yvec\trans \SigmaMat^{-1} \yvec\) has distribution \(\chi^2_k\).
@@ -416,20 +416,20 @@ Firstly, this test, obtained heuristically from a Bayesian posterior by analogy 
 Secondly, while \(\SigmaMat\) is mathematically full-rank, it is typically numerically rank-deficient.
 Therefore, \(\numsent\) overestimates the true degrees of freedom of the null distribution.
 
-	Benavoli and Mangili (2015), developing a test for function equality, address the second problem by trimming the \(\SigmaMat\) eigenvalues \(\lambda_i\) lower than \(\epsilon \sum_{j=1}^k \lambda_j\), with \(\epsilon\) a pre-specified small number (they use 0.01).
+    \citet{benavoli2015gaussian}, developing a test for function equality, address the second problem by trimming the \(\SigmaMat\) eigenvalues \(\lambda_i\) lower than \(\epsilon \sum_{j=1}^k \lambda_j\), with \(\epsilon\) a pre-specified small number (they use 0.01).
 They address the first problem by showing that the resulting \(p\)-value is always conservative in their simulations.
 However, in our work, we found the resulting \(p\)-value to be sensitive to the arbitrarily chosen \(\epsilon\) tolerance parameter, which makes it difficult to trust its validity.
 
-	We therefore again take the parametric bootstrap approach, this time using \(S^2\) as the test statistic.
+    We therefore again take the parametric bootstrap approach, this time using \(S^2\) as the test statistic.
 With B bootstrap samples, the \(p\)-value is estimated as
 \begin{equation}
         p \approx \frac{1}{B} \sum_{b=1}^B \Ind\cbr{S_{(b)}^2 < S^2}
-		\quad\text{with}\quad
+        \quad\text{with}\quad
         S_{(b)}^2 = (\muvec_{(b)} )\trans \SigmaMat^{-1} \muvec_{(b)}\,,
 \end{equation}
 where \(\muvec_{(b)}\) is the result of applying the cliff height estimator \autorefexternal{eq:postvar2gp} to the bootstrap sample \(\Yvec^{(b)}\).
 
-	Because calculating \(S^2\) involves inverting a matrix \(\SigmaMat\) that is mathematically of full rank, but numerically of low rank, we may worry about the numerical stability of computing \(S\).
+    Because calculating \(S^2\) involves inverting a matrix \(\SigmaMat\) that is mathematically of full rank, but numerically of low rank, we may worry about the numerical stability of computing \(S\).
 We verified in simulated examples that regularizing \(\SigmaMat\) by adding a small constant to its diagonal does not greatly affect the computed \(S^2\).
 The parametric bootstrap ensures the frequentist validity of the test
 regardless of the regularization.
@@ -442,16 +442,16 @@ regardless of the regularization.
     \centering
     \includegraphics[height=0.4\textheight]{figures/mississippi_sim.pdf}
     \caption{
-		\label{fig:mississippi_counties}
-		Set-up of the imaginary experiment in Louisiana and Mississippi. Each unit is at the centroid of a county. The colors indicated the observed outcomes in one draw of the simulation under \(\tau=1.5\). In this particular run, the \(p\)-values were 0.0016, 0.0018, and 0.0013 for the mLL, \(\chi^2\), and inverse-variance test respectively.}
+        \label{fig:mississippi_counties}
+        Set-up of the imaginary experiment in Louisiana and Mississippi. Each unit is at the centroid of a county. The colors indicated the observed outcomes in one draw of the simulation under \(\tau=1.5\). In this particular run, the \(p\)-values were 0.0016, 0.0018, and 0.0013 for the mLL, \(\chi^2\), and inverse-variance test respectively.}
 \end{figure}
 
-	The three tests we developed leverage different aspects of the design, and target two different null hypotheses. One may wonder how their power compares in the presence of a treatment effect. Considering once more the border between Louisiana and Mississippi, we imagine an experiment where the unit of analysis is the county, located at its centroid, as shown in \autoref{fig:mississippi_counties}.
+    The three tests we developed leverage different aspects of the design, and target two different null hypotheses. One may wonder how their power compares in the presence of a treatment effect. Considering once more the border between Louisiana and Mississippi, we imagine an experiment where the unit of analysis is the county, located at its centroid, as shown in \autoref{fig:mississippi_counties}.
 We simulate outcomes from a single Gaussian process covering both states. For simplicity, we fix the hyperparameters to arbitrary values: \(\sigman=\sigmaf=1.0\) and \(\ell=100\,\mathrm{km}\).
 We then add a constant treatment effect \(\tau\) to all the outcomes in Louisiana.
 The results of the three tests proposed so far are shown in the first three rows of \autoref{table:power} for \(\tau=0\) (null hypothesis) and \(\tau=1.2\) and significance level \(\alpha=0.05\).
 
-	We see that under the null, the \(\chi^2\) and likelihood ratio tests are valid (rejection of the null in 5\% of simulations up to simulation error).
+    We see that under the null, the \(\chi^2\) and likelihood ratio tests are valid (rejection of the null in 5\% of simulations up to simulation error).
 This is enforced by the parametric bootstrap, which draws test statistics from the same null distribution to calibrate the tests.
 However, the \(p\)-values for the inverse-variance test are biased down, so that we will falsely reject the null \(9\%\) instead of \(5\%\) of the time.
 While unfortunate, this is unsurprising, since the inverse-variance test was derived heuristically rather than from a rigorous frequentist procedure.
@@ -466,20 +466,20 @@ While unfortunate, this is unsurprising, since the inverse-variance test was der
         & \multicolumn{2}{c}{Power under} \\
         Test & \(\tau=0\) & \(\tau=1.2\) \\
         \hline
-	    Marginal log-likelihood bootstrap & 0.05 & 0.72 \\
-	    \(\chi^2\) bootstrap & 0.05 & 0.63 \\
-	    \(\invvar\) uncalibrated & 0.09 & 0.87 \\
-	    \(\invvar\) calibrated & 0.05 & 0.80 \\
+        mLL bootstrap & 0.05 & 0.72 \\
+        \(\chi^2\) bootstrap & 0.05 & 0.63 \\
+        \(\invvar\) uncalibrated & 0.09 & 0.87 \\
+        \(\invvar\) calibrated & 0.05 & 0.80 \\
         \hline
     \end{tabular}
     \egroup
     \caption{
-		Power of marginal likelihood, chi-squared, and inverse-variance tests, with nominal significance of \(\alpha=0.05\), under null and alternative hypothesis for simulated outcomes at the centroids of Louisiana and Mississippi counties.
-    	\label{table:power}
-	}
+        Power of mLL, \(\chi^2\), and inverse-variance tests, with nominal significance of \(\alpha=0.05\), under null and alternative hypothesis for simulated outcomes at the centroids of Louisiana and Mississippi counties.
+        \label{table:power}
+    }
 \end{table}
 
-	After calibration, the hypothesis test based on the inverse-variance mean is valid, but retains higher power to detect the constant treatment effect than the mLL and \(\chi^2\) tests.
+    After calibration, the hypothesis test based on the inverse-variance mean is valid, but retains higher power to detect the constant treatment effect than the mLL and \(\chi^2\) tests.
 This can lead to a paradox: we may reject the weak null hypothesis, but fail to reject the sharp null hypothesis (using the \(\chi^2\) or likelihood test), even though rejection of the weak null logically implies rejection of the sharp null.
 This paradox isn't specific to this setting, and is discussed in depth in the context of randomization-based inference by \cite{Ding:2014sf}.
 To maximize power, we therefore recommend using the calibrated inverse-variance test in studies where the main interest is in the detection of an overall (average) increase or decrease in outcomes.
@@ -495,7 +495,7 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
         \hline
         Test                   & \(p\)-value \\
         \hline
-        Marginal log-likelihood bootstrap & 0.003     \\
+        mLL bootstrap & 0.003     \\
         \(\chi^2\) bootstrap     & 0.022     \\
         \(\invvar\) uncalibrated & 0.0007    \\
         \(\invvar\) calibrated   & 0.002 \\
@@ -503,17 +503,17 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
     \end{tabular}
     \egroup
     \caption{
-		Results of hypothesis tests for New York school district house prices.
-		The marginal log-likelihood and \(\chi^2\) test were both performed with 10,000 bootstrap samples.
-    	\label{table:NYC_tests}
-	}
+        Results of hypothesis tests for New York school district house prices.
+        The mLL and \(\chi^2\) test were both performed with 10,000 bootstrap samples.
+        \label{table:NYC_tests}
+    }
 \end{table}
 
-	We now compare the results of the three hypothesis tests applied to the NYC house prices application.
+    We now compare the results of the three hypothesis tests applied to the NYC house prices application.
 The three \(p\)-values are provided in \autoref{table:NYC_tests}, and show
 agreement between the three tests, though the \(\chi^2\) test returns a considerably higher \(p\)-value, which is unsurprising considering the lower power of this test seen in simulations.
 
-	To assess the validity of the three tests, we apply the placebo tests devised in \autorefexternal{sec:placebo}.
+    To assess the validity of the three tests, we apply the placebo tests devised in \autorefexternal{sec:placebo}.
 Within each district, we split the data in half by a line at angles \(1\degree\), \(3\degree\), \(5\degree\), \(6\degree\), \(\dotsc\), \(179\degree\).
 Because these lines were drawn arbitrarily, we don't expect a discontinuous treatment effect between the two halves, and so we hope to see a uniform distribution of placebo \(p\)-values.
 However, these tests will be highly correlated,
@@ -524,21 +524,21 @@ There is in fact visible autocorrelation in the graphs of placebo \(p\)-values a
     \centering
     \includegraphics[width=\textwidth]{figures/NYC_placebos.pdf}
     \caption{
-		\label{fig:nyc_placebos}
-		Placebo tests for significance tests applied to NYC school district house prices, applied within districts 19 and 27. From top to bottom, results are shown for the marginal log-likelihood bootstrap test, chi-squared bootrap test, and calibrated inverse-variance test. The first column shows the placebo \(p\)-value as a function of the border angle; the second column shows histograms of the placebo \(p\)-values, with the black vertical line indicating the uniform distribution.
-	}
+        \label{fig:nyc_placebos}
+        Placebo tests for significance tests applied to NYC school district house prices, applied within districts 19 and 27. From top to bottom, results are shown for the mLL bootstrap test, \(\chi^2\) bootstrap test, and calibrated inverse-variance test. The first column shows the placebo \(p\)-value as a function of the border angle; the second column shows histograms of the placebo \(p\)-values, with the black vertical line indicating the uniform distribution.
+    }
 \end{figure}
 
-	The mLL placebo \(p\)-values show a pronounced bias towards low values.
-This seems to confirm our concern that the marginal log-likelihood may be sensitive to features of the data other than the discontinuity at the border.
+    The mLL placebo \(p\)-values show a pronounced bias towards low values.
+This seems to confirm our concern that the mLL may be sensitive to features of the data other than the discontinuity at the border.
 In particular, model misspecification, which is a concern in spatial models, makes the interpretation of the mLL test unreliable.
 Based on this vulnerability, and its manifestation in this application, we do not recommend relying on the likelihood-ratio test.
 
-	The \(\chi^2\) test shows more robustness, with \autoref{fig:nyc_placebos}(d) showing some negative bias in district 27, and some positive bias in district 19, which could simply be due to the low effective sample size.
+    The \(\chi^2\) test shows more robustness, with \autoref{fig:nyc_placebos}(d) showing some negative bias in district 27, and some positive bias in district 19, which could simply be due to the low effective sample size.
 We therefore believe that the \(\chi^2\) test will continue to be reliable under misspecification.
-It is only due to its low power that we hesitate to recommend its use in applications where the treatment effect is expected to be fairly homogenous.
+It is only due to its low power that we hesitate to recommend its use in applications where the treatment effect is expected to be fairly homogeneous.
 
-	Lastly, the calibrated inverse-variance placebo \(p\)-values display no obvious bias, with \autoref{fig:nyc_placebos}(f) close to uniformly distributed, and \autoref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
+    Lastly, the calibrated inverse-variance placebo \(p\)-values display no obvious bias, with \autoref{fig:nyc_placebos}(f) close to uniformly distributed, and \autoref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
 The high power and robustness of the inverse-variance test make a strong case for its use in most applications.
 
 
@@ -549,7 +549,7 @@ The high power and robustness of the inverse-variance test make a strong case fo
 
 
 
-	The GeoRDD analysis can be repeated for each pair of adjacent districts.
+    The GeoRDD analysis can be repeated for each pair of adjacent districts.
 \autoref{fig:NYC_pairwise} and \autoref{table:NYC_pairwise} give an overview of the results by showing the posterior mean and standard deviation of the inverse variance LATE estimated at each border.
 Significant effects are found between many districts, but interpreting the results requires some caution.
 We have already mentioned the issue of compound treatments for borders between school districts that overlap with the border between boroughs.
@@ -560,19 +560,19 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
     \centering
     \includegraphics[width=0.97\textwidth,height=0.8\textheight,keepaspectratio]{figures/pairwise_mean_se.png}
     \caption{
-		\label{fig:NYC_pairwise}
+        \label{fig:NYC_pairwise}
         Pairwise estimates of the inverse variance LATE between adjacent districts.
         The thickness of the orange buffer adjacent to borders is proportional to the posterior mean of the inverse variance LATE, and the blue buffer beyond it is proportional to the posterior standard deviation of the LATE.
     The buffers are drawn on the side of the border that is estimated to have higher house prices.}
 \end{figure}
 
-	Some school districts are separated by parks (or other non-residential zones), for example districts 15 \& 17 or 19 \& 24, so that house sales do not extend all the way to the border on one or both sides.
+    Some school districts are separated by parks (or other non-residential zones), for example districts 15 \& 17 or 19 \& 24, so that house sales do not extend all the way to the border on one or both sides.
 A significant treatment effect between these pairs cannot be interpreted as the detection of a discontinuity in prices at the border, let alone any kind of causal interpretation, but rather it means that the difference in prices between the two sides of the park exceeds the typical spatial variation of house prices expected over the same distance.
 This is not unsurprising, and one may speculate that physical barriers like parks, rivers, railways and major roads can separate neighborhoods with distinct character, demographics and thus house prices.
 This in turn challenges the stationarity assumption of the spatial model \autorefexternal{eq:spec2gp}.
 The higher distance between data and the border also stretches the spatial model's ability to extrapolate, which makes it more vulnerable to model misspecification.
 
-	Other pairs of district, like 13 \& 14, 13 \& 17, and 25 \& 28 have clusters of missing data (condo sales with unknown square footage) near the border that cast doubt on the interpretation of the estimated effect.
+    Other pairs of district, like 13 \& 14, 13 \& 17, and 25 \& 28 have clusters of missing data (condo sales with unknown square footage) near the border that cast doubt on the interpretation of the estimated effect.
 Nonetheless, significant effects are also found between pairs of school districts without issues due to compound treatments, physical barriers, or missing data.
 House prices increase going across the border from districts 16 to 13, 18 to 17, 24 to 30, 23 to 17, 25 to 26, 28 to 29, and 29 to 26.
 Overall, it seems that school district borders in Brooklyn and Queens can correspond to measurable jumps in house prices per square foot.
