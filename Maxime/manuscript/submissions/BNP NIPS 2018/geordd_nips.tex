@@ -5,7 +5,7 @@
 % before loading nips_2018
 
 % ready for submission
-\usepackage{nips_2018}
+\usepackage[final]{nips_2018}
 
 % to compile a preprint version, e.g., for submission to arXiv, add
 % add the [preprint] option:
@@ -70,6 +70,21 @@
   Burnaby, B.C.\\
   Canada
 }
+\author{
+Maxime Rischard\textsuperscript{$\dagger$}\\
+\And
+Zach Branson\textsuperscript{$\dagger$}\\
+\And
+Luke Miratrix\textsuperscript{$\ddagger$}\\
+\And
+Luke Bornn\textsuperscript{$\ast$}\\
+\AND
+\normalfont
+\normalsize\textsuperscript{$\dagger$}Harvard University Department of Statistics\\
+\normalsize\textsuperscript{$\ddagger$}Harvard Graduates School of Education\\
+\normalsize\textsuperscript{$\ast$}Simon Fraser University Department of Statistics and Actuarial Science\\
+\texttt{\{mrischard,zbranson,lmiratrix\}@g.harvard.edu}\,, \texttt{lbornn@sfu.ca}
+}
 
 \begin{document}
 
@@ -119,7 +134,7 @@ Reusing the same methodological skeleton and applying it to geographical RDDs, o
     \item
         extrapolate the surfaces to the \emph{border curve}, and
     \item
-        take the \emph{pointwise} difference between the two extrapolations to estimate the treatment effect along the border.
+        take the \emph{pointwise} difference between the two extrapolations to estimate the (possibly heterogeneous) treatment effect along the border.
 \end{flatlist}
 
 Recently, \cite{Branson:2017qy} proposed a Gaussian process regression (GPR) methodology that exhibits promising coverage and MSE properties compared to local linear regression for 1D~RDDs.
@@ -154,19 +169,21 @@ We denote by \(\tau(\sentinels)\) the \(\numsent\)-vector with \(r^\mathrm{th}\)
 Our GeoRDD framework allows any spatial method to be used to fit and extrapolate the outcomes on either side of the border.
 In this paper we use GPR \citep{banerjee2014hierarchical,rasmussen2006gaussian} for this purpose.
 On each side of the border, we model the observed outcomes \(Y_i\) at location \(\svec_i\) as the sum of an intercept \(m\), a spatial Gaussian process \(f(\svec)\), and iid normal noise \(\epsilon\).
-The Gaussian process has zero mean, and we choose to use the squared exponential covariance kernel:
+The Gaussian process has zero mean, and we choose to use the exponential covariance kernel (also known as Mat\'ern \(\nu=1/2\)):
 \begin{equation}
     \begin{split}
         & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \epsilon_i \quad\text{and}\quad
-        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i \,; \\
+          Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i 
+          \,,\quad\text{with } \epsilon_i \overset{\indep}{\sim} \normal(0, \sigman^2) \,; \\
         & f_\treat{}, f_\ctrol{} \overset{\indep}{\sim} \GP\del{0, k(\svec, \svec')} \quad\text{with}\quad
-        k(\svec,\svec') = \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \,.
+        % k(\svec,\svec') = \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \,.
+        k(\svec,\svec') = \sigmaf^2 \exp\del{-\norm{\svec-\svec'}_2 \big/ \ell} \,.
     \end{split}
     \label{eq:spec2gp}
 \end{equation}
-The treatment effect at \(\sentinel\) is then the difference between the two noise-free surfaces:
-    \(\tau(\sentinel) = g_\treat{}(\sentinel) - g_\ctrol{}(\sentinel)\)
-.
+The independence of \(f_\treat{}\) and \(f_\ctrol{}\) is analogous to the usual approach in 1D~RDDs of fitting the outcomes on either side of the threshold separately by local linear regression.
+The treatment effect at \(\sentinel\) is the difference between the two noise-free surfaces:
+    \(\tau(\sentinel) = g_\treat{}(\sentinel) - g_\ctrol{}(\sentinel)\).
 \label{sec:inference}
 If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu^2\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
 Given hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), the posterior distribution of \(g_\treat\) at \(\sentinels=\sentinelset\) is multivariate normal:
@@ -194,8 +211,9 @@ Since the two surfaces are modeled as independent, the treatment effect has post
     \end{split}
     \label{eq:postvar2gp}
 \end{equation}
-This leaves the choice of the hyperparameters \(\hyperparam\).
-For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak, while the other parameters are fitted by maximizing the marginal likelihood.
+This leaves the choice of the hyperparameters \(\hyperparam\):
+for \(\sigmamu\) we arbitrarily pick a large value to give the mean parameters weak priors, while \(\sigmaf,\sigman\), and \(\ell\) are fitted by maximizing the marginal likelihood.
+If the spatial behavior of the outcome variables is plausibly affected by the treatment, then \(\hyperparam\) can also be fitted separately in the two regions.
 
 \subsection{Estimating the Local Average Treatment Effect}
 \label{sec:ate}
@@ -246,14 +264,14 @@ modeled as a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\d
 \begin{equation}
     \begin{aligned}
         & Y_i = % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
-        	m_{\district\sbr{i}} + \beta_{\building\sbr{i}}
+        	m_{\district\sbr{i}} + \gamma{\building\sbr{i}}
         	+ f_{\district\sbr{i}}(\svec_i) + \epsilon_i 
 			\,,\quad
- 			\epsilon_i \sim \normal\del{0, \sigma_y^2} 
+ 			\epsilon_i \overset{\indep}{\sim} \normal\del{0, \sigman^2} 
 			\,,
 			\phantom{\hspace{-10cm}} % for alignment
             \\
-        & \beta_{l} \sim \normal\del{0, \sigma_\beta^2}
+        & \gamma_{l} \sim \normal\del{0, \sigmabeta^2}
 			\,,
 			&&
 			\forall
@@ -290,13 +308,13 @@ modeled as a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\d
 \end{figure}
 
 We illustrate the results with a single pair of neighboring districts: 19 (``treatment'') and 27 (``control'').
-We fit the hyperparameters \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigma_\beta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\)
+We fit the hyperparameters \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.26\), \(\widehat{\sigmabeta}=0.15\), and \(\widehat{\ell}=4.9~\text{km}\)
 by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29,
 and set \(\sigmamu=20\) to give the district means \(m_j\) a weak prior.
-After fitting the coefficients $\beta$ (see \autorefexternal{sec:covariates} in Supplements for details) and extracting residuals, we obtain the posterior treatment effect \autoref{eq:postvar2gp} shown in \autoref{fig:NYC_cliff_height}.
+After fitting the coefficients \(\gamma\) (see \autorefexternal{sec:covariates} in Supplements for details) and extracting residuals, we obtain the posterior treatment effect \autoref{eq:postvar2gp} shown in \autoref{fig:NYC_cliff_height}.
 
 The posterior mean in \autoref{fig:NYC_cliff_height} indicates a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
-Our two estimators, based on uniform weights and inverse-variance weights, yield LATE estimates (posterior mean \(\pm\) std. deviation) of \(-0.17\pm 0.08\) and \(-0.19 \pm 0.06\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
+Our two estimators, based on uniform weights and inverse-variance weights, yield LATE estimates (posterior mean \(\pm\) std. deviation) of \(-0.16\pm 0.09\) and \(-0.20 \pm 0.06\) respectively, which corresponds to an approximately 20\% increase in property prices going from district 19 to district 27.
 By contrast, treating each district and building class as a fixed effect in an OLS model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 
 \section{Discussion}
@@ -319,7 +337,7 @@ Simply integrating the treatment effect uniformly along the border yields an est
 The inverse-variance weighted estimator is robust to this effect and uses the information available in the data more efficiently.
 
 We applied our method to a publicly available dataset of one year of New York City property sales, to examine whether school district cause difference in property prices.
-Focusing on the border between school districts 19 and 27, we estimated a roughly 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
+Focusing on the border between school districts 19 and 27, we estimated an approximately 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
 However, the border between these two districts is also the border between the NYC boroughs of Brooklyn and Queens, so we cannot attribute this difference to the causal effect of the school districts.
 In the Supplements, we extend the GeoRDD analysis to other pairs of adjacent school districts, and find significant effects between many of these pairs.
 

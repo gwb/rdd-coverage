@@ -5,7 +5,7 @@
 % before loading nips_2018
 
 % ready for submission
-\usepackage{nips_2018}
+\usepackage[final]{nips_2018}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -72,6 +72,21 @@
   Burnaby, B.C.\\
   Canada
 }
+\author{
+Maxime Rischard\textsuperscript{$\dagger$}\\
+\And
+Zach Branson\textsuperscript{$\dagger$}\\
+\And
+Luke Miratrix\textsuperscript{$\ddagger$}\\
+\And
+Luke Bornn\textsuperscript{$\ast$}\\
+\AND
+\normalfont
+\normalsize\textsuperscript{$\dagger$}Harvard University Department of Statistics\\
+\normalsize\textsuperscript{$\ddagger$}Harvard Graduates School of Education\\
+\normalsize\textsuperscript{$\ast$}Simon Fraser University Department of Statistics and Actuarial Science\\
+\texttt{\{mrischard,zbranson,lmiratrix\}@g.harvard.edu}\,, \texttt{lbornn@sfu.ca}
+}
 
 \begin{document}
 
@@ -122,20 +137,20 @@ and those of the \(j^\mathrm{th}\) control unit by \(\svec_{j\ctrol}\), while \(
 \section{Handling Nonspatial Covariates}
 \label{sec:covariates}
 
-The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on non-spatial covariates.
-The models are modified by the addition of the linear regression term \(\Dmat \betavec\) on the \(n \times p\) matrix of covariates \(\Dmat\), where \(p\) is the number of non-spatial covariates.
-We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigma_\beta^2 \Dmat \Dmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\).
-Let \(\dvec_i\) be the \(p\)-vector of non-spatial covariates of unit \(i\).
+The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on nonspatial covariates.
+The models are modified by the addition of the linear regression term \(\Xmat \gammavec\) on the \(n \times p\) matrix of covariates \(\Xmat\), where \(p\) is the number of nonspatial covariates.
+We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigmabeta^2 \Xmat \Xmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\).
+Let \(\xvec_i\) be the \(p\)-vector of nonspatial covariates of unit \(i\).
 Our model becomes:
 \begin{equation}
     \begin{split}
-        & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i \quad\text{and}\quad
-        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \dvec_i\trans \betavec + \epsilon_i \,\text{, with} \\
-        & \beta_j \overset{\indep}{\sim} \normal\del{0,\sigmabeta^2}\,\text{, for }j=1,2,\dotsc,p \,,
+        & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \xvec_i\trans \gammavec + \epsilon_i \quad\text{and}\quad
+        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \xvec_i\trans \gammavec + \epsilon_i \,\text{, with} \\
+        & \gamma_j \overset{\indep}{\sim} \normal\del{0,\sigmabeta^2}\,\text{, for }j=1,2,\dotsc,p \,,
     \end{split}
     \label{eq:covariates_model}
 \end{equation}
-and \(f_\treat\) and \(f_\ctrol\) as in \autoref{eq:spec2gp}.
+and \(f_\treat\), \(f_\ctrol\) and \(\epsilon_i\) as in \autoref{eq:spec2gp}.
 
 Unfortunately, the linear term induces a covariance between the treatment and control region; \(\SigmaMat_Y\) is no longer black diagonal, which roughly quadruples the computational cost of the analysis, as it requires the inversion of an \((n_\treat{}+n_\ctrol{}) \times (n_\treat{}+n_\ctrol{})\) covariance matrix instead of (in the absence of correlations between the treatment and control units) the separate inversions of the \(n_\treat{} \times n_\treat{}\) covariance matrix \(\STT\), and \(n_\ctrol{} \times n_\ctrol{}\) covariance matrix \(\SCC\).
 The introduction of the linear term modifies the cliff height estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
@@ -165,7 +180,7 @@ The introduction of the linear term modifies the cliff height estimator \autoref
     \end{split}
     \label{eq:cliff_with_covariates}
 \end{equation}
-To avoid the complexity caused by the correlation between \(\yt\) and \(\yc\) that the linear term induces, we suggest first obtaining an estimate \(\hat\betavec\) of the coefficients:
+To avoid the complexity caused by the correlation between \(\yt\) and \(\yc\) that the linear term induces, we suggest first obtaining an estimate \(\hat\gammavec\) of the coefficients:
 \begin{equation}
     \begin{split}
         % \Yvec &= \begin{pmatrix}
@@ -174,37 +189,37 @@ To avoid the complexity caused by the correlation between \(\yt\) and \(\yc\) th
         % \end{pmatrix}
         % \\
         &
-        \cov\del{\Yvec \mid \betavec }
+        \cov\del{\Yvec \mid \gammavec }
                 = \begin{bmatrix}
                     \STT & 0 \\
                     0 & \SCC
                   \end{bmatrix}
             \,,\ 
-            \cov\del{\betavec} = \sigmabeta^2 \eye_p 
+            \cov\del{\gammavec} = \sigmabeta^2 \eye_p 
             \,,\  
-            \cov\del{\Yvec, \betavec} = \sigmabeta^2 \Dmat \\&
+            \cov\del{\Yvec, \gammavec} = \sigmabeta^2 \Xmat \\&
         \SigmaMat_Y = \cov\del{\Yvec} 
-            = \cov\del{\Yvec \mid \betavec}
-                + \sigmabeta^2 \Dmat \Dmat\trans \\&
+            = \cov\del{\Yvec \mid \gammavec}
+                + \sigmabeta^2 \Xmat \Xmat\trans \\&
         % &= \begin{bmatrix}
             % \STT\!+\!\sigmabeta^2 \Dmat_{\treat} \Dmat_{\treat}\trans 
             % & \! \sigmabeta^2 \Dmat_{\treat} \Dmat_{\ctrol}\trans \\
             % \sigmabeta^2 \Dmat_{\ctrol} \Dmat_{\treat}\trans 
             % & \! \SCC\!+\!\sigmabeta^2 \Dmat_{\ctrol} \Dmat_{\ctrol}\trans
         % \end{bmatrix}\\
-        \hat\betavec 
-            = \E\del{\beta \mid \Yvec} 
-            = \cov\del{\betavec,\Yvec} \cov\del{\Yvec,\Yvec}^{-1} \Yvec
-            = \sigmabeta^2 \Dmat\trans\SigmaMat_{Y}^{-1} \Yvec
+        \hat\gammavec 
+            = \E\del{\gamma \mid \Yvec} 
+            = \cov\del{\gammavec,\Yvec} \cov\del{\Yvec,\Yvec}^{-1} \Yvec
+            = \sigmabeta^2 \Xmat\trans\SigmaMat_{Y}^{-1} \Yvec
         \,.
     \end{split}
 \end{equation}
-The treatment and control residuals can then be obtained as \(\residvec = \Yvec - \Dmat \hat\betavec\).
-Conditionally on \(\betavec=\hat\betavec\), the residuals of the treatment and control units then have independent multivariate normal distributions with covariances \(\STT\) and \(\SCC\) respectively.
+The treatment and control residuals can then be obtained as \(\residvec = \Yvec - \Xmat \hat\gammavec\).
+Conditionally on \(\gammavec=\hat\gammavec\), the residuals of the treatment and control units then have independent multivariate normal distributions with covariances \(\STT\) and \(\SCC\) respectively.
 
 
-We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\betavec=\hat\betavec\).
-This is an approximation, as it ignores the uncertainty in the estimate of \(\betavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
+We can then proceed with the GeoRDD analysis on the residuals, which are decorrelated conditionally on \(\gammavec=\hat\gammavec\).
+This is an approximation, as it ignores the uncertainty in the estimate of \(\gammavec\), but if the number of samples in the treatment and control areas is high (even away from the border), the approximation has negligible effect on the estimate of the treatment effect, and simplifies the subsequent GeoRDD analysis.
 
 %%% NYC %%%
 \section{Full Analysis: NYC School Districts}
@@ -241,7 +256,7 @@ The higher distance between data and the border also stretches the spatial model
 Nonetheless, significant effects are also found between pairs of school districts without issues due to compound treatments, physical barriers, or missing data.
 House prices increase going across the border from districts 16 to 13, 18 to 17, 24 to 30, 23 to 17, 25 to 26, 28 to 29, and 29 to 26.
 Overall, it seems that school district borders in Brooklyn and Queens can correspond to measurable jumps in house prices per square foot.
-The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 20\% price increase from 29 to 26, or 22\% from 18 to 17.
+The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 17\% price increase from 29 to 26 and from 18 to 17.
 
 % \begin{landscape}
     % \begin{table}[p]
@@ -249,32 +264,32 @@ The estimated size of this effect varies: zero or negligible in some cases, such
         \footnotesize
         \begin{tabular}{r|lllllll}
             \hline
-\( \mathbf{13} \)& \( \mathbf{14:}~-0.29 \pm 0.09 \)& \( \mathbf{15:}~+0.03 \pm 0.07 \)& \( \mathbf{16:}~+0.13 \pm 0.07 \)& \( \mathbf{17:}~+0.26 \pm 0.08 \)\\ 
-\( \mathbf{14} \)& \( \mathbf{13:}~-0.29 \pm 0.09 \)& \( \mathbf{16:}~+0.16 \pm 0.10 \)& \( \mathbf{24:}~+0.38 \pm 0.15 \)& \( \mathbf{32:}~+0.07 \pm 0.12 \)\\ 
-\( \mathbf{15} \)& \( \mathbf{13:}~+0.03 \pm 0.07 \)& \( \mathbf{17:}~+0.18 \pm 0.10 \)& \( \mathbf{20:}~-0.05 \pm 0.06 \)& \( \mathbf{22:}~-0.28 \pm 0.11 \)\\ 
-\( \mathbf{16} \)& \( \mathbf{13:}~+0.13 \pm 0.07 \)& \( \mathbf{14:}~+0.16 \pm 0.10 \)& \( \mathbf{17:}~-0.04 \pm 0.07 \)& \( \mathbf{23:}~-0.10 \pm 0.07 \)& \( \mathbf{32:}~-0.05 \pm 0.06 \)\\ 
-\( \mathbf{17} \)& \( \mathbf{13:}~+0.26 \pm 0.08 \)& \( \mathbf{15:}~+0.18 \pm 0.10 \)& \( \mathbf{16:}~-0.04 \pm 0.07 \)& \( \mathbf{18:}~+0.20 \pm 0.07 \)& \( \mathbf{22:}~+0.06 \pm 0.07 \)& \( \mathbf{23:}~-0.29 \pm 0.10 \)\\ 
-\( \mathbf{18} \)& \( \mathbf{17:}~+0.20 \pm 0.07 \)& \( \mathbf{19:}~-0.06 \pm 0.12 \)& \( \mathbf{22:}~+0.10 \pm 0.07 \)& \( \mathbf{23:}~-0.03 \pm 0.09 \)\\ 
-\( \mathbf{19} \)& \( \mathbf{18:}~-0.06 \pm 0.12 \)& \( \mathbf{23:}~-0.00 \pm 0.08 \)& \( \mathbf{24:}~+0.39 \pm 0.11 \)& \( \mathbf{27:}~+0.19 \pm 0.06 \)& \( \mathbf{32:}~-0.27 \pm 0.12 \)\\ 
-\( \mathbf{20} \)& \( \mathbf{15:}~-0.05 \pm 0.06 \)& \( \mathbf{21:}~-0.04 \pm 0.05 \)& \( \mathbf{22:}~+0.11 \pm 0.08 \)\\ 
-\( \mathbf{21} \)& \( \mathbf{20:}~-0.04 \pm 0.05 \)& \( \mathbf{22:}~-0.04 \pm 0.05 \)\\ 
-\( \mathbf{22} \)& \( \mathbf{15:}~-0.28 \pm 0.11 \)& \( \mathbf{17:}~+0.06 \pm 0.07 \)& \( \mathbf{18:}~+0.10 \pm 0.07 \)& \( \mathbf{20:}~+0.11 \pm 0.08 \)& \( \mathbf{21:}~-0.04 \pm 0.05 \)\\ 
-\( \mathbf{23} \)& \( \mathbf{16:}~-0.10 \pm 0.07 \)& \( \mathbf{17:}~-0.29 \pm 0.10 \)& \( \mathbf{18:}~-0.03 \pm 0.09 \)& \( \mathbf{19:}~-0.00 \pm 0.08 \)& \( \mathbf{32:}~+0.04 \pm 0.08 \)\\ 
-\( \mathbf{24} \)& \( \mathbf{14:}~+0.38 \pm 0.15 \)& \( \mathbf{19:}~+0.39 \pm 0.11 \)& \( \mathbf{25:}~-0.26 \pm 0.13 \)& \( \mathbf{27:}~-0.22 \pm 0.10 \)& \( \mathbf{28:}~+0.06 \pm 0.06 \)& \( \mathbf{30:}~-0.14 \pm 0.05 \)& \( \mathbf{32:}~-0.02 \pm 0.08 \)\\ 
-\( \mathbf{25} \)& \( \mathbf{24:}~-0.26 \pm 0.13 \)& \( \mathbf{26:}~+0.08 \pm 0.04 \)& \( \mathbf{28:}~-0.15 \pm 0.08 \)& \( \mathbf{29:}~-0.06 \pm 0.10 \)& \( \mathbf{30:}~+0.28 \pm 0.15 \)\\ 
-\( \mathbf{26} \)& \( \mathbf{25:}~+0.08 \pm 0.04 \)& \( \mathbf{29:}~-0.18 \pm 0.05 \)\\ 
-\( \mathbf{27} \)& \( \mathbf{19:}~+0.19 \pm 0.06 \)& \( \mathbf{24:}~-0.22 \pm 0.10 \)& \( \mathbf{28:}~-0.04 \pm 0.04 \)& \( \mathbf{29:}~+0.01 \pm 0.08 \)\\ 
-\( \mathbf{28} \)& \( \mathbf{24:}~+0.06 \pm 0.06 \)& \( \mathbf{25:}~-0.15 \pm 0.08 \)& \( \mathbf{27:}~-0.04 \pm 0.04 \)& \( \mathbf{29:}~-0.09 \pm 0.04 \)\\ 
-\( \mathbf{29} \)& \( \mathbf{25:}~-0.06 \pm 0.10 \)& \( \mathbf{26:}~-0.18 \pm 0.05 \)& \( \mathbf{27:}~+0.01 \pm 0.08 \)& \( \mathbf{28:}~-0.09 \pm 0.04 \)\\ 
-\( \mathbf{30} \)& \( \mathbf{24:}~-0.14 \pm 0.05 \)& \( \mathbf{25:}~+0.28 \pm 0.15 \)\\ 
-\( \mathbf{32} \)& \( \mathbf{14:}~+0.07 \pm 0.12 \)& \( \mathbf{16:}~-0.05 \pm 0.06 \)& \( \mathbf{19:}~-0.27 \pm 0.12 \)& \( \mathbf{23:}~+0.04 \pm 0.08 \)& \( \mathbf{24:}~-0.02 \pm 0.08 \)\\ 
+\( \mathbf{13} \)& \( \mathbf{14:}~-0.30 \pm 0.10 \)& \( \mathbf{15:}~+0.05 \pm 0.08 \)& \( \mathbf{16:}~-0.07 \pm 0.07 \)& \( \mathbf{17:}~-0.16 \pm 0.09 \)\\ 
+\( \mathbf{14} \)& \( \mathbf{13:}~+0.30 \pm 0.10 \)& \( \mathbf{16:}~-0.07 \pm 0.12 \)& \( \mathbf{24:}~-0.35 \pm 0.19 \)& \( \mathbf{32:}~-0.04 \pm 0.13 \)\\ 
+\( \mathbf{15} \)& \( \mathbf{13:}~-0.05 \pm 0.08 \)& \( \mathbf{17:}~-0.18 \pm 0.11 \)& \( \mathbf{20:}~+0.09 \pm 0.06 \)& \( \mathbf{22:}~+0.40 \pm 0.14 \)\\ 
+\( \mathbf{16} \)& \( \mathbf{13:}~+0.07 \pm 0.07 \)& \( \mathbf{14:}~+0.07 \pm 0.12 \)& \( \mathbf{17:}~-0.08 \pm 0.08 \)& \( \mathbf{23:}~-0.10 \pm 0.08 \)& \( \mathbf{32:}~+0.04 \pm 0.08 \)\\ 
+\( \mathbf{17} \)& \( \mathbf{13:}~+0.16 \pm 0.09 \)& \( \mathbf{15:}~+0.18 \pm 0.11 \)& \( \mathbf{16:}~+0.08 \pm 0.08 \)& \( \mathbf{18:}~-0.16 \pm 0.07 \)& \( \mathbf{22:}~+0.06 \pm 0.08 \)& \( \mathbf{23:}~-0.29 \pm 0.11 \)\\ 
+\( \mathbf{18} \)& \( \mathbf{17:}~+0.16 \pm 0.07 \)& \( \mathbf{19:}~-0.13 \pm 0.14 \)& \( \mathbf{22:}~+0.06 \pm 0.07 \)& \( \mathbf{23:}~-0.08 \pm 0.10 \)\\ 
+\( \mathbf{19} \)& \( \mathbf{18:}~+0.13 \pm 0.14 \)& \( \mathbf{23:}~-0.02 \pm 0.09 \)& \( \mathbf{24:}~+0.34 \pm 0.13 \)& \( \mathbf{27:}~+0.20 \pm 0.06 \)& \( \mathbf{32:}~+0.27 \pm 0.15 \)\\ 
+\( \mathbf{20} \)& \( \mathbf{15:}~-0.09 \pm 0.06 \)& \( \mathbf{21:}~+0.06 \pm 0.06 \)& \( \mathbf{22:}~-0.08 \pm 0.09 \)\\ 
+\( \mathbf{21} \)& \( \mathbf{20:}~-0.06 \pm 0.06 \)& \( \mathbf{22:}~-0.05 \pm 0.05 \)\\ 
+\( \mathbf{22} \)& \( \mathbf{15:}~-0.40 \pm 0.14 \)& \( \mathbf{17:}~-0.06 \pm 0.08 \)& \( \mathbf{18:}~-0.06 \pm 0.07 \)& \( \mathbf{20:}~+0.08 \pm 0.09 \)& \( \mathbf{21:}~+0.05 \pm 0.05 \)\\ 
+\( \mathbf{23} \)& \( \mathbf{16:}~+0.10 \pm 0.08 \)& \( \mathbf{17:}~+0.29 \pm 0.11 \)& \( \mathbf{18:}~+0.08 \pm 0.10 \)& \( \mathbf{19:}~+0.02 \pm 0.09 \)& \( \mathbf{32:}~-0.07 \pm 0.09 \)\\ 
+\( \mathbf{24} \)& \( \mathbf{14:}~+0.35 \pm 0.19 \)& \( \mathbf{19:}~-0.34 \pm 0.13 \)& \( \mathbf{25:}~+0.26 \pm 0.15 \)& \( \mathbf{27:}~-0.17 \pm 0.12 \)& \( \mathbf{28:}~+0.17 \pm 0.07 \)& \( \mathbf{30:}~+0.10 \pm 0.06 \)& \( \mathbf{32:}~-0.01 \pm 0.09 \)\\ 
+\( \mathbf{25} \)& \( \mathbf{24:}~-0.26 \pm 0.15 \)& \( \mathbf{26:}~+0.09 \pm 0.05 \)& \( \mathbf{28:}~-0.09 \pm 0.09 \)& \( \mathbf{29:}~+0.06 \pm 0.13 \)& \( \mathbf{30:}~-0.45 \pm 0.22 \)\\ 
+\( \mathbf{26} \)& \( \mathbf{25:}~-0.09 \pm 0.05 \)& \( \mathbf{29:}~-0.15 \pm 0.06 \)\\ 
+\( \mathbf{27} \)& \( \mathbf{19:}~-0.20 \pm 0.06 \)& \( \mathbf{24:}~+0.17 \pm 0.12 \)& \( \mathbf{28:}~+0.01 \pm 0.04 \)& \( \mathbf{29:}~-0.00 \pm 0.10 \)\\ 
+\( \mathbf{28} \)& \( \mathbf{24:}~-0.17 \pm 0.07 \)& \( \mathbf{25:}~+0.09 \pm 0.09 \)& \( \mathbf{27:}~-0.01 \pm 0.04 \)& \( \mathbf{29:}~+0.11 \pm 0.05 \)\\ 
+\( \mathbf{29} \)& \( \mathbf{25:}~-0.06 \pm 0.13 \)& \( \mathbf{26:}~+0.15 \pm 0.06 \)& \( \mathbf{27:}~+0.00 \pm 0.10 \)& \( \mathbf{28:}~-0.11 \pm 0.05 \)\\ 
+\( \mathbf{30} \)& \( \mathbf{24:}~-0.10 \pm 0.06 \)& \( \mathbf{25:}~+0.45 \pm 0.22 \)\\ 
+\( \mathbf{32} \)& \( \mathbf{14:}~+0.04 \pm 0.13 \)& \( \mathbf{16:}~-0.04 \pm 0.08 \)& \( \mathbf{19:}~-0.27 \pm 0.15 \)& \( \mathbf{23:}~+0.07 \pm 0.09 \)& \( \mathbf{24:}~+0.01 \pm 0.09 \)\\ 
             \hline
         \end{tabular}
         \caption{
             \label{table:NYC_pairwise}
             \textbf{Estimated Treatment Effects Between Adjacent NYC School Districts.}
             Each row gives the posterior (mean \(\pm\) standard deviation) of the inverse-variance LATEs for one district (row header) compared to its neighbors.
-            For example the first cell indicates an estimated average change in log house prices per square foot of -0.29 when crossing the border from district 13 to 14.
+            For example the first cell indicates an estimated average change in log house prices per square foot of -0.30 when crossing the border from district 13 to 14.
         }
 \end{sidewaystable}
     % \end{table}

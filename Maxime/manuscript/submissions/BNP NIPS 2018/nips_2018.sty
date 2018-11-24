@@ -1,5 +1,5 @@
 % partial rewrite of the LaTeX2e package for submissions to the
-% Conference on Neural Information Processing Systems (NIPS):
+% Conference on Neural Information Processing Systems (NeurIPS):
 %
 % - uses more LaTeX conventions
 % - line numbers at submission time replaced with aligned numbers from
@@ -17,7 +17,7 @@
 % last revision: March 2018
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{nips_2018}[2018/03/03 NIPS 2018 submission/camera-ready style file]
+\ProvidesPackage{nips_2018}[2018/03/03 NeurIPS 2018 submission/camera-ready style file]
 
 % declare final option, which creates camera-ready copy
 \newif\if@nipsfinal\@nipsfinalfalse
@@ -65,12 +65,12 @@
   \if@nipsfinal
     \newcommand{\@noticestring}{%
       \@nipsordinal\/ Conference on Neural Information Processing Systems
-      (NIPS \@nipsyear), \@nipslocation.%
+      (NeurIPS \@nipsyear), \@nipslocation.%
     }
   \else
     \newcommand{\@noticestring}{%
       Submitted to \@nipsordinal\/ Conference on Neural Information
-      Processing Systems (NIPS \@nipsyear). Do not distribute.%
+      Processing Systems (NeurIPS \@nipsyear). Do not distribute.%
     }
 
     % line numbers for submission
