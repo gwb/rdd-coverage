@@ -55,13 +55,13 @@ A visual inspection of \autorefexternal{fig:sales_map} showing the locations of 
         \label{fig:confounding}}
 \end{figure}
 
-\section{Handling Non-spatial Covariates}
+\section{Handling Nonspatial Covariates}
 \label{sec:covariates}
 
-The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on non-spatial covariates.
-The models are modified by the addition of the linear regression term \(\Xmat \gammavec\) on the \(n \times p\) matrix of covariates \(\Xmat\), where \(p\) is the number of non-spatial covariates.
+The Gaussian process specification also makes it easy, mathematically and computationally, to incorporate a linear model on nonspatial covariates.
+The models are modified by the addition of the linear regression term \(\Xmat \gammavec\) on the \(n \times p\) matrix of covariates \(\Xmat\), where \(p\) is the number of nonspatial covariates.
 We recommend placing a normal prior \(\normal(0,\sigmabeta^2)\) on the regression coefficients, as this preserves the multivariate normality of the model, with the simple addition of a term \(\sigmabeta^2 \Xmat \Xmat\trans\) to the covariance \(\SigmaMat_Y\) of \(\Yvec\).
-Let \(\xvec_i\) be the \(p\)-vector of non-spatial covariates of unit \(i\).
+Let \(\xvec_i\) be the \(p\)-vector of nonspatial covariates of unit \(i\).
 Our model becomes:
 \begin{equation}
     \begin{split}

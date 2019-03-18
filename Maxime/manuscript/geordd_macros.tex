@@ -1,0 +1,68 @@
+\newcommand{\building}{\mathtt{BuildClass}}
+\newcommand{\district}{\mathtt{Distr}}
+
+\newcommand*{\area}{\mathcal{A}}
+\newcommand*{\treat}{T}
+\newcommand*{\ctrol}{C}
+\newcommand*{\treatind}{Z}
+\newcommand*{\treatarea}{\area{}_{\treat}}
+\newcommand*{\ctrolarea}{\area{}_{\ctrol}}
+
+\newcommand*{\sigmabeta}{\sigma_{\gamma}}
+\newcommand*{\sigmamu}{\sigma_{m}}
+\newcommand*{\dvec}{\mathbold{d}}
+\newcommand*{\wvec}{\mathbold{w}}
+\newcommand*{\yvec}{\mathbold{y}}
+\newcommand*{\Yvec}{\mathbold{Y}}
+\newcommand*{\yt}{\Yvec_{\treat}}
+\newcommand*{\yc}{\Yvec_{\ctrol}}
+\newcommand*{\vvec}{\mathbold{v}}
+\newcommand*{\muvec}{\mathbold{\mu}}
+\newcommand*{\gammavec}{\mathbold{\gamma}}
+\newcommand*{\residvec}{\mathbold{R}}
+
+\newcommand*{\border}{\mathcal{B}}
+\newcommand*{\sentinel}{\mathbold{b}}
+\newcommand*{\numsent}{R}
+\newcommand*{\sentinels}{\sentinel_{1:\numsent}}
+\newcommand*{\isent}{r}
+\newcommand*{\sentinelset}{\cbr{\sentinel_1,\ldots,\sentinel_\numsent}}
+
+\DeclareMathOperator{\proj}{proj}
+\DeclareMathOperator{\dist}{dist}
+\newcommand*{\buffer}{\Delta}
+\newcommand*{\vicinity}[1]{\Ind^\buffer\del{#1}}
+\newcommand*{\hyperparam}{\bm{\theta}}
+
+\newcommand*{\taubold}{\bm{\tau}}
+\newcommand*{\weightb}{w_{\border}}
+\newcommand*{\wt}{\wvec_{\treat}}   
+\newcommand*{\wc}{\wvec_{\ctrol}}
+\newcommand*{\gridres}{\nu}
+\newcommand*{\grid}{G^\gridres}
+\newcommand*{\Dmat}{\mathbold{D}}
+\newcommand*{\Kmat}{\mathbold{K}}
+\newcommand*{\Xmat}{\mathbold{X}}
+\newcommand*{\Wmat}{\mathbold{W}}
+\newcommand*{\SigmaMat}{\mathbold{\Sigma}}
+\newcommand*{\KBB}{\Kmat_{\border \border}}
+\newcommand*{\KBT}{\Kmat_{\border \treat}}
+\newcommand*{\KBC}{\Kmat_{\border \ctrol}}
+\newcommand*{\STT}{\SigmaMat_{\treat \treat}}
+\newcommand*{\SCC}{\SigmaMat_{\ctrol \ctrol}}
+\newcommand*{\KTT}{\Kmat_{\treat \treat}}
+\newcommand*{\KCC}{\Kmat_{\ctrol \ctrol}}
+\newcommand*{\KTC}{\Kmat_{\treat \ctrol}}
+\newcommand*{\WT}{\Wmat_{\treat}}
+\newcommand*{\WC}{\Wmat_{\ctrol}}
+
+\newcommand*{\tauw}{\tau^{w}}
+\newcommand*{\unifavg}{\tau^{\mathrm{UNIF}}}
+\newcommand*{\invvar}{\tau^{\mathrm{INV}}}
+\newcommand*{\taurho}{\tau^{\rho}}
+\newcommand*{\tauproj}{\tau^{\mathrm{PROJ}}}
+\newcommand*{\taugeo}{\tau^{\mathrm{GEO}}}
+\newcommand*{\taupop}{\tau^{\mathrm{POP}}}
+
+\newcommand*{\modnull}{M_0}%\mathscr{M}_0}
+\newcommand*{\modalt}{M_1}%\mathscr{M}_1}
