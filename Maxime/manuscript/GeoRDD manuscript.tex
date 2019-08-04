@@ -1,10 +1,15 @@
 \documentclass[12pt]{article}
 
+
 \newcommand{\blind}{1}
 \pdfminorversion=4
 \input{preamble.tex}
+\input{global_macros.tex}
+\input{geordd_macros.tex}
 % disable hyperlinks between documents
 \newcommand{\autorefexternal}[1]{\autoref*{#1}}
+\newcommand{\ofsupp}{ of the Supplementary Materials}
+\newcommand{\degree}{\,^\circ}
 
 \begin{document}
 \doublespacing
@@ -45,7 +50,17 @@
 \vfill
 \newpage
 
+\graphicspath{{./figures/}}
+
 \input{geordd_raw}
+
+\bibliographystyle{chicago}
+\bibliography{GeoRDD}
+
+\begin{appendices}
+    \input{geordd_appendices.tex}
+\end{appendices}
+
 
 
 \end{document}

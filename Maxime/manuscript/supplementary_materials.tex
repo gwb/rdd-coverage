@@ -1,0 +1,59 @@
+\documentclass[letter,12pt]{article}
+
+\input{preamble.tex}
+\input{global_macros.tex}
+\input{geordd_macros.tex}
+% disable hyperlinks between documents
+\newcommand{\autorefexternal}[1]{\autoref*{#1}}
+\newcommand{\degree}{\,^\circ}
+
+\pdfminorversion=4
+\newcommand{\blind}{1}
+
+\newcommand{\sprefix}{S-}
+\renewcommand{\theequation}{\sprefix\arabic{equation}}
+\renewcommand{\thesection}{\sprefix\arabic{section}}
+\renewcommand{\thefigure}{\sprefix\arabic{figure}}
+\renewcommand{\thetable}{\sprefix\arabic{table}}
+
+\begin{document}
+\doublespacing
+
+\externaldocument{"GeoRDD manuscript"}
+
+\if0\blind
+{
+\title{
+	\bf
+	\Large
+	Supplementary Materials
+	\\*
+    \large
+    \georddtitle
+}
+\author{\georddauthor}
+\maketitle
+} \fi
+
+\if1\blind
+{
+  \bigskip
+  \bigskip
+  \bigskip
+  \begin{center}
+	\bf 
+	\LARGE
+	Supplementary Materials
+	\\*
+	\large
+	\georddtitle
+  \end{center}
+  \medskip
+} \fi
+
+\input{supplementary_raw.tex}
+
+\bibliographystyle{chicago}
+\bibliography{GeoRDD}
+
+\end{document}

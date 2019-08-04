@@ -1,5 +1,6 @@
 \section{Introduction}\label{sec:geordd_introduction}
 
+\label{sec:framework}
 It is commonly believed that the quality of schools has a significant effect on the price of nearby housing.
 Economists have long been interested in measuring and using this effect to estimate the implicit price of school quality.
 \citet{black2011housing} review the existing literature on this topic, and classify the various identification strategies and methodologies that have been proposed.
@@ -57,7 +58,6 @@ Reusing the same methodological skeleton and applying it to geographical RDDs, o
     \item
         take the \emph{pointwise} difference between the two extrapolations to estimate the treatment effect along the border.
 \end{flatlist}
-\label{sec:framework}
 The usefulness of spatial models is then evident;
 we propose to use kriging, also known as Gaussian process regression (GPR), to fit and extrapolate the outcomes, 
 but other spatial methods could also be suitable.
@@ -192,7 +192,7 @@ Since the two surfaces are modeled as independent, the treatment effect \(\tau(\
     \end{split}
     \label{eq:postvar2gp}
 \end{equation}
-The posterior mean and covariance of the \(\tau(\sentinels)\) are the primary output of our GeoRDD analysis, and we refer to \autoref{eq:postvar2gp} as the ``cliff height'' estimator.
+The posterior mean and covariance of \(\tau(\sentinels)\) are the primary output of our GeoRDD analysis, and we refer to \autoref{eq:postvar2gp} as the ``cliff height'' estimator.
 
 This leaves the choice of the hyperparameters: \(\hyperparam=\ell\), \(\sigmaf\), \(\sigman\), and \(\sigmamu\).
 For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak.
@@ -537,7 +537,7 @@ A placebo test repeatedly applies the hypothesis test on data that are known to 
 in order to verify that the returned \(p\)-values are uniformly distributed.
 In our spatial setting, we use the treatment and control regions separately as placebo groups.
 Within each placebo group, we repeatedly draw an arbitrary geographical border, creating new treatment and control groups.
-Here we drew lines that split the placebo units in half at a sequence of angles \(1\degrees,2\degrees,3\degrees,\dotsc,180\degrees\) counter-clockwise from horizontal, each positioned so that half of the units fall on either side of the line in order to maximize power.
+Here we drew lines that split the placebo units in half at a sequence of angles \(1\degree,2\degree,3\degree,\dotsc,180\degree\) counter-clockwise from horizontal, each positioned so that half of the units fall on either side of the line in order to maximize power.
 Because the borders are drawn arbitrarily, without reference to the outcomes, we should not expect to observe a discontinuous jump in outcomes.
 We apply the calibrated inverse-variance test procedure described above to the data arbitrarily divided by each placebo border, and hope to obtain a roughly uniform distribution of \(p\)-values.
 The placebo \(p\)-values are highly correlated, resulting in a small effective sample size, but this procedure nonetheless allows us to visually verify that the \(p\)-values are not blatantly biased.
@@ -741,7 +741,7 @@ For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, whi
 
 To assess the validity of the test, we apply the placebo tests devised in \autoref{sec:placebo},
 the results of which are shown in \autoref{fig:placebo_invvar}.
-Within each district, we split the data in half by a line at angles \(1\degrees\), \(2\degrees\), \(\dotsc\), \(180\degrees\).
+Within each district, we split the data in half by a line at angles \(1\degree\), \(2\degree\), \(\dotsc\), \(180\degree\).
 Because these lines were drawn arbitrarily, we do not expect a discontinuous treatment effect between the two halves, and so we hope to see a uniform distribution of placebo \(p\)-values.
 However, these tests will be highly correlated---there is in fact noticeable autocorrelation in the graph of the placebo \(p\)-value as a function of angle---and so the low effective sample size could lead to some apparent departures from uniformity.
 Nonetheless, we do not observe a flagrant bias in \autoref{fig:placebo_invvar}(b), which therefore does not discredit the calibrated inverse-variance test, and confirms the significance of the difference in price at the border between the two districts.

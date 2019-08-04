@@ -3,156 +3,53 @@
 % \renewcommand*{\arraystretch}{0.8} % https://tex.stackexchange.com/questions/183562/how-to-reduce-vertical-space-in-matrix
 \def\SmallColSep{\setlength{\arraycolsep}{3pt}}
 % \usepackage{authblk}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{xr-hyper} % cross-references (between documents)
+\usepackage{xcolor} % Allow colors to be defined
+\usepackage{geometry} % Used to adjust the document margins
+\usepackage{amsmath} % Equations
+\usepackage{amssymb} % Equations
+% The hyperref package gives us a pdf with properly built
+% internal navigation ('pdf bookmarks' for the table of contents,
+% internal cross-reference links, web links for URLs, etc.)
+\usepackage[hyphens]{url}
+\usepackage[hypertexnames=false]{hyperref}
+\usepackage[title,toc]{appendix}
+\newcommand{\georddtitle}{
+    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
+    Do School Districts Affect NYC House Prices?
+}
+\hypersetup{
+    colorlinks=true,
+    pdfborder=0 0 1,
+    pdftitle=\georddtitle{},
+    allcolors=[rgb]{0.00,0.38,0.59},
+    allbordercolors=[rgb]{0.60,0.76,0.86}
+}
+\newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
+\hypersetup{pdfkeywords=\georddkeywords{}}
+\hypersetup{pdfauthor=Maxime Rischard}
+\newcommand{\georddauthor}{
+% Authors using authblk package
+    \author[a]{Maxime Rischard
+        \thanks{
+        This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
+    }
+    \author[a]{Zach Branson}
+    \author[b]{Luke Miratrix}
+    \author[c]{Luke Bornn}
+    \affil[a]{Department of Statistics, Harvard University}
+    \affil[b]{Graduate School of Education, Harvard University}
+    \affil[c]{Simon Fraser University}
+}
+
+\usepackage{natbib}
+\usepackage{bm}
+\usepackage{mathtools}
+\usepackage{pdflscape}
+\usepackage[nodisplayskipstretch]{setspace}
 
 \usepackage{enumitem}
 \newlist{flatlist}{enumerate*}{1}
 \setlist[flatlist]{label=(\arabic*)}
-
-
-\newcommand{\mathbold}[1]{\bm{#1}} % if not using mathpazo
-
-\DeclarePairedDelimiter{\parenthesis}{\lparen}{\rparen}
-\DeclarePairedDelimiter{\squarebracket}{\lbrack}{\rbrack}
-\DeclarePairedDelimiter{\curlybracket}{\lbrace}{\rbrace}
-\DeclarePairedDelimiter{\absolutevalue}{\lvert}{\rvert}
-\DeclarePairedDelimiter{\doublebar}{\lVert}{\rVert}
-\newcommand{\del}[1]{\parenthesis*{#1}}
-\newcommand{\sbr}[1]{\squarebracket*{#1}}
-\newcommand{\cbr}[1]{\curlybracket*{#1}}
-\newcommand{\abs}[1]{\absolutevalue*{#1}}
-\newcommand{\norm}[1]{\doublebar*{#1}}
-% \DeclareMathOperator{\dif}{d}
-\newcommand*{\diffdchar}{d}
-\newcommand*{\dif}[1]{\mathop{\diffdchar #1}}
-\DeclareMathOperator*{\argmin}{arg\,min}
-\DeclareMathOperator*{\argmax}{arg\,max}
-\let\Pr\relax
-\DeclareMathOperator{\Pr}{\mathbb{P}}
-\DeclareMathOperator{\prob}{p}
-\DeclareMathOperator{\E}{\mathbb{E}}
-\DeclareMathOperator{\V}{\mathbb{V}}
-\DeclareMathOperator{\cov}{{Cov}}
-\DeclareMathOperator{\var}{{var}}
-\DeclareMathOperator{\Ind}{\mathbb{I}}
-\DeclareMathOperator*{\sgn}{{sgn}}
-
-\DeclareMathOperator{\normal}{\mathcal{N}}
-\DeclareMathOperator{\unif}{Uniform}
-\DeclareMathOperator{\invchi}{\mathrm{Inv-\chi}^2}
-\DeclareMathOperator{\ones}{\mathbf{1}}
-\DeclareMathOperator{\GP}{\mathcal{GP}}
-\newcommand{\building}{\mathtt{BuildClass}}
-\newcommand{\district}{\mathtt{Distr}}
-
-\newcommand*{\trans}{^{\intercal}}
-% \newcommand*{\trans}{^{\top}}
-% \newcommand*{\trans}{^{\prime}}
-
-\newcommand*{\area}{\mathcal{A}}
-\newcommand*{\treat}{T}
-\newcommand*{\ctrol}{C}
-\newcommand*{\treatind}{Z}
-\newcommand*{\treatarea}{\area{}_{\treat}}
-\newcommand*{\ctrolarea}{\area{}_{\ctrol}}
-
-\newcommand*{\sigmaf}{\sigma_{\mathrm{GP}}}
-\newcommand*{\sigman}{\sigma_{\epsilon}}
-\newcommand*{\sigmabeta}{\sigma_{\gamma}}
-\newcommand*{\sigmamu}{\sigma_{m}}
-\newcommand*{\svec}{\mathbold{s}}
-\newcommand*{\dvec}{\mathbold{d}}
-\newcommand*{\xvec}{\mathbold{x}}
-\newcommand*{\wvec}{\mathbold{w}}
-\newcommand*{\yvec}{\mathbold{y}}
-\newcommand*{\Yvec}{\mathbold{Y}}
-\newcommand*{\yt}{\Yvec_{\treat}}
-\newcommand*{\yc}{\Yvec_{\ctrol}}
-\newcommand*{\vvec}{\mathbold{v}}
-\newcommand*{\muvec}{\mathbold{\mu}}
-\newcommand*{\gammavec}{\mathbold{\gamma}}
-\newcommand*{\residvec}{\mathbold{R}}
-\newcommand*{\indep}{\protect\mathpalette{\protect\independenT}{\perp}}
-\def\independenT#1#2{\mathrel{\rlap{$#1#2$}\mkern2mu{#1#2}}}
-\makeatletter
-\newcommand*{\iid}{%
-    \@ifnextchar{.}%
-        {i.\,i.\,d}%
-        {i.\,i.\,d.\@}%
-}
-\makeatother
-\newcommand{\mathiid}{\text{\iid}}
-\newcommand{\simiid}{\overset{\mathiid}{\sim}}
-\newcommand*{\vectreat}{\Ind_{T}}
-
-\newcommand*{\border}{\mathcal{B}}
-\newcommand*{\sentinel}{\mathbold{b}}
-\newcommand*{\numsent}{R}
-\newcommand*{\sentinels}{\sentinel_{1:\numsent}}
-\newcommand*{\isent}{r}
-\newcommand*{\sentinelset}{\cbr{\sentinel_1,\ldots,\sentinel_\numsent}}
-
-\newcommand*{\eye}{\mathbf{I}}
-
-\DeclareMathOperator{\trace}{trace}
-\newcommand*{\tauw}{\tau^{w}}
-\newcommand*{\unifavg}{\tau^{\mathrm{UNIF}}}
-\newcommand*{\invvar}{\tau^{\mathrm{INV}}}
-\newcommand*{\taurho}{\tau^{\rho}}
-\newcommand*{\tauproj}{\tau^{\mathrm{PROJ}}}
-\newcommand*{\taugeo}{\tau^{\mathrm{GEO}}}
-\newcommand*{\taupop}{\tau^{\mathrm{POP}}}
-
-\newcommand*{\modnull}{\mathscr{M}_0}
-\newcommand*{\modalt}{\mathscr{M}_1}
-\newcommand*{\degree}{{\,^\circ}}
-
-\DeclareMathOperator{\proj}{proj}
-\DeclareMathOperator{\dist}{dist}
-\newcommand*{\buffer}{\Delta}
-\newcommand*{\vicinity}[1]{\Ind^\buffer\del{#1}}
-\newcommand*{\hyperparam}{\bm{\theta}}
-
-\newcommand*{\taubold}{\bm{\tau}}
-\newcommand*{\weightb}{w_{\border}}
-\newcommand*{\wt}{\wvec_{\treat}}   
-\newcommand*{\wc}{\wvec_{\ctrol}}
-\newcommand*{\gridres}{\nu}
-\newcommand*{\grid}{G^\gridres}
-\newcommand*{\Dmat}{\mathbold{D}}
-\newcommand*{\Kmat}{\mathbold{K}}
-\newcommand*{\Xmat}{\mathbold{X}}
-\newcommand*{\Wmat}{\mathbold{W}}
-\newcommand*{\SigmaMat}{\mathbold{\Sigma}}
-\newcommand*{\KBB}{\Kmat_{\border \border}}
-\newcommand*{\KBT}{\Kmat_{\border \treat}}
-\newcommand*{\KBC}{\Kmat_{\border \ctrol}}
-\newcommand*{\STT}{\SigmaMat_{\treat \treat}}
-\newcommand*{\SCC}{\SigmaMat_{\ctrol \ctrol}}
-\newcommand*{\KTT}{\Kmat_{\treat \treat}}
-\newcommand*{\KCC}{\Kmat_{\ctrol \ctrol}}
-\newcommand*{\KTC}{\Kmat_{\treat \ctrol}}
-\newcommand*{\WT}{\Wmat_{\treat}}
-\newcommand*{\WC}{\Wmat_{\ctrol}}
-
-\def\sectionautorefname{Section}
-\def\subsectionautorefname{Section}
-\def\subsubsectionautorefname{Section}
-\def\figureautorefname{Figure}
-\def\Appendixautorefname{Appendix}
-\def\tableautorefname{Table}
-\def\equationautorefname~#1\null{(#1)\null}
-
-% \newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
-% \hypersetup{pdfkeywords=\georddkeywords{}}
-% \hypersetup{pdfauthor=Maxime Rischard}
-% Authors using authblk package
-    % \author[a]{Maxime Rischard
-        % \thanks{
-		% This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
-    % }
-    % \author[a]{Zach Branson}
-    % \author[b]{Luke Miratrix}
-    % \author[c]{Luke Bornn}
-    % \affil[a]{Department of Statistics, Harvard University}
-    % \affil[b]{Graduate School of Education, Harvard University}
-    % \affil[c]{Simon Fraser University}
