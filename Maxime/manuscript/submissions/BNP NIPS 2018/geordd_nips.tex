@@ -40,10 +40,10 @@
 \usepackage{natbib}
 \usepackage{bm}
 \usepackage{mathtools}
-\usepackage{pdflscape}
+\usepackage{rotating,tabularx}
 
 \input{preamble.tex}
-\newcommand{\autorefexternal}[1]{\autoref*{#1}}
+\newcommand{\autorefexternal}[1]{\autoref{#1}}
 
 \title{Bayesian Nonparametrics for Geographic RDDs}
 
@@ -87,8 +87,6 @@ Luke Bornn\textsuperscript{$\ast$}\\
 }
 
 \begin{document}
-
-\externaldocument{"supplementary_nips"}
 
 \maketitle
 
@@ -345,9 +343,31 @@ In the Supplements, we extend the GeoRDD analysis to other pairs of adjacent sch
 \subsubsection*{Acknowledgments}
 This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.
 
-
 \bibliographystyle{alpha}
 \bibliography{GeoRDD}
 
+%%%%%%%%%% Merge with supplemental materials %%%%%%%%%%
+% https://tex.stackexchange.com/questions/168169/options-for-supplementary-materials-in-preprint-version-revtex-arxiv#169606
+\pagebreak
+\begin{center}
+\phantomsection
+	\addcontentsline{toc}{section}{Supplementary Materials}
+	\bf 
+	\LARGE
+	Supplementary Materials
+\end{center}
+%%%%%%%%%% Merge with supplemental materials %%%%%%%%%%
+%%%%%%%%%% Prefix a "S" to all equations, figures, tables and reset the counter %%%%%%%%%%
+\setcounter{equation}{0}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\setcounter{section}{0}
+\newcommand{\sprefix}{S-}
+\renewcommand{\theequation}{\sprefix\arabic{equation}}
+\renewcommand{\thesection}{\sprefix\arabic{section}}
+\renewcommand{\thefigure}{\sprefix\arabic{figure}}
+\renewcommand{\thetable}{\sprefix\arabic{table}}
+
+\input{supplementary_raw_neurips.tex}
 
 \end{document}
