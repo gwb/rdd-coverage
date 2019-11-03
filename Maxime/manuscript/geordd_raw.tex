@@ -138,14 +138,15 @@ On each side of the border, we model the observed outcomes \(Y_i\) at location \
 The Gaussian process has zero mean, and its covariance function is a modeling choice.
 There is a rich literature of possible covariance functions, known as ``kernels'' in machine learning; see
 \citet{banerjee2014hierarchical} and \citet{rasmussen2006gaussian} for examples.
-In this paper we use the squared exponential kernel for its ease of understanding and its prevalence in applied spatial statistics.
+In this paper we use the Mat\'ern \(\nu=1/2\) covariance (also known as the exponential kernel) for its ease of understanding and its prevalence in applied spatial statistics.
 This yields the outcomes model:
 \begin{equation}
     \begin{split}
         & Y_{i\treat} = \underbrace{m_\treat{} + f_\treat{}(\svec_i)}_{g_\treat{}(\svec_i)} + \epsilon_i \quad\text{and}\quad
-        Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i \,; \\
+          Y_{i\ctrol} = \underbrace{m_\ctrol{} + f_\ctrol{}(\svec_i)}_{g_\ctrol{}(\svec_i)} + \epsilon_i 
+          \,,\quad\text{with } \epsilon_i \overset{\indep}{\sim} \normal(0, \sigman^2) \,; \\
         & f_\treat{}, f_\ctrol{} \overset{\indep}{\sim} \GP\del{0, k(\svec, \svec')} \quad\text{with}\quad
-        k(\svec,\svec') = \sigmaf^2 \exp\del{ - \frac{\del{\svec-\svec'}\trans\del{\svec-\svec'}}{2 \ell^2}} \,.
+        k(\svec,\svec') = \sigmaf^2 \exp\del{-\norm{\svec-\svec'}_2 \big/ \ell} \,.
     \end{split}
     \label{eq:spec2gp}
 \end{equation}
@@ -530,7 +531,7 @@ The calibrated inverse-variance test “targets” the weak null hypothesis in t
 \subsubsection{Placebo Tests}
 \label{sec:placebo}
 Gaussian process models are almost always misspecified.
-We do not believe that the Gaussian process with stationary squared exponential kernel is the true data-generating process, although we hope that the model is sufficiently flexible to represent reality well.
+We do not believe that the Gaussian process with stationary Mat\'ern kernel is the true data-generating process, although we hope that the model is sufficiently flexible to represent reality well.
 Under misspecification, we should be skeptical of results that rely on the truth of the model specification.
 We therefore encourage practitioners to probe the validity of the hypothesis test by running a ``placebo'' test.
 A placebo test repeatedly applies the hypothesis test on data that are known to have zero treatment effect (a ``placebo''),
@@ -635,7 +636,7 @@ The complete model is then a Gaussian process within each district (indexed by \
     \end{aligned}
     \label{eq:nyc_model}
 \end{equation}
-where \(k\) is the squared exponential covariance function as in \autoref{eq:spec2gp}.
+where \(k\) is the Mat\'ern covariance function as in \autoref{eq:spec2gp}.
 
 A visual inspection of the house sales map in \autoref{fig:sales_map} drew our attention towards the border between districts 19 and 27, which we arbitrarily designate as ``treatment'' and ``control'' respectively.
 Importantly, the border between the two districts is also part of the border between Brooklyn and Queens.
@@ -664,7 +665,8 @@ A sale gives a snapshot of the price of the land, made more accurate by correcti
 
 We fit the hyperparameters \(\sigmabeta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
 We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
-The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigmabeta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\).
+% The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigmabeta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\). % Squared Exponential kernel
+The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.26\), \(\widehat{\sigmabeta}=0.14\), and \(\widehat{\ell}=5.0~\text{km}\). % Matern kernel
 
 We seek to estimate the treatment effect function \(\tau\) on the border between the two districts.
 We could proceed by computing the cliff height estimator with covariates \autoref{eq:cliff_with_covariates}.
@@ -694,7 +696,7 @@ However, the credible envelope is fairly wide, especially in the southern sectio
 
 \subsection{Average Log-Price Increase}
 The cliff height \autoref{fig:NYC_cliff_height} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
-Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=2\ell\) of the border, yield LATE estimates of \(-0.19\) and \(-0.18\) respectively, which corresponds to an almost 20\% increase in property prices going from district 19 to district 27.
+Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=\ell\) of the border, yield LATE estimates of \(-0.20\) and \(-0.17\) respectively, which corresponds to a roughly 20\% increase in property prices going from district 19 to district 27.
 By contrast, treating each district and building class as a fixed effect in an OLS model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East to West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
 All LATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
@@ -708,12 +710,18 @@ In this example the different estimators yield similar answers, as the border is
         & \multicolumn{3}{c}{Posterior} \\
         Estimand & Mean & Standard Dev. & Tail Prob. \\
         \hline
-          \(\unifavg\) & -0.17 & 0.08 & 1.98\% \\
-          \(\taurho\) & -0.19 & 0.06 & 0.04\% \\
-          \(\invvar\) & -0.19 & 0.06 & 0.03\% \\
-          \(\tauproj~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.13\% \\
-          \(\taugeo~(\buffer=2\ell)\) & -0.16 & 0.09 & 3.80\% \\
-          \(\taupop~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.15\% \\
+          % \(\unifavg\)                 & -0.17 & 0.08 & 1.98\% \\
+          % \(\taurho\)                  & -0.19 & 0.06 & 0.04\% \\
+          % \(\invvar\)                  & -0.19 & 0.06 & 0.03\% \\
+          % \(\tauproj~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.13\% \\
+          % \(\taugeo~(\buffer=2\ell)\)  & -0.16 & 0.09 & 3.80\% \\
+          % \(\taupop~(\buffer=2\ell)\)  & -0.18 & 0.06 & 0.15\% \\
+          \(\unifavg\) & -0.16 & 0.09 & 4.52\% \\
+          \(\taurho\)  & -0.19 & 0.06 & 0.14\% \\
+          \(\invvar\)  & -0.20 & 0.06 & 0.09\% \\
+          \(\tauproj\) & -0.17 & 0.08 & 1.98\% \\
+          \(\taugeo\)  & -0.14 & 0.13 & 15.37\% \\
+          \(\taupop\)  & -0.17 & 0.08 & 1.34\% \\
         \hline
     \end{tabular}
     \caption{
@@ -726,7 +734,7 @@ Negative LATEs correspond to district 27 being more expensive.
 \subsection{Significant Difference in Price?}
 The estimated inverse-variance weighted mean treatment effect is suggestive of a significant treatment effect.
 But the posterior tail probability cannot be interpreted as a \(p\)-value.
-For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, which yields a \(p\)-value of \(p^{\mathrm{INV}}=0.002\), thus rejecting the null hypothesis that there is no difference in house prices at the border between districts 19 and 27.
+For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, which yields a \(p\)-value of \(p^{\mathrm{INV}}=0.005\), thus rejecting the null hypothesis that there is no difference in house prices at the border between districts 19 and 27.
 
 \begin{figure}[tb]
     \centering
@@ -792,9 +800,8 @@ As is common in spatial statistics, we use Gaussian process regression as a non-
 We believe care must therefore be taken not to lean heavily on modeling assumptions.
 In particular, we recommend that hypothesis tests always be accompanied by placebo tests:
 by applying the same procedure with arbitrary borders where no treatment was applied, we can verify that the test behaves appropriately under the null hypothesis, despite any potential model misspecification.
-We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and we chose the squared exponential covariance kernel for simplicity.
-This kernel makes smoothness assumptions that are often considered unrealistic in geostatistical settings; the Mat\'ern covariance family is often recommended as a more robust alternative.
-The assumption of equal covariance parameters in the two areas can also be relaxed, by separately tuning the parameters within each area.
+We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and we chose the Mat\'ern covariance kernel.
+The assumption of equal covariance parameters in the two areas can be relaxed, by separately tuning the parameters within each area.
 
 Because of the need to extrapolate the fitted processes a short distance to the border, our GeoRDD method may be vulnerable to the limitations of Gaussian processes when extrapolating.
 The distinction between interpolation and extrapolation of spatial models is explored in some depth in \citet{stein2012interpolation}.
