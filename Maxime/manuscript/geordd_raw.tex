@@ -134,8 +134,8 @@ GPR, known as kriging in the spatial statistics literature, is a Bayesian non-pa
 Recently, \citet{Branson:2017qy} showed GPR to be a promising approach for the analysis 1D RDDs.
 Further inspired by the popularity of GPR in spatial statistics, we extend the model of \citet{Branson:2017qy} to geographical RDDs.
 
-On each side of the border, we model the observed outcomes \(Y_i\) at location \(\svec_i\) as the sum of an intercept \(m\), a spatial Gaussian process \(f(\svec)\), and \iid{} normal noise \(\epsilon\).
-The Gaussian process has zero mean, and its covariance function is a modeling choice.
+On each side of the border, we model the observed outcomes \(Y_i\) at location \(\svec_i\) as the sum of an intercept \(m\), a spatial Gaussian process (GP) \(f(\svec)\), and \iid{} normal noise \(\epsilon\).
+The GP has zero mean, and its covariance function is a modeling choice.
 There is a rich literature of possible covariance functions, known as ``kernels'' in machine learning; see
 \citet{banerjee2014hierarchical} and \citet{rasmussen2006gaussian} for examples.
 In this paper we use the Mat\'ern \(\nu=1/2\) covariance (also known as the exponential kernel) for its ease of understanding and its prevalence in applied spatial statistics.
@@ -161,10 +161,10 @@ We expect that this assumption will be reasonable in many applications, but it c
 
 \subsection{Inference of the Treatment Effect}
 \label{sec:inference}
-If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu^2\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the Gaussian processes, and the mean parameters.
+If \(m_\treat\) and \(m_\ctrol\) are given normal priors with variance \(\sigmamu^2\), then the model specification \autoref{eq:spec2gp} can be used to obtain covariances between the observations, the GPs, and the mean parameters.
 Given hyperparameters \(\hyperparam = \del{\ell,\sigmaf, \sigman, \sigmamu}\), any vector with entries consisting of observations, points on the potential outcomes surface \(f_{\treat}\) and \(f_{\ctrol}\), and the mean parameters \(m_{\ctrol}, m_{\treat}\) is jointly multivariate normal. Therefore the distribution of any such vector conditioned on another is also multivariate normal, with mean and covariances analytically tractable, and easily computed.
 
-In accordance with the framework laid out in \autoref{sec:framework}, we proceed by extrapolating both Gaussian processes to the border,
+In accordance with the framework laid out in \autoref{sec:framework}, we proceed by extrapolating both GPs to the border,
 and then taking the difference of the predictions to obtain the posterior treatment effect along the border.
 Computationally, we need to represent this border as a set \(\sentinels=\sentinelset\) of \(\numsent\) ``sentinel'' units dotted along \(\border\).
 The extrapolation step then follows mechanically through multivariate normal theory.
@@ -198,8 +198,8 @@ The posterior mean and covariance of \(\tau(\sentinels)\) are the primary output
 This leaves the choice of the hyperparameters: \(\hyperparam=\ell\), \(\sigmaf\), \(\sigman\), and \(\sigmamu\).
 For \(\sigmamu\), we arbitrarily pick a large number, so that the prior on the mean parameters is weak.
 The rest are optimized by maximizing the marginal likelihood of the observations \(\prob\del{\Yvec \mid \ell, \sigmaf, \sigman}\), which is available analytically and easily computed for GPR.
-This empirical Bayes approach is common in spatial and machine learning applications of Gaussian processes.
-An alternative would be to also specify a prior on the hyperparameters, which would be preferable in order to fully account for the uncertainty in the model, but fully Bayesian inference of large Gaussian process models tends to be computationally expensive.
+This empirical Bayes approach is common in spatial and machine learning applications of GPs.
+An alternative would be to also specify a prior on the hyperparameters, which would be preferable in order to fully account for the uncertainty in the model, but fully Bayesian inference of large GP models tends to be computationally expensive.
 
 
 \subsection{Estimating the Local Average Treatment Effect}
@@ -414,11 +414,11 @@ and may feel more familiar to practitioners used to finite-population inference.
 The averaging is over the observed units in the vicinity of the border, after they have been moved to the nearest point on the border.
 
 In our experience, the choice of \(\buffer\) does not have a large effect on the estimate yielded by \autoref{eq:tauproj}.
-A reasonable heuristic is to set \(\buffer\) to a small multiple of the Gaussian process lengthscale \(\ell\).
+A reasonable heuristic is to set \(\buffer\) to a small multiple of the GP lengthscale \(\ell\).
 It should be noted that this choice only affects the location and density of projected units on the border; the \(\tauproj\) estimator assigns non-zero unit weights \autoref{eq:unit_weights} to all units, whether or not they fall within \(\buffer\) of the border.
 
-\subsubsection{Summary}
-\label{sec:summary}
+% \subsubsection{Summary}
+% \label{sec:summary}
 
 The properties of the four LATE definitions proposed in this paper, and two additional choices presented \autorefexternal{sec:additional_late}\ofsupp{}, are summarized in \autoref{table:estimator_properties}.
 In most applications, we recommend the use of the finite population or inverse-variance-weighted estimators, to prevent the undesirable influence of border topology.
@@ -495,7 +495,7 @@ In particular, there is no guarantee that under the null hypothesis, \(\tilde{p}
 
 To turn it into a valid frequentist test, it can be calibrated using a parametric bootstrap under the null.
 We specify a parametric null model \(\modnull\)
-as a single Gaussian process spanning the control and treatment regions,
+as a single GP spanning the control and treatment regions,
 with the same kernel and hyperparameters values obtained through the procedure of \autoref{sec:inference}.
 Under \(\modnull\), the expected outcomes surface is smooth and continuous at the border,
 and therefore accords with both the sharp and weak null hypotheses.
@@ -530,8 +530,8 @@ The calibrated inverse-variance test “targets” the weak null hypothesis in t
 
 \subsubsection{Placebo Tests}
 \label{sec:placebo}
-Gaussian process models are almost always misspecified.
-We do not believe that the Gaussian process with stationary Mat\'ern kernel is the true data-generating process, although we hope that the model is sufficiently flexible to represent reality well.
+GP models are almost always misspecified.
+We do not believe that the GP with stationary Mat\'ern kernel is the true data-generating process, although we hope that the model is sufficiently flexible to represent reality well.
 Under misspecification, we should be skeptical of results that rely on the truth of the model specification.
 We therefore encourage practitioners to probe the validity of the hypothesis test by running a ``placebo'' test.
 A placebo test repeatedly applies the hypothesis test on data that are known to have zero treatment effect (a ``placebo''),
@@ -608,7 +608,7 @@ In this paper, we avoid these assumptions by seeking to directly estimate the ju
 
 In our application, the outcome of interest is price per square foot of a property sale.
 As is commonly done in analyses of real estate prices, we take its logarithm to reduce the skew in the outcomes.
-The complete model is then a Gaussian process within each district (indexed by \(j=1,\dotsc,J_\district\)) over the spatial covariates \(\svec\), super-imposed with a linear regression on the property covariates (which are \(L_\building\) building categories encoded as dummy variables):
+The complete model is then a GP within each district (indexed by \(j=1,\dotsc,J_\district\)) over the spatial covariates \(\svec\), super-imposed with a linear regression on the property covariates (which are \(L_\building\) building categories encoded as dummy variables):
 \begin{equation}
     \begin{aligned}
         & Y_i = % \log\del{ \frac{\saleprice_i}{\sqft_i}} =
@@ -710,12 +710,6 @@ In this example the different estimators yield similar answers, as the border is
         & \multicolumn{3}{c}{Posterior} \\
         Estimand & Mean & Standard Dev. & Tail Prob. \\
         \hline
-          % \(\unifavg\)                 & -0.17 & 0.08 & 1.98\% \\
-          % \(\taurho\)                  & -0.19 & 0.06 & 0.04\% \\
-          % \(\invvar\)                  & -0.19 & 0.06 & 0.03\% \\
-          % \(\tauproj~(\buffer=2\ell)\) & -0.18 & 0.06 & 0.13\% \\
-          % \(\taugeo~(\buffer=2\ell)\)  & -0.16 & 0.09 & 3.80\% \\
-          % \(\taupop~(\buffer=2\ell)\)  & -0.18 & 0.06 & 0.15\% \\
           \(\unifavg\) & -0.16 & 0.09 & 4.52\% \\
           \(\taurho\)  & -0.19 & 0.06 & 0.14\% \\
           \(\invvar\)  & -0.20 & 0.06 & 0.09\% \\
@@ -774,7 +768,23 @@ In this paper, we emphasize the importance of the spatial aspect of the design, 
 We used Gaussian process regression (GPR), known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step (1) of our framework.
 Our approach yields a multivariate normal posterior distribution of the treatment effect for a collection of ``sentinel'' locations along the border.
 
-Averaging the treatment effect along the border turns out to have surprising pitfalls.
+While our framework is intuitive and well-motivated by the 1D RDD literature,
+it does have drawbacks.
+It does not specify a prior directly on the treatment effect long the border;
+instead our GP model implicitly gives it a Gaussian process (GP) prior with double 
+the covariance function placed on the outcomes on either side of the border.
+Such a wide prior can lead to regularization induced confounding (RIC) as
+defined and demonstrated by \citet{hahn2017bayesian} and \citet{hahn2018regularization}.
+Unfortunately the proposed solution of first regressing the treatment variable on
+control variates (spatial covariates in GeoRDDs) to estimate the propensity score is inapplicable:
+the propensity score for GeoRDD is known to be 0 or 1 in
+the control and treatment region respectively, and the assumption of overlap
+(Equation~2 in \citet{hahn2017bayesian}) is violated.
+We hope that our work will encourage further exploration of Bayesian nonparametric
+model specifications for GeoRDDs,
+including direct priors for the treatment effect which would address concerns about RIC.
+
+We also found that averaging the treatment effect along the border has surprising pitfalls.
 Simply integrating the treatment effect uniformly along the border yields an estimand that is inefficient and undesirably sensitive to the topology of the border.
 More sophisticated estimands, summarized in \autoref{table:estimator_properties}, are robust to this effect, and use the information available in the data more efficiently.
 
@@ -794,23 +804,24 @@ This keeps data away from the borders, breaks the stationarity assumption of the
 % Missing data from condo sales which do not report square footage can also distort estimated effects.
 % Overall, it seems that school district borders in Brooklyn and Queens are often accompanied by a discontinuity in house prices, but the causal attribution of this difference to the reputation of the school districts can be questionable.
 
-The main limitation of our approach to GeoRDDs is the reliance on modeling assumptions.
-We modeled the response surfaces as two independent Gaussian processes, with \iid{} normal noise for each observation.
-As is common in spatial statistics, we use Gaussian process regression as a non-parametric smoothing device that flexibly captures spatial correlations, but do not claim that our model is a true representation of the stochastic mechanism generating the data.
+One limitation of our approach to GeoRDDs is the reliance on modeling assumptions.
+We modeled the response surfaces as two independent GPs, with \iid{} normal noise for each observation.
+As is common in spatial statistics, we use GPR as a non-parametric smoothing device that flexibly captures spatial correlations, but do not claim that our model is a true representation of the stochastic mechanism generating the data.
 We believe care must therefore be taken not to lean heavily on modeling assumptions.
 In particular, we recommend that hypothesis tests always be accompanied by placebo tests:
 by applying the same procedure with arbitrary borders where no treatment was applied, we can verify that the test behaves appropriately under the null hypothesis, despite any potential model misspecification.
-We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and we chose the Mat\'ern covariance kernel.
-The assumption of equal covariance parameters in the two areas can be relaxed, by separately tuning the parameters within each area.
+We also assumed a stationary covariance structure, with hyperparameters equal in the treatment and control regions, and we chose the Mat\'ern covariance kernel in the application.
+The assumption of equal measurement variance and covariance parameters in the two areas can be relaxed,
+by separately tuning the parameters within each area.
 
-Because of the need to extrapolate the fitted processes a short distance to the border, our GeoRDD method may be vulnerable to the limitations of Gaussian processes when extrapolating.
+Because of the need to extrapolate the fitted processes a short distance to the border, our GeoRDD method may be vulnerable to the limitations of GPs when extrapolating.
 The distinction between interpolation and extrapolation of spatial models is explored in some depth in \citet{stein2012interpolation}.
-We expect that methodological advances that improve the extrapolating behavior of Gaussian processes would also improve the robustness of our method.
+We expect that methodological advances that improve the extrapolating behavior of GPs would also improve the robustness of our method.
 For example, \citet{wilson2013gaussian} develop spectral mixture (SM) covariance kernels with good extrapolating behavior, which could be applied beneficially to GeoRDDs.
 However, SM kernels are motivated by time series with some periodic or oscillatory behavior, which is more unusual in spatial applications, and may therefore not be as well-suited for use with GeoRDDs.
 
 The use of GPR to analyze GeoRDDs gives flexibility and extensibility to the method.
-This presents many opportunities for future research, inspired by the past and future development of methods in spatial statistics and machine learning that are based on Gaussian processes.
+This presents many opportunities for future research, inspired by the past and future development of methods in spatial statistics and machine learning that are based on GPs.
 % In spatial statistics, kriging has been used as the foundation for a plethora of spatial models, which may be adapted for the purposes of analyzing GeoRDDs.
 \citet{banerjee2014hierarchical} provides a good introduction to the richness of the spatial statistics field.
 For example, if the outcomes are binary, proportions, or counts, then binomial or Poisson likelihoods could be substituted instead of the normal likelihood used in this paper.
@@ -820,5 +831,5 @@ Hypothesis tests targeting the homogeneity of the treatment effect along the bor
 
 The framework and techniques of this paper could also be extended to spatio-temporal settings.
 If the treatment is only applied to the treatment region after a time \(t^*\), one could envision a three-dimensional RDD consisting of the geographical border in the spatial dimensions, and a straight line through \(t^*\) in the temporal dimension.
-The Gaussian process model would need to be augmented with a temporal component, for example with an anisotropic squared exponential covariance function.
-We leave spatio-temporal RDDs using Gaussian process models to future research.
+The GP model would need to be augmented with a temporal component, for example with an anisotropic squared exponential covariance function.
+We leave spatio-temporal RDDs using GP models to future research.
