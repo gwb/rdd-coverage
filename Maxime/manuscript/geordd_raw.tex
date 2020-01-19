@@ -205,7 +205,7 @@ An alternative would be to also specify a prior on the hyperparameters, which wo
 \subsection{Estimating the Local Average Treatment Effect}
 \label{sec:ate}
 
-Once we have obtained the posterior of \(\tau\) \eqref{eq:postvar2gp}, estimating the local average treatment effect (LATE) along the border will often be of interest.
+Once we have obtained the posterior of \(\tau\) \autoref{eq:postvar2gp}, estimating the local average treatment effect (LATE) along the border will often be of interest.
 We consider the class of weighted means of the functional treatment effect \(\tau\del{\sentinel}\),
 with weight function \(\weightb(\sentinel)\) defined everywhere on the border \(\border\).
 The weighted mean integral can be approximated as a weighted sum at the sentinels \(\sentinels\):
@@ -564,9 +564,9 @@ We therefore ask whether we can measure a discontinuous jump in house prices acr
 \end{figure}
 
 In order to model the property sale prices, we first need to obtain their locations.
-We geocode the address of each sale by merging the sales with NYC's Pluto database, which contains X and Y coordinates for each house, identified by its borough, zip code, block and lot.
+We geocode the address of each sale by merging the sales with the NYC Department of Finance's Digital Tax Map, which contains X and Y coordinates for the centroid of every parcel in NYC, identified by its borough, zip code, block and lot.
 These coordinates are given in the EPSG:2263 projection, which we also adopt.
-For addresses that do not find a match in Pluto, we use Google's geocoding API to obtain a latitude and longitude, which we then project onto EPSG:2263.
+Details and code for this preprocessing step are available from the first author's GitHub account.
 
 We then filter the 56,815 sales, by removing
 36,448 sales outside of the family homes building class categories (one, two, and three family dwellings),
@@ -710,12 +710,18 @@ In this example the different estimators yield similar answers, as the border is
         & \multicolumn{3}{c}{Posterior} \\
         Estimand & Mean & Standard Dev. & Tail Prob. \\
         \hline
-          \(\unifavg\) & -0.16 & 0.09 & 4.52\% \\
-          \(\taurho\)  & -0.19 & 0.06 & 0.14\% \\
-          \(\invvar\)  & -0.20 & 0.06 & 0.09\% \\
-          \(\tauproj\) & -0.17 & 0.08 & 1.98\% \\
-          \(\taugeo\)  & -0.14 & 0.13 & 15.37\% \\
-          \(\taupop\)  & -0.17 & 0.08 & 1.34\% \\
+          % \(\unifavg\) & -0.16 & 0.09 & 4.41\% \\
+          % \(\taurho\) & -0.19 & 0.06 & 0.14\% \\
+          % \(\invvar\) & -0.20 & 0.06 & 0.09\% \\
+          % \(\tauproj\) & -0.17 & 0.08 & 1.95\% \\
+          % \(\taugeo\) & -0.14 & 0.13 & 15.08\% \\
+          % \(\taupop\) & -0.17 & 0.08 & 1.25\% \\
+          \(\unifavg\) & -0.16 & 0.09 & 4.39\% \\
+          \(\taurho\) & -0.19 & 0.06 & 0.14\% \\
+          \(\invvar\) & -0.20 & 0.06 & 0.09\% \\
+          \(\tauproj\) & -0.17 & 0.08 & 1.91\% \\
+          \(\taugeo\) & -0.14 & 0.13 & 15.38\% \\
+          \(\taupop\) & -0.17 & 0.08 & 1.24\% \\
         \hline
     \end{tabular}
     \caption{
@@ -770,19 +776,23 @@ Our approach yields a multivariate normal posterior distribution of the treatmen
 
 While our framework is intuitive and well-motivated by the 1D RDD literature,
 it does have drawbacks.
-It does not specify a prior directly on the treatment effect long the border;
-instead our GP model implicitly gives it a Gaussian process (GP) prior with double 
-the covariance function placed on the outcomes on either side of the border.
+It does not specify a prior directly on the treatment effect along the border;
+instead it can be shown that our GP model implicitly gives it a wide prior for a constant effect
+plus a Gaussian process (GP) prior with double the covariance function \(k\) in \autoref{eq:spec2gp}.
 Such a wide prior can lead to regularization induced confounding (RIC) as
 defined and demonstrated by \citet{hahn2017bayesian} and \citet{hahn2018regularization}.
+RIC can be understood as the tendency of a Bayesian or regularized model to recruit a treatment effect variable that has a weak prior in order to explain away a more strongly regularized trend in the control variables.
+The calibration of the \(p\)-values in \autoref{sec:hypothesis_testing} safeguards the validity of our proposed hypothesis tests
+--- further validated by placebo tests ---
+but RIC could bias the cliff-face and LATE estimates.
 Unfortunately the proposed solution of first regressing the treatment variable on
-control variates (spatial covariates in GeoRDDs) to estimate the propensity score is inapplicable:
-the propensity score for GeoRDD is known to be 0 or 1 in
-the control and treatment region respectively, and the assumption of overlap
+control variables (spatial covariates in GeoRDDs) to estimate the propensity score cannot be used:
+the propensity score for GeoRDDs is already known to be 0 or 1 in
+the control and treatment region respectively, which also implies that the assumption of overlap
 (Equation~2 in \citet{hahn2017bayesian}) is violated.
-We hope that our work will encourage further exploration of Bayesian nonparametric
-model specifications for GeoRDDs,
-including direct priors for the treatment effect which would address concerns about RIC.
+That said, it could be beneficial to place a direct prior on the treatment effect.
+We hope that our work will encourage further exploration of this and other Bayesian nonparametric
+model specifications for GeoRDDs.
 
 We also found that averaging the treatment effect along the border has surprising pitfalls.
 Simply integrating the treatment effect uniformly along the border yields an estimand that is inefficient and undesirably sensitive to the topology of the border.
