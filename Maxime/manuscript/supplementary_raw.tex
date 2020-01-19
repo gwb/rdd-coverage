@@ -22,18 +22,18 @@ The projection RDD then considers a 1D RDD along \(\svec_2\).
 The usual RDD estimand \autorefexternal{eq:rdd_univ_estimand} can be obtained analytically:
 \begin{equation}
     \tau = \frac{
-            \int_{0}^{1}  2\rho \alpha \svec_{1} \dif \svec_{1} 
+            \int_{0}^{1}  2\rho \alpha \svec_{1} \dif \svec_{1}
             + \int_{1}^{2}  \rho \alpha \svec_{1} \dif \svec_{1}
         }{
-            \int_{0}^{1}  2\rho \dif \svec_{1} 
+            \int_{0}^{1}  2\rho \dif \svec_{1}
             + \int_{1}^{2}  \rho \dif \svec_{1}
         }
         -
         \frac{
-            \int_{0}^{1} \rho \alpha \svec_{1} \dif \svec_{1} 
+            \int_{0}^{1} \rho \alpha \svec_{1} \dif \svec_{1}
             + \int_{1}^{2} 2\rho \alpha \svec_{1} \dif \svec_{1}
         }{
-            \int_{-1}^{0} \rho \dif \svec_{1} 
+            \int_{-1}^{0} \rho \dif \svec_{1}
             + \int_{0}^{1} 2\rho \dif \svec_{1}
         }
     = \frac{-\alpha}{3}
@@ -48,9 +48,9 @@ A visual inspection of \autorefexternal{fig:sales_map} showing the locations of 
     \centering
     \includegraphics[height=0.3\textheight]{figures/confounding/confounding.pdf}
     \caption{
-        A theoretical example illustrating the susceptibility of the projected 1D~RDD method to spatial confounding. 
+        A theoretical example illustrating the susceptibility of the projected 1D~RDD method to spatial confounding.
         On the left, the background shows the density of units, while on the right it shows the linear spatial trend in outcomes.
-        The locations of treatment and control units are shown with circles and crosses respectively, separated by a border at \(\svec_2 = 0\). 
+        The locations of treatment and control units are shown with circles and crosses respectively, separated by a border at \(\svec_2 = 0\).
         Notice how treatment units are densest in an area with low outcomes, while control units units are densest in an area with high outcomes.
         \label{fig:confounding}}
 \end{figure}
@@ -77,7 +77,7 @@ Unfortunately, the linear term induces a covariance between the treatment and co
 The introduction of the linear term modifies the cliff height estimator \autoref{eq:postvar2gp} so that its posterior mean and covariance become:
 \begin{equation}
     \begin{split}
-        \muvec_{\sentinels \mid Y, X} &= 
+        \muvec_{\sentinels \mid Y, X} &=
         \begingroup\SmallColSep
         \begin{bmatrix}
             \KBT & -\KBC
@@ -117,21 +117,21 @@ The posterior mean of \(\gammavec\) can be obtained analytically:
                     \STT & 0 \\
                     0 & \SCC
                   \end{bmatrix}
-            \,,\ 
-            \cov\del{\gammavec} = \sigmabeta^2 \eye_p 
-            \,,\  
+            \,,\
+            \cov\del{\gammavec} = \sigmabeta^2 \eye_p
+            \,,\
             \cov\del{\Yvec, \gammavec} = \sigmabeta^2 \Xmat \\&
-        \SigmaMat_Y = \cov\del{\Yvec} 
+        \SigmaMat_Y = \cov\del{\Yvec}
             = \cov\del{\Yvec \mid \gammavec}
                 + \sigmabeta^2 \Xmat \Xmat\trans \\&
         % &= \begin{bmatrix}
-            % \STT\!+\!\sigmabeta^2 \Xmat_{\treat} \Xmat_{\treat}\trans 
+            % \STT\!+\!\sigmabeta^2 \Xmat_{\treat} \Xmat_{\treat}\trans
             % & \! \sigmabeta^2 \Xmat_{\treat} \Xmat_{\ctrol}\trans \\
-            % \sigmabeta^2 \Xmat_{\ctrol} \Xmat_{\treat}\trans 
+            % \sigmabeta^2 \Xmat_{\ctrol} \Xmat_{\treat}\trans
             % & \! \SCC\!+\!\sigmabeta^2 \Xmat_{\ctrol} \Xmat_{\ctrol}\trans
         % \end{bmatrix}\\
-        \hat\gammavec 
-            = \E\del{\gammavec \mid \Yvec} 
+        \hat\gammavec
+            = \E\del{\gammavec \mid \Yvec}
             = \cov\del{\gammavec,\Yvec} \cov\del{\Yvec,\Yvec}^{-1} \Yvec
             = \sigmabeta^2 \Xmat\trans\SigmaMat_{Y}^{-1} \Yvec
     \end{split}
@@ -192,12 +192,12 @@ As before, the uncertainty in the estimate of \(\rho\) should in principle be pr
     The estimand \(\taupop\) can be interpreted as giving equal weight to each unit in the superpopulation of units within the border vicinity \(\area_\buffer\), but then moving each unit from its original location to the nearest point on the border (where the GeoRDD is best able to estimate the treatment effect without undue extrapolation) and then averaging the treatment effect of each unit in this displaced superpopulation.
 The resulting weight function is:
 \begin{equation}
-    \weightb(\sentinel) = 
+    \weightb(\sentinel) =
         \lim_{\gridres \rightarrow 0}
         \frac{1}{L_\gridres}
         \sum_{l=1}^{L_\gridres}
-            \delta\del{\sentinel - \proj_{\border}\del{\grid_l} } 
-            \rho(\grid_l) 
+            \delta\del{\sentinel - \proj_{\border}\del{\grid_l} }
+            \rho(\grid_l)
         \,.
 \end{equation}
 
@@ -211,7 +211,7 @@ The resulting weight function is:
     \label{fig:wiggly_boundaries_setup}
     Spatial positions of units and border for the wiggly border simulation of \autoref{sec:wiggly_border}. Projection lines for the projected finite population LATE are shown in light gray.}
 \end{figure}
-    
+
 
     We illustrate all of our LATE estimators with a simulation.
 200 units are placed in a square area delimited by spatial coordinates \(\svec_1 \in \cbr{0,2}\) and \(\svec_2 \in \cbr{-1, 1}\).
@@ -248,7 +248,7 @@ To units above the border we add a treatment effect \(\tau(\svec_1, \svec_2) = \
 \end{tabular}
 \egroup
 \caption{
-    Summary of wiggly border simulation setup. 
+    Summary of wiggly border simulation setup.
     \label{table:wiggly_setup}}
 \end{table}
 
@@ -270,7 +270,7 @@ The simulations results can also be found in \autoref{table:wiggly_results}.
         Results of the simulations of \autoref{sec:wiggly_border}, showing for each LATE estimator as the leftmost section of the border gets wigglier (a) the estimate (posterior mean) averaged over 10,000 simulations with the corresponding estimand shown as a dotted line of the same color, and (b) the posterior standard deviation.
     }
 \end{figure}
-    
+
     When the border is a straight line and because \(\treatarea\) and \(\ctrolarea\) are rectangles, the density-weighted estimand \(\taurho\) equals the projected superpopulation estimand \(\taupop\).
 They are in fact both equal to the infinite-population average treatment effect since the treatment effect does not depend on \(\svec_2\).
 Correspondingly, the posteriors of \(\taurho\) and \(\taupop\) are identical.
@@ -294,7 +294,7 @@ band get automatically downweighted as their correlation rises.
 The estimators that rely on projection
 \(\tauproj\), \(\taugeo\), and \(\taupop\) also remain stable,
 because the projected sentinels hardly move.
-    
+
 \begin{figure}[ptb]
 \centering
 \includegraphics[width=\textwidth]{figures/weight_functions.pdf}
@@ -311,17 +311,17 @@ Furthermore, note that all estimators can give some small negative weights \(\wt
 For Gaussian processes, this can be understood in terms of the negative side-lobes of the equivalent kernel (see \cite{rasmussen2006gaussian} Section 2.6).
 The high variance of \(\unifavg\) and \(\taugeo\) manifests itself as large weights given to a small number of units.
 All other estimators spread the weights more evenly among the units near the border, which reduces their variance.
-    
+
     For comparison, the weights placed on units by the projected 1D RDD are shown in \autoref{fig:weight_functions}(g).
 A triangular kernel in \(\svec_2\) was used with bandwidth selected using the MSE-minimizing method proposed by \cite{imbens2012optimal}.
 The Projected 1D~RDD estimator can also be written as a linear combination of the observed outcomes \autorefexternal{eq:unit_weights}, and the unit weight vectors can be derived as:
 \begin{equation}
 % \begin{split}
 %\hphantom{-}
-\wt = \Xmat_b (\Xmat_\treat\trans \Wmat_\treat \Xmat_\treat)^{-1} \Xmat_\treat\trans \Wmat_\treat %\,, 
+\wt = \Xmat_b (\Xmat_\treat\trans \Wmat_\treat \Xmat_\treat)^{-1} \Xmat_\treat\trans \Wmat_\treat %\,,
 \quad\text{and}\quad
 % \\
-\wc = - \Xmat_b (\Xmat_\ctrol\trans \Wmat_\ctrol \Xmat_\ctrol)^{-1} \Xmat_\ctrol\trans \Wmat_\ctrol \,, 
+\wc = - \Xmat_b (\Xmat_\ctrol\trans \Wmat_\ctrol \Xmat_\ctrol)^{-1} \Xmat_\ctrol\trans \Wmat_\ctrol \,,
 % \end{split}
 \label{eq:unit_weights_llr}
 \end{equation}
@@ -370,7 +370,7 @@ Consequently, any trend in the outcomes across \(\svec_1\) would confound the es
             \hline
         \end{tabular}
         \caption{
-            \textbf{Wiggly Border Simulation Results.} 
+            \textbf{Wiggly Border Simulation Results.}
             Posterior mean averaged over 10,000 simulations, posterior standard deviation and true value for each LATE estimand as the wiggliness of the border is increased in the simulations of \autoref{sec:wiggly_border}.
             \label{table:wiggly_results}
             }
@@ -516,7 +516,7 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
         % \(\invvar\) uncalibrated & 0.0007    \\
         % \(\invvar\) calibrated   & 0.002 \\
         mLL bootstrap            & 0.003 \\
-        \(\chi^2\) bootstrap     & 0.016 \\
+        \(\chi^2\) bootstrap     & 0.013 \\
         \(\invvar\) uncalibrated & 0.002 \\
         \(\invvar\) calibrated   & 0.005 \\
         \hline
@@ -594,34 +594,34 @@ The higher distance between data and the border also stretches the spatial model
 
     Other pairs of district, like 13 \& 14, 13 \& 17, and 25 \& 28 have clusters of missing data (condo sales with unknown square footage) near the border that cast doubt on the interpretation of the estimated effect.
 Nonetheless, significant effects are also found between pairs of school districts without issues due to compound treatments, physical barriers, or missing data.
-House prices increase going across the border from districts 16 to 13, 18 to 17, 24 to 30, 23 to 17, 25 to 26, 28 to 29, and 29 to 26.
+House prices increase going across the border from districts 18 to 17, 23 to 17, 28 to 29, and 29 to 26.
 Overall, it seems that school district borders in Brooklyn and Queens can correspond to measurable jumps in house prices per square foot.
-The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 20\% price increase from 29 to 26, or 22\% from 18 to 17.
+The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 16\% price increase from 29 to 26, or 17\% from 18 to 17.
 
 \begin{landscape}
     \begin{table}[p]
         \footnotesize
         \begin{tabular}{r|lllllll}
             \hline
-\( \mathbf{13} \)& \( \mathbf{14:}~-0.29 \pm 0.09 \)& \( \mathbf{15:}~+0.03 \pm 0.07 \)& \( \mathbf{16:}~+0.13 \pm 0.07 \)& \( \mathbf{17:}~+0.26 \pm 0.08 \)\\ 
-\( \mathbf{14} \)& \( \mathbf{13:}~-0.29 \pm 0.09 \)& \( \mathbf{16:}~+0.16 \pm 0.10 \)& \( \mathbf{24:}~+0.38 \pm 0.15 \)& \( \mathbf{32:}~+0.07 \pm 0.12 \)\\ 
-\( \mathbf{15} \)& \( \mathbf{13:}~+0.03 \pm 0.07 \)& \( \mathbf{17:}~+0.18 \pm 0.10 \)& \( \mathbf{20:}~-0.05 \pm 0.06 \)& \( \mathbf{22:}~-0.28 \pm 0.11 \)\\ 
-\( \mathbf{16} \)& \( \mathbf{13:}~+0.13 \pm 0.07 \)& \( \mathbf{14:}~+0.16 \pm 0.10 \)& \( \mathbf{17:}~-0.04 \pm 0.07 \)& \( \mathbf{23:}~-0.10 \pm 0.07 \)& \( \mathbf{32:}~-0.05 \pm 0.06 \)\\ 
-\( \mathbf{17} \)& \( \mathbf{13:}~+0.26 \pm 0.08 \)& \( \mathbf{15:}~+0.18 \pm 0.10 \)& \( \mathbf{16:}~-0.04 \pm 0.07 \)& \( \mathbf{18:}~+0.20 \pm 0.07 \)& \( \mathbf{22:}~+0.06 \pm 0.07 \)& \( \mathbf{23:}~-0.29 \pm 0.10 \)\\ 
-\( \mathbf{18} \)& \( \mathbf{17:}~+0.20 \pm 0.07 \)& \( \mathbf{19:}~-0.06 \pm 0.12 \)& \( \mathbf{22:}~+0.10 \pm 0.07 \)& \( \mathbf{23:}~-0.03 \pm 0.09 \)\\ 
-\( \mathbf{19} \)& \( \mathbf{18:}~-0.06 \pm 0.12 \)& \( \mathbf{23:}~-0.00 \pm 0.08 \)& \( \mathbf{24:}~+0.39 \pm 0.11 \)& \( \mathbf{27:}~+0.19 \pm 0.06 \)& \( \mathbf{32:}~-0.27 \pm 0.12 \)\\ 
-\( \mathbf{20} \)& \( \mathbf{15:}~-0.05 \pm 0.06 \)& \( \mathbf{21:}~-0.04 \pm 0.05 \)& \( \mathbf{22:}~+0.11 \pm 0.08 \)\\ 
-\( \mathbf{21} \)& \( \mathbf{20:}~-0.04 \pm 0.05 \)& \( \mathbf{22:}~-0.04 \pm 0.05 \)\\ 
-\( \mathbf{22} \)& \( \mathbf{15:}~-0.28 \pm 0.11 \)& \( \mathbf{17:}~+0.06 \pm 0.07 \)& \( \mathbf{18:}~+0.10 \pm 0.07 \)& \( \mathbf{20:}~+0.11 \pm 0.08 \)& \( \mathbf{21:}~-0.04 \pm 0.05 \)\\ 
-\( \mathbf{23} \)& \( \mathbf{16:}~-0.10 \pm 0.07 \)& \( \mathbf{17:}~-0.29 \pm 0.10 \)& \( \mathbf{18:}~-0.03 \pm 0.09 \)& \( \mathbf{19:}~-0.00 \pm 0.08 \)& \( \mathbf{32:}~+0.04 \pm 0.08 \)\\ 
-\( \mathbf{24} \)& \( \mathbf{14:}~+0.38 \pm 0.15 \)& \( \mathbf{19:}~+0.39 \pm 0.11 \)& \( \mathbf{25:}~-0.26 \pm 0.13 \)& \( \mathbf{27:}~-0.22 \pm 0.10 \)& \( \mathbf{28:}~+0.06 \pm 0.06 \)& \( \mathbf{30:}~-0.14 \pm 0.05 \)& \( \mathbf{32:}~-0.02 \pm 0.08 \)\\ 
-\( \mathbf{25} \)& \( \mathbf{24:}~-0.26 \pm 0.13 \)& \( \mathbf{26:}~+0.08 \pm 0.04 \)& \( \mathbf{28:}~-0.15 \pm 0.08 \)& \( \mathbf{29:}~-0.06 \pm 0.10 \)& \( \mathbf{30:}~+0.28 \pm 0.15 \)\\ 
-\( \mathbf{26} \)& \( \mathbf{25:}~+0.08 \pm 0.04 \)& \( \mathbf{29:}~-0.18 \pm 0.05 \)\\ 
-\( \mathbf{27} \)& \( \mathbf{19:}~+0.19 \pm 0.06 \)& \( \mathbf{24:}~-0.22 \pm 0.10 \)& \( \mathbf{28:}~-0.04 \pm 0.04 \)& \( \mathbf{29:}~+0.01 \pm 0.08 \)\\ 
-\( \mathbf{28} \)& \( \mathbf{24:}~+0.06 \pm 0.06 \)& \( \mathbf{25:}~-0.15 \pm 0.08 \)& \( \mathbf{27:}~-0.04 \pm 0.04 \)& \( \mathbf{29:}~-0.09 \pm 0.04 \)\\ 
-\( \mathbf{29} \)& \( \mathbf{25:}~-0.06 \pm 0.10 \)& \( \mathbf{26:}~-0.18 \pm 0.05 \)& \( \mathbf{27:}~+0.01 \pm 0.08 \)& \( \mathbf{28:}~-0.09 \pm 0.04 \)\\ 
-\( \mathbf{30} \)& \( \mathbf{24:}~-0.14 \pm 0.05 \)& \( \mathbf{25:}~+0.28 \pm 0.15 \)\\ 
-\( \mathbf{32} \)& \( \mathbf{14:}~+0.07 \pm 0.12 \)& \( \mathbf{16:}~-0.05 \pm 0.06 \)& \( \mathbf{19:}~-0.27 \pm 0.12 \)& \( \mathbf{23:}~+0.04 \pm 0.08 \)& \( \mathbf{24:}~-0.02 \pm 0.08 \)\\ 
+\( \mathbf{13} \)& \( \mathbf{14:}~-0.29 \pm 0.10 \)& \( \mathbf{15:}~+0.09 \pm 0.08 \)& \( \mathbf{16:}~-0.06 \pm 0.07 \)& \( \mathbf{17:}~-0.15 \pm 0.09 \)\\
+\( \mathbf{14} \)& \( \mathbf{13:}~+0.29 \pm 0.10 \)& \( \mathbf{16:}~-0.07 \pm 0.12 \)& \( \mathbf{24:}~-0.35 \pm 0.19 \)& \( \mathbf{32:}~-0.05 \pm 0.13 \)\\
+\( \mathbf{15} \)& \( \mathbf{13:}~-0.09 \pm 0.08 \)& \( \mathbf{17:}~-0.17 \pm 0.11 \)& \( \mathbf{20:}~+0.09 \pm 0.06 \)& \( \mathbf{22:}~+0.35 \pm 0.14 \)\\
+\( \mathbf{16} \)& \( \mathbf{13:}~+0.06 \pm 0.07 \)& \( \mathbf{14:}~+0.07 \pm 0.12 \)& \( \mathbf{17:}~-0.08 \pm 0.08 \)& \( \mathbf{23:}~-0.10 \pm 0.08 \)& \( \mathbf{32:}~+0.04 \pm 0.08 \)\\
+\( \mathbf{17} \)& \( \mathbf{13:}~+0.15 \pm 0.09 \)& \( \mathbf{15:}~+0.17 \pm 0.11 \)& \( \mathbf{16:}~+0.08 \pm 0.08 \)& \( \mathbf{18:}~-0.16 \pm 0.07 \)& \( \mathbf{22:}~+0.01 \pm 0.08 \)& \( \mathbf{23:}~-0.29 \pm 0.11 \)\\
+\( \mathbf{18} \)& \( \mathbf{17:}~+0.16 \pm 0.07 \)& \( \mathbf{19:}~-0.13 \pm 0.14 \)& \( \mathbf{22:}~+0.05 \pm 0.07 \)& \( \mathbf{23:}~-0.08 \pm 0.10 \)\\
+\( \mathbf{19} \)& \( \mathbf{18:}~+0.13 \pm 0.14 \)& \( \mathbf{23:}~-0.01 \pm 0.09 \)& \( \mathbf{24:}~+0.34 \pm 0.13 \)& \( \mathbf{27:}~+0.20 \pm 0.06 \)& \( \mathbf{32:}~+0.27 \pm 0.15 \)\\
+\( \mathbf{20} \)& \( \mathbf{15:}~-0.09 \pm 0.06 \)& \( \mathbf{21:}~+0.06 \pm 0.06 \)& \( \mathbf{22:}~-0.09 \pm 0.09 \)\\
+\( \mathbf{21} \)& \( \mathbf{20:}~-0.06 \pm 0.06 \)& \( \mathbf{22:}~-0.05 \pm 0.05 \)\\
+\( \mathbf{22} \)& \( \mathbf{15:}~-0.35 \pm 0.14 \)& \( \mathbf{17:}~-0.01 \pm 0.08 \)& \( \mathbf{18:}~-0.05 \pm 0.07 \)& \( \mathbf{20:}~+0.09 \pm 0.09 \)& \( \mathbf{21:}~+0.05 \pm 0.05 \)\\
+\( \mathbf{23} \)& \( \mathbf{16:}~+0.10 \pm 0.08 \)& \( \mathbf{17:}~+0.29 \pm 0.11 \)& \( \mathbf{18:}~+0.08 \pm 0.10 \)& \( \mathbf{19:}~+0.01 \pm 0.09 \)& \( \mathbf{32:}~-0.07 \pm 0.08 \)\\
+\( \mathbf{24} \)& \( \mathbf{14:}~+0.35 \pm 0.19 \)& \( \mathbf{19:}~-0.34 \pm 0.13 \)& \( \mathbf{25:}~+0.25 \pm 0.15 \)& \( \mathbf{27:}~-0.17 \pm 0.12 \)& \( \mathbf{28:}~+0.17 \pm 0.07 \)& \( \mathbf{30:}~+0.10 \pm 0.06 \)& \( \mathbf{32:}~-0.01 \pm 0.09 \)\\
+\( \mathbf{25} \)& \( \mathbf{24:}~-0.25 \pm 0.15 \)& \( \mathbf{26:}~+0.09 \pm 0.05 \)& \( \mathbf{28:}~-0.09 \pm 0.09 \)& \( \mathbf{29:}~+0.06 \pm 0.13 \)& \( \mathbf{30:}~-0.45 \pm 0.22 \)\\
+\( \mathbf{26} \)& \( \mathbf{25:}~-0.09 \pm 0.05 \)& \( \mathbf{29:}~-0.15 \pm 0.06 \)\\
+\( \mathbf{27} \)& \( \mathbf{19:}~-0.20 \pm 0.06 \)& \( \mathbf{24:}~+0.17 \pm 0.12 \)& \( \mathbf{28:}~+0.01 \pm 0.04 \)& \( \mathbf{29:}~-0.00 \pm 0.10 \)\\
+\( \mathbf{28} \)& \( \mathbf{24:}~-0.17 \pm 0.07 \)& \( \mathbf{25:}~+0.09 \pm 0.09 \)& \( \mathbf{27:}~-0.01 \pm 0.04 \)& \( \mathbf{29:}~+0.11 \pm 0.05 \)\\
+\( \mathbf{29} \)& \( \mathbf{25:}~-0.06 \pm 0.13 \)& \( \mathbf{26:}~+0.15 \pm 0.06 \)& \( \mathbf{27:}~+0.00 \pm 0.10 \)& \( \mathbf{28:}~-0.11 \pm 0.05 \)\\
+\( \mathbf{30} \)& \( \mathbf{24:}~-0.10 \pm 0.06 \)& \( \mathbf{25:}~+0.45 \pm 0.22 \)\\
+\( \mathbf{32} \)& \( \mathbf{14:}~+0.05 \pm 0.13 \)& \( \mathbf{16:}~-0.04 \pm 0.08 \)& \( \mathbf{19:}~-0.27 \pm 0.15 \)& \( \mathbf{23:}~+0.07 \pm 0.08 \)& \( \mathbf{24:}~+0.01 \pm 0.09 \)\\
             \hline
         \end{tabular}
         \caption{
@@ -632,4 +632,3 @@ The estimated size of this effect varies: zero or negligible in some cases, such
         }
     \end{table}
 \end{landscape}
-
