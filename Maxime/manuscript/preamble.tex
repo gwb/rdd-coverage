@@ -8,7 +8,7 @@
 \usepackage{xr-hyper} % cross-references (between documents)
 \usepackage{xcolor} % Allow colors to be defined
 \usepackage{geometry} % Used to adjust the document margins
-\geometry{a4paper, margin=2cm}
+\geometry{letterpaper, margin=1in}
 \usepackage{amsmath} % Equations
 \usepackage{amssymb} % Equations
 % The hyperref package gives us a pdf with properly built
@@ -28,22 +28,34 @@
     allcolors=[rgb]{0.00,0.38,0.59},
     allbordercolors=[rgb]{0.60,0.76,0.86}
 }
+
+\def\sectionautorefname{Section}
+\def\subsectionautorefname{Section}
+\def\subsubsectionautorefname{Section}
+\def\figureautorefname{Figure}
+\def\Appendixautorefname{Appendix}
+\def\tableautorefname{Table}
+\def\equationautorefname~#1\null{(#1)\null}
+
 \newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
 \hypersetup{pdfkeywords=\georddkeywords{}}
 \hypersetup{pdfauthor=Maxime Rischard}
 \newcommand{\georddauthor}{
-% Authors using authblk package
-    \author[a]{Maxime Rischard
-        \thanks{
-        This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
-    }
-    \author[b]{Zach Branson}
-    \author[c]{Luke Miratrix}
-    \author[d]{Luke Bornn}
-    \affil[a]{Department of Statistics, Harvard University}
-    \affil[b]{Department of Statistics and Data Science, Carnegie Mellon University}
-    \affil[c]{Graduate School of Education, Harvard University}
-    \affil[d]{Simon Fraser University}
+    Maxime Rischard
+    \thanks{
+This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
+    \vspace{-0.5em}
+    \\
+    Department of Statistics, Harvard University \\
+
+    Zach Branson \vspace{-0.5em} \\
+	Department of Statistics and Data Science, Carnegie Mellon University \\
+
+    Luke Miratrix \vspace{-0.5em} \\
+    Graduate School of Education, Harvard University \\
+
+    Luke Bornn \vspace{-0.5em} \\
+    Department of Statistics and Actuarial Science, Simon Fraser University 
 }
 
 \usepackage{natbib}
@@ -54,4 +66,4 @@
 
 \usepackage{enumitem}
 \newlist{flatlist}{enumerate*}{1}
-\setlist[flatlist]{label=(\arabic*)}
+\setlist[flatlist]{label=(\roman*)}

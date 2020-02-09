@@ -1,59 +1,13 @@
 \documentclass[12pt]{article}
 
-\RequirePackage[OT1]{fontenc}
-\usepackage{mathrsfs}
-\usepackage{graphicx}
-\usepackage{xr-hyper} % cross-references (between documents)
-\usepackage{xcolor} % Allow colors to be defined
-\usepackage{geometry} % Used to adjust the document margins
-\geometry{tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
-\usepackage{amsmath} % Equations
-\usepackage{amssymb} % Equations
-\usepackage[hyphens]{url}
-\usepackage[hypertexnames=false]{hyperref}
-\usepackage[title,toc]{appendix}
-\newcommand{\georddtitle}{
-    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
-    Do School Districts Affect NYC House Prices?
-}
-\hypersetup{
-    colorlinks=true,
-    pdfborder=0 0 1,
-    pdftitle=\georddtitle{},
-    allcolors=[rgb]{0.00,0.38,0.59},
-    allbordercolors=[rgb]{0.60,0.76,0.86}
-}
-\usepackage{natbib}
-\usepackage{bm}
-\usepackage{mathtools}
-\usepackage{pdflscape}
-\usepackage{setspace}
-
-\newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
-\hypersetup{pdfkeywords=\georddkeywords{}}
-
 \newcommand{\blind}{0}
 \pdfminorversion=4
 \input{preamble.tex}
-% disable hyperlinks between documents
+\input{global_macros.tex}
+\input{geordd_macros.tex}
 \newcommand{\autorefexternal}[1]{\autoref*{#1}}
-\newcommand{\georddauthor}{
-    Maxime Rischard
-    \thanks{
-This research was supported by the National Science Foundation Graduate Research Fellowship Program under Grant No. 1144152, by the National Science Foundation under Grant No. 1461435, by DARPA under Grant No. FA8750-14-2-0117, by ARO under Grant No. W911NF- 15-1-0172, and by NSERC. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the authors and do not necessarily reflect the views of the National Science Foundation, DARPA, ARO, or NSERC.}
-    \vspace{-0.5em}
-    \\
-    Department of Statistics, Harvard University \\
-
-    Zach Branson \vspace{-0.5em} \\
-    Department of Statistics and Data Science, Carnegie Mellon University \\
-
-    Luke Miratrix \vspace{-0.5em} \\
-    Graduate School of Education, Harvard University \\
-
-    Luke Bornn \vspace{-0.5em} \\
-    Department of Statistics and Actuarial Science, Simon Fraser University 
-}
+\newcommand{\ofsupp}{ of the Supplementary Materials}
+\newcommand{\degree}{\,^\circ}
 
 \begin{document}
 \doublespacing
@@ -94,6 +48,7 @@ This research was supported by the National Science Foundation Graduate Research
 \vfill
 \newpage
 
+\graphicspath{{./figures/}}
 \input{geordd_raw}
 
 \bibliographystyle{chicago}

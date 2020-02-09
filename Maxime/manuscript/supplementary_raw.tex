@@ -511,14 +511,10 @@ To maximize power, we therefore recommend using the calibrated inverse-variance 
         \hline
         Test                   & \(p\)-value \\
         \hline
-        % mLL bootstrap & 0.003     \\
-        % \(\chi^2\) bootstrap     & 0.022     \\
-        % \(\invvar\) uncalibrated & 0.0007    \\
-        % \(\invvar\) calibrated   & 0.002 \\
-        mLL bootstrap            & 0.003 \\
+        mLL bootstrap            & 0.002 \\
         \(\chi^2\) bootstrap     & 0.013 \\
-        \(\invvar\) uncalibrated & 0.002 \\
-        \(\invvar\) calibrated   & 0.005 \\
+        \(\invvar\) uncalibrated & 0.0008 \\
+        \(\invvar\) calibrated   & 0.003 \\
         \hline
     \end{tabular}
     \egroup
@@ -534,7 +530,7 @@ The three \(p\)-values are provided in \autoref{table:NYC_tests}, and show
 agreement between the three tests, though the \(\chi^2\) test returns a considerably higher \(p\)-value, which is unsurprising considering the lower power of this test seen in simulations.
 
     To assess the validity of the three tests, we apply the placebo tests devised in \autorefexternal{sec:placebo}.
-Within each district, we split the data in half by a line at angles \(1\degree\), \(3\degree\), \(5\degree\), \(6\degree\), \(\dotsc\), \(179\degree\).
+Within each district, we split the data in half by a line at angles \(1\degree\), \(3\degree\), \(5\degree\), \(\dotsc\), \(179\degree\).
 Because these lines were drawn arbitrarily, we don't expect a discontinuous treatment effect between the two halves, and so we hope to see a uniform distribution of placebo \(p\)-values.
 However, these tests will be highly correlated,
 and so the low effective sample size could lead to some apparent departures from uniformity.
@@ -558,7 +554,7 @@ Based on this vulnerability, and its manifestation in this application, we do no
 We therefore believe that the \(\chi^2\) test will continue to be reliable under misspecification.
 It is only due to its low power that we hesitate to recommend its use in applications where the treatment effect is expected to be fairly homogeneous.
 
-    Lastly, the calibrated inverse-variance placebo \(p\)-values display no obvious bias, with \autoref{fig:nyc_placebos}(f) close to uniformly distributed, and \autoref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
+    Lastly, the calibrated inverse-variance placebo \(p\)-values also do not display obvious bias, with \autoref{fig:nyc_placebos}(f) close to uniformly distributed, and \autoref{fig:nyc_placebos}(e) showing a lower auto-correlation than the mLL and \(\chi^2\) tests.
 The high power and robustness of the inverse-variance test make a strong case for its use in most applications.
 
 
@@ -588,47 +584,68 @@ School districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 
 
     Some school districts are separated by parks (or other non-residential zones), for example districts 15 \& 17 or 19 \& 24, so that house sales do not extend all the way to the border on one or both sides.
 A significant treatment effect between these pairs cannot be interpreted as the detection of a discontinuity in prices at the border, let alone any kind of causal interpretation, but rather it means that the difference in prices between the two sides of the park exceeds the typical spatial variation of house prices expected over the same distance.
-This is not unsurprising, and one may speculate that physical barriers like parks, rivers, railways and major roads can separate neighborhoods with distinct character, demographics and thus house prices.
+This is not surprising, and one may speculate that physical barriers like parks, rivers, railways and major roads can separate neighborhoods with distinct character, demographics and thus house prices.
 This in turn challenges the stationarity assumption of the spatial model \autorefexternal{eq:spec2gp}.
 The higher distance between data and the border also stretches the spatial model's ability to extrapolate, which makes it more vulnerable to model misspecification.
 
     Other pairs of district, like 13 \& 14, 13 \& 17, and 25 \& 28 have clusters of missing data (condo sales with unknown square footage) near the border that cast doubt on the interpretation of the estimated effect.
 Nonetheless, significant effects are also found between pairs of school districts without issues due to compound treatments, physical barriers, or missing data.
-House prices increase going across the border from districts 18 to 17, 23 to 17, 28 to 29, and 29 to 26.
+House prices increase going across the border from districts 23 to 17, 28 to 29, 29 to 26.
+The results also show an increase in price at the border from 24 to 28, but this could be confounded by gaps in the sales data due to Forest Park, St.~John Cemetery and condos near Queens Blvd.
+Also note that we report comparisons between 40 pairs of districts, so some false positives would be expected at the 5\% significance level.
 Overall, it seems that school district borders in Brooklyn and Queens can correspond to measurable jumps in house prices per square foot.
-The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 16\% price increase from 29 to 26, or 17\% from 18 to 17.
+The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 17\% price increase from 29 to 26.
 
 \begin{landscape}
     \begin{table}[p]
         \footnotesize
-        \begin{tabular}{r|lllllll}
+        \begin{tabular}{r|rrrrrrr}
             \hline
-\( \mathbf{13} \)& \( \mathbf{14:}~-0.29 \pm 0.10 \)& \( \mathbf{15:}~+0.09 \pm 0.08 \)& \( \mathbf{16:}~-0.06 \pm 0.07 \)& \( \mathbf{17:}~-0.15 \pm 0.09 \)\\
-\( \mathbf{14} \)& \( \mathbf{13:}~+0.29 \pm 0.10 \)& \( \mathbf{16:}~-0.07 \pm 0.12 \)& \( \mathbf{24:}~-0.35 \pm 0.19 \)& \( \mathbf{32:}~-0.05 \pm 0.13 \)\\
-\( \mathbf{15} \)& \( \mathbf{13:}~-0.09 \pm 0.08 \)& \( \mathbf{17:}~-0.17 \pm 0.11 \)& \( \mathbf{20:}~+0.09 \pm 0.06 \)& \( \mathbf{22:}~+0.35 \pm 0.14 \)\\
-\( \mathbf{16} \)& \( \mathbf{13:}~+0.06 \pm 0.07 \)& \( \mathbf{14:}~+0.07 \pm 0.12 \)& \( \mathbf{17:}~-0.08 \pm 0.08 \)& \( \mathbf{23:}~-0.10 \pm 0.08 \)& \( \mathbf{32:}~+0.04 \pm 0.08 \)\\
-\( \mathbf{17} \)& \( \mathbf{13:}~+0.15 \pm 0.09 \)& \( \mathbf{15:}~+0.17 \pm 0.11 \)& \( \mathbf{16:}~+0.08 \pm 0.08 \)& \( \mathbf{18:}~-0.16 \pm 0.07 \)& \( \mathbf{22:}~+0.01 \pm 0.08 \)& \( \mathbf{23:}~-0.29 \pm 0.11 \)\\
-\( \mathbf{18} \)& \( \mathbf{17:}~+0.16 \pm 0.07 \)& \( \mathbf{19:}~-0.13 \pm 0.14 \)& \( \mathbf{22:}~+0.05 \pm 0.07 \)& \( \mathbf{23:}~-0.08 \pm 0.10 \)\\
-\( \mathbf{19} \)& \( \mathbf{18:}~+0.13 \pm 0.14 \)& \( \mathbf{23:}~-0.01 \pm 0.09 \)& \( \mathbf{24:}~+0.34 \pm 0.13 \)& \( \mathbf{27:}~+0.20 \pm 0.06 \)& \( \mathbf{32:}~+0.27 \pm 0.15 \)\\
-\( \mathbf{20} \)& \( \mathbf{15:}~-0.09 \pm 0.06 \)& \( \mathbf{21:}~+0.06 \pm 0.06 \)& \( \mathbf{22:}~-0.09 \pm 0.09 \)\\
-\( \mathbf{21} \)& \( \mathbf{20:}~-0.06 \pm 0.06 \)& \( \mathbf{22:}~-0.05 \pm 0.05 \)\\
-\( \mathbf{22} \)& \( \mathbf{15:}~-0.35 \pm 0.14 \)& \( \mathbf{17:}~-0.01 \pm 0.08 \)& \( \mathbf{18:}~-0.05 \pm 0.07 \)& \( \mathbf{20:}~+0.09 \pm 0.09 \)& \( \mathbf{21:}~+0.05 \pm 0.05 \)\\
-\( \mathbf{23} \)& \( \mathbf{16:}~+0.10 \pm 0.08 \)& \( \mathbf{17:}~+0.29 \pm 0.11 \)& \( \mathbf{18:}~+0.08 \pm 0.10 \)& \( \mathbf{19:}~+0.01 \pm 0.09 \)& \( \mathbf{32:}~-0.07 \pm 0.08 \)\\
-\( \mathbf{24} \)& \( \mathbf{14:}~+0.35 \pm 0.19 \)& \( \mathbf{19:}~-0.34 \pm 0.13 \)& \( \mathbf{25:}~+0.25 \pm 0.15 \)& \( \mathbf{27:}~-0.17 \pm 0.12 \)& \( \mathbf{28:}~+0.17 \pm 0.07 \)& \( \mathbf{30:}~+0.10 \pm 0.06 \)& \( \mathbf{32:}~-0.01 \pm 0.09 \)\\
-\( \mathbf{25} \)& \( \mathbf{24:}~-0.25 \pm 0.15 \)& \( \mathbf{26:}~+0.09 \pm 0.05 \)& \( \mathbf{28:}~-0.09 \pm 0.09 \)& \( \mathbf{29:}~+0.06 \pm 0.13 \)& \( \mathbf{30:}~-0.45 \pm 0.22 \)\\
-\( \mathbf{26} \)& \( \mathbf{25:}~-0.09 \pm 0.05 \)& \( \mathbf{29:}~-0.15 \pm 0.06 \)\\
-\( \mathbf{27} \)& \( \mathbf{19:}~-0.20 \pm 0.06 \)& \( \mathbf{24:}~+0.17 \pm 0.12 \)& \( \mathbf{28:}~+0.01 \pm 0.04 \)& \( \mathbf{29:}~-0.00 \pm 0.10 \)\\
-\( \mathbf{28} \)& \( \mathbf{24:}~-0.17 \pm 0.07 \)& \( \mathbf{25:}~+0.09 \pm 0.09 \)& \( \mathbf{27:}~-0.01 \pm 0.04 \)& \( \mathbf{29:}~+0.11 \pm 0.05 \)\\
-\( \mathbf{29} \)& \( \mathbf{25:}~-0.06 \pm 0.13 \)& \( \mathbf{26:}~+0.15 \pm 0.06 \)& \( \mathbf{27:}~+0.00 \pm 0.10 \)& \( \mathbf{28:}~-0.11 \pm 0.05 \)\\
-\( \mathbf{30} \)& \( \mathbf{24:}~-0.10 \pm 0.06 \)& \( \mathbf{25:}~+0.45 \pm 0.22 \)\\
-\( \mathbf{32} \)& \( \mathbf{14:}~+0.05 \pm 0.13 \)& \( \mathbf{16:}~-0.04 \pm 0.08 \)& \( \mathbf{19:}~-0.27 \pm 0.15 \)& \( \mathbf{23:}~+0.07 \pm 0.08 \)& \( \mathbf{24:}~+0.01 \pm 0.09 \)\\
+\( \mathbf{13} \) \vspace{-0.7ex} & \( \mathbf{14:}~-0.26 \pm 0.10 \)& \( \mathbf{15:}~+0.07 \pm 0.08 \)& \( \mathbf{16:}~-0.02 \pm 0.07 \)& \( \mathbf{17:}~-0.31 \pm 0.08 \)\\ 
+ & \( (p={0.01}) \)& \( (p={0.40}) \)& \( (p={0.75}) \)& \( (p<0.01) \)\\ 
+\( \mathbf{14} \) \vspace{-0.7ex} & \( \mathbf{13:}~+0.26 \pm 0.10 \)& \( \mathbf{16:}~-0.11 \pm 0.11 \)& \( \mathbf{24:}~-0.54 \pm 0.20 \)& \( \mathbf{32:}~-0.02 \pm 0.13 \)\\ 
+ & \( (p={0.01}) \)& \( (p={0.33}) \)& \( (p<0.01) \)& \( (p={0.90}) \)\\ 
+\( \mathbf{15} \) \vspace{-0.7ex} & \( \mathbf{13:}~-0.07 \pm 0.08 \)& \( \mathbf{17:}~-0.30 \pm 0.12 \)& \( \mathbf{20:}~-0.07 \pm 0.06 \)& \( \mathbf{22:}~+0.02 \pm 0.15 \)\\ 
+ & \( (p={0.40}) \)& \( (p={0.01}) \)& \( (p={0.33}) \)& \( (p={0.88}) \)\\ 
+\( \mathbf{16} \) \vspace{-0.7ex} & \( \mathbf{13:}~+0.02 \pm 0.07 \)& \( \mathbf{14:}~+0.11 \pm 0.11 \)& \( \mathbf{17:}~-0.11 \pm 0.08 \)& \( \mathbf{23:}~-0.05 \pm 0.08 \)& \( \mathbf{32:}~+0.08 \pm 0.07 \)\\ 
+ & \( (p={0.75}) \)& \( (p={0.33}) \)& \( (p={0.22}) \)& \( (p={0.58}) \)& \( (p={0.32}) \)\\ 
+\( \mathbf{17} \) \vspace{-0.7ex} & \( \mathbf{13:}~+0.31 \pm 0.08 \)& \( \mathbf{15:}~+0.30 \pm 0.12 \)& \( \mathbf{16:}~+0.11 \pm 0.08 \)& \( \mathbf{18:}~-0.13 \pm 0.07 \)& \( \mathbf{22:}~-0.05 \pm 0.08 \)& \( \mathbf{23:}~-0.30 \pm 0.11 \)\\ 
+ & \( (p<0.01) \)& \( (p={0.01}) \)& \( (p={0.22}) \)& \( (p={0.09}) \)& \( (p={0.57}) \)& \( (p={0.01}) \)\\ 
+\( \mathbf{18} \) \vspace{-0.7ex} & \( \mathbf{17:}~+0.13 \pm 0.07 \)& \( \mathbf{19:}~-0.11 \pm 0.14 \)& \( \mathbf{22:}~+0.19 \pm 0.08 \)& \( \mathbf{23:}~-0.11 \pm 0.11 \)\\ 
+ & \( (p={0.09}) \)& \( (p={0.49}) \)& \( (p={0.03}) \)& \( (p={0.34}) \)\\ 
+\( \mathbf{19} \) \vspace{-0.7ex} & \( \mathbf{18:}~+0.11 \pm 0.14 \)& \( \mathbf{23:}~-0.05 \pm 0.10 \)& \( \mathbf{24:}~+0.37 \pm 0.13 \)& \( \mathbf{27:}~+0.22 \pm 0.06 \)& \( \mathbf{32:}~+0.34 \pm 0.16 \)\\ 
+ & \( (p={0.49}) \)& \( (p={0.61}) \)& \( (p={0.01}) \)& \( (p<0.01) \)& \( (p={0.04}) \)\\ 
+\( \mathbf{20} \) \vspace{-0.7ex} & \( \mathbf{15:}~+0.07 \pm 0.06 \)& \( \mathbf{21:}~+0.12 \pm 0.06 \)& \( \mathbf{22:}~+0.05 \pm 0.09 \)\\ 
+ & \( (p={0.33}) \)& \( (p={0.07}) \)& \( (p={0.64}) \)\\ 
+\( \mathbf{21} \) \vspace{-0.7ex} & \( \mathbf{20:}~-0.12 \pm 0.06 \)& \( \mathbf{22:}~+0.01 \pm 0.05 \)\\ 
+ & \( (p={0.07}) \)& \( (p={0.88}) \)\\ 
+\( \mathbf{22} \) \vspace{-0.7ex} & \( \mathbf{15:}~-0.02 \pm 0.15 \)& \( \mathbf{17:}~+0.05 \pm 0.08 \)& \( \mathbf{18:}~-0.19 \pm 0.08 \)& \( \mathbf{20:}~-0.05 \pm 0.09 \)& \( \mathbf{21:}~-0.01 \pm 0.05 \)\\ 
+ & \( (p={0.88}) \)& \( (p={0.57}) \)& \( (p={0.03}) \)& \( (p={0.64}) \)& \( (p={0.88}) \)\\ 
+\( \mathbf{23} \) \vspace{-0.7ex} & \( \mathbf{16:}~+0.05 \pm 0.08 \)& \( \mathbf{17:}~+0.30 \pm 0.11 \)& \( \mathbf{18:}~+0.11 \pm 0.11 \)& \( \mathbf{19:}~+0.05 \pm 0.10 \)& \( \mathbf{32:}~+0.00 \pm 0.09 \)\\ 
+ & \( (p={0.58}) \)& \( (p={0.01}) \)& \( (p={0.34}) \)& \( (p={0.61}) \)& \( (p={0.98}) \)\\ 
+\( \mathbf{24} \) \vspace{-0.7ex} & \( \mathbf{14:}~+0.54 \pm 0.20 \)& \( \mathbf{19:}~-0.37 \pm 0.13 \)& \( \mathbf{25:}~+0.21 \pm 0.16 \)& \( \mathbf{27:}~-0.13 \pm 0.13 \)& \( \mathbf{28:}~+0.17 \pm 0.07 \)& \( \mathbf{30:}~+0.04 \pm 0.06 \)& \( \mathbf{32:}~+0.07 \pm 0.09 \)\\ 
+ & \( (p<0.01) \)& \( (p={0.01}) \)& \( (p={0.20}) \)& \( (p={0.35}) \)& \( (p={0.02}) \)& \( (p={0.58}) \)& \( (p={0.49}) \)\\ 
+\( \mathbf{25} \) \vspace{-0.7ex} & \( \mathbf{24:}~-0.21 \pm 0.16 \)& \( \mathbf{26:}~+0.07 \pm 0.05 \)& \( \mathbf{28:}~-0.06 \pm 0.09 \)& \( \mathbf{29:}~+0.05 \pm 0.12 \)& \( \mathbf{30:}~-0.38 \pm 0.22 \)\\ 
+ & \( (p={0.20}) \)& \( (p={0.23}) \)& \( (p={0.53}) \)& \( (p={0.72}) \)& \( (p={0.04}) \)\\ 
+\( \mathbf{26} \) \vspace{-0.7ex} & \( \mathbf{25:}~-0.07 \pm 0.05 \)& \( \mathbf{29:}~-0.16 \pm 0.06 \)\\ 
+ & \( (p={0.23}) \)& \( (p={0.01}) \)\\ 
+\( \mathbf{27} \) \vspace{-0.7ex} & \( \mathbf{19:}~-0.22 \pm 0.06 \)& \( \mathbf{24:}~+0.13 \pm 0.13 \)& \( \mathbf{28:}~+0.02 \pm 0.04 \)& \( \mathbf{29:}~+0.00 \pm 0.10 \)\\ 
+ & \( (p<0.01) \)& \( (p={0.35}) \)& \( (p={0.67}) \)& \( (p={0.97}) \)\\ 
+\( \mathbf{28} \) \vspace{-0.7ex} & \( \mathbf{24:}~-0.17 \pm 0.07 \)& \( \mathbf{25:}~+0.06 \pm 0.09 \)& \( \mathbf{27:}~-0.02 \pm 0.04 \)& \( \mathbf{29:}~+0.13 \pm 0.05 \)\\ 
+ & \( (p={0.02}) \)& \( (p={0.53}) \)& \( (p={0.67}) \)& \( (p={0.01}) \)\\ 
+\( \mathbf{29} \) \vspace{-0.7ex} & \( \mathbf{25:}~-0.05 \pm 0.12 \)& \( \mathbf{26:}~+0.16 \pm 0.06 \)& \( \mathbf{27:}~-0.00 \pm 0.10 \)& \( \mathbf{28:}~-0.13 \pm 0.05 \)\\ 
+ & \( (p={0.72}) \)& \( (p={0.01}) \)& \( (p={0.97}) \)& \( (p={0.01}) \)\\ 
+\( \mathbf{30} \) \vspace{-0.7ex} & \( \mathbf{24:}~-0.04 \pm 0.06 \)& \( \mathbf{25:}~+0.38 \pm 0.22 \)\\ 
+ & \( (p={0.58}) \)& \( (p={0.04}) \)\\ 
+\( \mathbf{32} \) \vspace{-0.7ex} & \( \mathbf{14:}~+0.02 \pm 0.13 \)& \( \mathbf{16:}~-0.08 \pm 0.07 \)& \( \mathbf{19:}~-0.34 \pm 0.16 \)& \( \mathbf{23:}~-0.00 \pm 0.09 \)& \( \mathbf{24:}~-0.07 \pm 0.09 \)\\ 
+ & \( (p={0.90}) \)& \( (p={0.32}) \)& \( (p={0.04}) \)& \( (p={0.98}) \)& \( (p={0.49}) \)\\ 
             \hline
         \end{tabular}
         \caption{
             \label{table:NYC_pairwise}
-            \textbf{Estimated Treatment Effects Between Adjacent NYC School Districts.}
-            Each row gives the posterior (mean \(\pm\) standard deviation) of the inverse-variance LATEs for one district (row header) compared to its neighbors.
-            For example the first cell indicates an estimated average change in log house prices per square foot of -0.29 when crossing the border from district 13 to 14.
+            \textbf{Estimated Treatment Effects for Adjacent School Districts.}
+            Each row gives the posterior (mean \(\pm\) standard deviation, and calibrated $p$-value below) of the inverse-variance LATEs for one district compared to its neighbors.
+            For example the first cell shows an estimated LATE in log prices per sqft of -0.26 when crossing from district 13 to 14.
         }
     \end{table}
 \end{landscape}

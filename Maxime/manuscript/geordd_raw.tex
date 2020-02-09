@@ -549,9 +549,9 @@ The placebo \(p\)-values are highly correlated, resulting in a small effective s
 
 We now use our methodology to study the effect
 of school districts on house prices in New~York City.
-The city publishes information pertaining to property sales within the city in the last 12 months on a rolling basis,
-available at \url{https://www1.nyc.gov/site/finance/taxes/property-rolling-sales-data.page},
-which we downloaded on September~15, 2016.
+The city publishes information pertaining to property sales within the city in annualized datasets,
+available at \url{https://www1.nyc.gov/site/finance/taxes/property-annualized-sales-update.page},
+and in this example we will use the 2015 dataset.
 The dataset includes columns for the sale price, building class, and the address of the property.
 Public schools in the city are all part of the City School District of the City of New York, but the city-wide district is itself divided into 32 sub-districts.
 It is a common belief that school districts have an impact on real estate price, as parents are willing to pay more to live in districts with better schools.
@@ -568,16 +568,17 @@ We geocode the address of each sale by merging the sales with the NYC Department
 These coordinates are given in the EPSG:2263 projection, which we also adopt.
 Details and code for this preprocessing step are available from the first author's GitHub account.
 
-We then filter the 56,815 sales, by removing
-36,448 sales outside of the family homes building class categories (one, two, and three family dwellings),
-4 remaining sales missing the square footage information,
-% \item without a reported sale price,
-% \item without a location due to failed geocoding,
-% \item smaller than 100 sq ft, and 
-and 785 remaining sales with outlier log price per square foot less than 3 or more than 8.
+We then filter the 83,441 sales, by removing
+\begin{flatlist}
+\item 51,741 sales outside of the family homes building class categories (one, two, and three family dwellings),
+\item 11,141 remaining properties without a reported sale price,
+\item 62 remaining sales missing the square footage information,
+\item 76 remaining properties which could not be geocoded, and
+\item 905 remaining sales with outlier log price per square foot less than 3 or more than 8.
+\end{flatlist}
 We exclude condos and coops because only very few sales report square footage alongside the price.
-The resulting dataset of 19,578 sales is displayed in \autoref{fig:sales_map}.
-The 27,394 residential properties with missing square footage information are also shown;
+The resulting dataset of 19,516 sales is displayed in \autoref{fig:sales_map}.
+The 33,331 residential properties with missing square footage information are also shown;
 these are almost all coops and condos, which explains the clustering of missing data in areas of higher density.
 
 \subsection{Model for Property Prices}
@@ -666,7 +667,7 @@ A sale gives a snapshot of the price of the land, made more accurate by correcti
 We fit the hyperparameters \(\sigmabeta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
 We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
 % The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigmabeta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\). % Squared Exponential kernel
-The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.26\), \(\widehat{\sigmabeta}=0.14\), and \(\widehat{\ell}=5.0~\text{km}\). % Matern kernel
+The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.29\), \(\widehat{\sigmabeta}=0.14\), and \(\widehat{\ell}=5.7~\text{km}\). % Matern kernel
 
 We seek to estimate the treatment effect function \(\tau\) on the border between the two districts.
 We could proceed by computing the cliff height estimator with covariates \autoref{eq:cliff_with_covariates}.
@@ -676,7 +677,7 @@ In this example, we find that the posterior variance of \(\gammavec\) is low, an
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[height=0.35\textheight]{NYC_cliff_face.png}
+    \includegraphics[height=0.35\textheight]{NYC_cliff_face.pdf}
     \caption{\label{fig:NYC_cliff_height}
         (a)
         Cliff height estimator \autoref{eq:postvar2gp} for the school district effect on house prices per square foot between district 27 and district 19, with 95\% credible envelope.
@@ -696,7 +697,7 @@ However, the credible envelope is fairly wide, especially in the southern sectio
 
 \subsection{Average Log-Price Increase}
 The cliff height \autoref{fig:NYC_cliff_height} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
-Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=\ell\) of the border, yield LATE estimates of \(-0.20\) and \(-0.17\) respectively, which corresponds to a roughly 20\% increase in property prices going from district 19 to district 27.
+Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=\ell\) of the border, yield LATE estimates of \(-0.22\) and \(-0.18\) respectively, which corresponds to a roughly 20\% increase in property prices going from district 19 to district 27.
 By contrast, treating each district and building class as a fixed effect in an OLS model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East to West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
 All LATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
@@ -710,18 +711,12 @@ In this example the different estimators yield similar answers, as the border is
         & \multicolumn{3}{c}{Posterior} \\
         Estimand & Mean & Standard Dev. & Tail Prob. \\
         \hline
-          % \(\unifavg\) & -0.16 & 0.09 & 4.41\% \\
-          % \(\taurho\) & -0.19 & 0.06 & 0.14\% \\
-          % \(\invvar\) & -0.20 & 0.06 & 0.09\% \\
-          % \(\tauproj\) & -0.17 & 0.08 & 1.95\% \\
-          % \(\taugeo\) & -0.14 & 0.13 & 15.08\% \\
-          % \(\taupop\) & -0.17 & 0.08 & 1.25\% \\
-          \(\unifavg\) & -0.16 & 0.09 & 4.39\% \\
-          \(\taurho\) & -0.19 & 0.06 & 0.14\% \\
-          \(\invvar\) & -0.20 & 0.06 & 0.09\% \\
-          \(\tauproj\) & -0.17 & 0.08 & 1.91\% \\
-          \(\taugeo\) & -0.14 & 0.13 & 15.38\% \\
-          \(\taupop\) & -0.17 & 0.08 & 1.24\% \\
+          \(\unifavg\) & -0.16 & 0.10 & 5.25\% \\
+          \(\taurho\)  & -0.22 & 0.07 & 0.04\% \\
+          \(\invvar\)  & -0.22 & 0.06 & 0.04\% \\
+          \(\tauproj\) & -0.18 & 0.09 & 2.04\% \\
+          \(\taugeo\)  & -0.11 & 0.15 & 22.24\% \\
+          \(\taupop\)  & -0.18 & 0.08 & 1.03\% \\
         \hline
     \end{tabular}
     \caption{
@@ -734,7 +729,7 @@ Negative LATEs correspond to district 27 being more expensive.
 \subsection{Significant Difference in Price?}
 The estimated inverse-variance weighted mean treatment effect is suggestive of a significant treatment effect.
 But the posterior tail probability cannot be interpreted as a \(p\)-value.
-For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, which yields a \(p\)-value of \(p^{\mathrm{INV}}=0.005\), thus rejecting the null hypothesis that there is no difference in house prices at the border between districts 19 and 27.
+For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, which yields a \(p\)-value of \(p^{\mathrm{INV}}=0.003\), thus rejecting the null hypothesis that there is no difference in house prices at the border between districts 19 and 27.
 
 \begin{figure}[tb]
     \centering
@@ -749,7 +744,7 @@ For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, whi
 
 To assess the validity of the test, we apply the placebo tests devised in \autoref{sec:placebo},
 the results of which are shown in \autoref{fig:placebo_invvar}.
-Within each district, we split the data in half by a line at angles \(1\degree\), \(2\degree\), \(\dotsc\), \(180\degree\).
+Within each district, we split the data in half by a line at angles \(1\degree\), \(3\degree\), \(5\degree\), \(\dotsc\), \(179\degree\).
 Because these lines were drawn arbitrarily, we do not expect a discontinuous treatment effect between the two halves, and so we hope to see a uniform distribution of placebo \(p\)-values.
 However, these tests will be highly correlated---there is in fact noticeable autocorrelation in the graph of the placebo \(p\)-value as a function of angle---and so the low effective sample size could lead to some apparent departures from uniformity.
 Nonetheless, we do not observe a flagrant bias in \autoref{fig:placebo_invvar}(b), which therefore does not discredit the calibrated inverse-variance test, and confirms the significance of the difference in price at the border between the two districts.
@@ -763,36 +758,16 @@ The same idea underpins causal interpretations of one-dimensional regression dis
 We use this similarity to motivate a framework for the analysis of GeoRDDs, which proceeds in three steps:
 % One-dimensional methods can be abstracted to three steps: (1) fit a smooth function on either side of the threshold; (2) extrapolate the functions to the threshold; and (3) take the difference of the two extrapolations to estimate the treatment effect at the threshold.
 \begin{flatlist} 
-\item fit a smooth surface on either side of the border,
-\item extrapolate the surfaces to the border, and 
-\item take the difference of the two extrapolations to estimate the treatment effect along the border.
+\item fit a smooth surface on either side of the border, \label{item:fitsmooth}
+\item extrapolate the surfaces to the border, and \label{item:extrapolate}
+\item take the difference of the two extrapolations to estimate the treatment effect along the border. \label{item:diff}
 \end{flatlist}
 
 % Previous research has focused on extending methods developed for 1D RDDs to GeoRDDs.
 % In applied settings, some have used the signed distance from the border as the forcing variable in a 1D RDD, but the resulting estimator is spatially confounded.
 In this paper, we emphasize the importance of the spatial aspect of the design, and therefore draw from the spatial statistics literature, which brings a rich set of tools designed to model and exploit spatial correlations.
-We used Gaussian process regression (GPR), known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step (1) of our framework.
+We used Gaussian process regression (GPR), known as kriging in the spatial statistics literature, to fit the smooth surfaces to the outcomes in step \ref{item:fitsmooth} of our framework.
 Our approach yields a multivariate normal posterior distribution of the treatment effect for a collection of ``sentinel'' locations along the border.
-
-While our framework is intuitive and well-motivated by the 1D RDD literature,
-it does have drawbacks.
-It does not specify a prior directly on the treatment effect along the border;
-instead it can be shown that our GP model implicitly gives it a wide prior for a constant effect
-plus a Gaussian process (GP) prior with double the covariance function \(k\) in \autoref{eq:spec2gp}.
-Such a wide prior can lead to regularization induced confounding (RIC) as
-defined and demonstrated by \citet{hahn2017bayesian} and \citet{hahn2018regularization}.
-RIC can be understood as the tendency of a Bayesian or regularized model to recruit a treatment effect variable that has a weak prior in order to explain away a more strongly regularized trend in the control variables.
-The calibration of the \(p\)-values in \autoref{sec:hypothesis_testing} safeguards the validity of our proposed hypothesis tests
---- further validated by placebo tests ---
-but RIC could bias the cliff-face and LATE estimates.
-Unfortunately the proposed solution of first regressing the treatment variable on
-control variables (spatial covariates in GeoRDDs) to estimate the propensity score cannot be used:
-the propensity score for GeoRDDs is already known to be 0 or 1 in
-the control and treatment region respectively, which also implies that the assumption of overlap
-(Equation~2 in \citet{hahn2017bayesian}) is violated.
-That said, it could be beneficial to place a direct prior on the treatment effect.
-We hope that our work will encourage further exploration of this and other Bayesian nonparametric
-model specifications for GeoRDDs.
 
 We also found that averaging the treatment effect along the border has surprising pitfalls.
 Simply integrating the treatment effect uniformly along the border yields an estimand that is inefficient and undesirably sensitive to the topology of the border.
@@ -804,13 +779,37 @@ To test against the null hypothesis of zero treatment effect along the border, w
 We use the inverse-variance weighted LATE to attain high power, but the other LATE estimates of \autoref{sec:ate} could be used similarly.
 To ensure good frequentist properties we “calibrate” the test, obtaining its distribution under the null model, either using a parametric bootstrap or analytically.
 
-We applied our method to a publicly available dataset of one year of New York City property sales, to examine whether school district cause difference in property prices.
+While our framework is intuitive and well-motivated by the 1D RDD literature,
+it does have drawbacks.
+It does not specify a prior directly on the treatment effect along the border;
+instead it can be shown that our Gaussian process (GP) model implicitly gives it a wide prior for a constant effect
+plus a GP prior with double the covariance function \(k\) in \autoref{eq:spec2gp}.
+Such a wide prior can lead to regularization induced confounding (RIC) as
+defined and demonstrated by \citet{hahn2017bayesian} and \citet{hahn2018regularization}.
+RIC can be understood as the tendency of a Bayesian or regularized model to recruit a treatment effect variable that has a weak prior in order to explain away a more strongly regularized trend in the control variables.
+The calibration of the \(p\)-values in \autoref{sec:hypothesis_testing} safeguards the validity of our proposed hypothesis tests
+--- further validated by placebo tests ---
+but RIC could bias the cliff-face and LATE estimates.
+Unfortunately the proposed solution of first regressing the treatment variable on
+control variables (spatial covariates in GeoRDDs) to estimate the propensity score cannot be used:
+the assumption of overlap (Equation~2 in \citet{hahn2017bayesian}) is violated,
+because the propensity scores are known to be 0 or 1 in the control and treatment regions, respectively.
+That said, it could be beneficial to place a direct prior on the treatment effect;
+this could for example be accomplished by specifying a baseline smooth spatial process that spans both regions, 
+and an independent treatment effect surface with lower prior variance that also spans both regions
+but is multiplied by 0.5 in the treatment region and -0.5 in the control region.
+We hope that our work will encourage further exploration of this and other Bayesian nonparametric
+model specifications for GeoRDDs.
+
+
+We applied our method to a publicly available dataset of one year of New York City property sales, to examine whether school districts cause difference in property prices.
 While this relates to the literature on valuing school quality through house prices, we focus on inferring the discontinuity in house prices at the border, without attempting to attribute it to a difference in various metrics of school quality.
 Focusing on a single border, we estimated a roughly 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
 However, the border between these two districts is also the border between the NYC boroughs of Brooklyn and Queens, so we cannot attribute this difference to the causal effect of the school districts.
 In the Supplementary Materials, we extend the GeoRDD analysis to other pairs of adjacent school districts, and find significant effects between many of these pairs.
 However, in some of these cases, physical barriers like parks, commercial zones, railways, and major roads can separate neighborhoods. 
 This keeps data away from the borders, breaks the stationarity assumption of the spatial model, and increases the extent of extrapolation performed by the model, which casts doubt on the legitimacy of the estimated treatment effects.
+Nonetheless, significant effects are also found between pairs of school districts without such confounding factors.
 % Missing data from condo sales which do not report square footage can also distort estimated effects.
 % Overall, it seems that school district borders in Brooklyn and Queens are often accompanied by a discontinuity in house prices, but the causal attribution of this difference to the reputation of the school districts can be questionable.
 
@@ -841,5 +840,4 @@ Hypothesis tests targeting the homogeneity of the treatment effect along the bor
 
 The framework and techniques of this paper could also be extended to spatio-temporal settings.
 If the treatment is only applied to the treatment region after a time \(t^*\), one could envision a three-dimensional RDD consisting of the geographical border in the spatial dimensions, and a straight line through \(t^*\) in the temporal dimension.
-The GP model would need to be augmented with a temporal component, for example with an anisotropic squared exponential covariance function.
 We leave spatio-temporal RDDs using GP models to future research.

@@ -1,48 +1,18 @@
 \documentclass[letter,12pt]{article}
 
-\RequirePackage[OT1]{fontenc}
-\usepackage{mathrsfs}
-\usepackage{graphicx}
-\usepackage{xr-hyper} % cross-references (between documents)
-\usepackage{xcolor} % Allow colors to be defined
-\usepackage{geometry} % Used to adjust the document margins
-\geometry{tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
-\usepackage{amsmath} % Equations
-\usepackage{amssymb} % Equations
-\usepackage[hyphens]{url}
-\usepackage[hypertexnames=false]{hyperref}
-\usepackage[title,toc]{appendix}
-\newcommand{\georddtitle}{
-    A Bayesian Nonparametric Approach to Geographic Regression Discontinuity Designs:
-    Do School Districts Affect NYC House Prices?
-}
-\hypersetup{
-    colorlinks=true,
-    pdfborder=0 0 1,
-    pdftitle=\georddtitle{},
-    allcolors=[rgb]{0.00,0.38,0.59},
-    allbordercolors=[rgb]{0.60,0.76,0.86}
-}
-\usepackage{natbib}
-\usepackage{bm}
-\usepackage{mathtools}
-\usepackage{pdflscape}
-\usepackage{setspace}
-
-\newcommand{\georddkeywords}{Gaussian processes; kriging; bayesian testing; causal inference; regression discontinuity; treatment effect; housing market}
-\hypersetup{pdfkeywords=\georddkeywords{}}
-
-\pdfminorversion=4
 \newcommand{\blind}{1}
 \input{preamble.tex}
+\input{global_macros.tex}
+\input{geordd_macros.tex}
 % disable hyperlinks between documents
 \newcommand{\autorefexternal}[1]{\autoref*{#1}}
-
 \newcommand{\sprefix}{S-}
-\renewcommand{\theequation}{\sprefix\arabic{equation}}
-\renewcommand{\thesection}{\sprefix\arabic{section}}
-\renewcommand{\thefigure}{\sprefix\arabic{figure}}
-\renewcommand{\thetable}{\sprefix\arabic{table}}
+\newcommand{\degree}{\,^\circ}
+
+% \renewcommand{\theequation}{\sprefix\arabic{equation}}
+% \renewcommand{\thesection}{\sprefix\arabic{section}}
+% \renewcommand{\thefigure}{\sprefix\arabic{figure}}
+% \renewcommand{\thetable}{\sprefix\arabic{table}}
 
 \begin{document}
 \doublespacing
