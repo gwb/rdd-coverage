@@ -90,7 +90,8 @@ In \autoref{sec:hypothesis_testing} we turn to hypothesis testing, and propose a
 In \autoref{sec:NYC_example}, we apply our methodology to the problem of valuing school quality, 
 using publicly available data of property sales in NYC to determine whether school districts affect property prices.
 Initially focusing on a single border between two school districts, we estimate the treatment effect everywhere along the border, obtain estimates of the LATE, and perform and validate a hypothesis test.
-For that border, we find a statistically significant difference in price across the border with a \(p\)-value of 0.002, and estimate that the same house located near the border will on average fetch an almost 20\% higher price in district 27 than in district 19.
+% numestim %
+For that border, we find a statistically significant difference in price across the border with a \(p\)-value of 0.003, and estimate that the same house located near the border will on average fetch an almost 20\% higher price in district 27 than in district 19.
 However, this effect can not be attributed solely to the quality or reputation of the schools, as this border also separates the boroughs of Brooklyn and Queens, thus confounding the causal effect of the districts.
 We then extend to the other borders between sub-districts in NYC, and talk about cross-cutting themes in our evaluation.
 
@@ -575,8 +576,8 @@ We therefore ask whether we can measure a discontinuous jump in house prices acr
 
 \begin{figure}[tb]
     \centering
-    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{figures/pairwise_mean_se.png}
-    \caption{\label{fig:sales_map}Map of property sales in New York City along with estimated pairwise border impacts. Each dot is a sale, and its color indicates the price per square foot. White indicate sales with missing square footage. All pairwise estimates of the inverse variance LATE between adjacent school districts shown by the orange and blue buffers along their borders, with the thickness of the orange buffer  proportional to the posterior mean, and the blue beyond it proportional to the posterior standard deviation. All buffers drawn on the side estimated to have higher house prices. Each district is labeled by its number.}
+    \includegraphics[width=\textwidth,height=0.4\textheight,keepaspectratio]{figures/NYC_pairwise_mean_se.png}
+    \caption{\label{fig:sales_map}\label{fig:NYC_pairwise}Map of property sales in New York City along with estimated pairwise border impacts. Each dot is a sale, and its color indicates the price per square foot. White indicate sales with missing square footage. All pairwise estimates of the inverse variance LATE between adjacent school districts shown by the orange and blue buffers along their borders, with the thickness of the orange buffer  proportional to the posterior mean, and the blue beyond it proportional to the posterior standard deviation. All buffers drawn on the side estimated to have higher house prices. Each district is labeled by its number.}
 \end{figure}
 
 %In order to model the property sale prices, we first need to obtain their locations.
@@ -584,6 +585,7 @@ We first geocode the address of each sale by merging the sales with the NYC Depa
 These coordinates are given in the EPSG:2263 projection, which we also adopt.
 Details and code for this preprocessing step are available from the first author's GitHub account.
 
+% numestim %
 We then filter the 83,441 sales by removing
 \begin{flatlist}
 \item 51,741 sales outside of the family homes building class categories (one, two, and three family dwellings),
@@ -593,7 +595,9 @@ We then filter the 83,441 sales by removing
 \item 905 remaining sales with outlier log price per square foot less than 3 or more than 8.
 \end{flatlist}
 We exclude condos and coops because only very few sales report square footage alongside the price.
+% numestim %
 The resulting dataset of 19,516 sales is displayed in \autoref{fig:sales_map}.
+% numestim %
 The 33,331 residential properties with missing square footage information are also shown;
 these are almost all coops and condos, which explains the clustering of missing data in areas of higher density.
 
@@ -682,7 +686,7 @@ A sale gives a snapshot of the price of the land; this snapshot is made more acc
 
 We fit the hyperparameters \(\sigmabeta\), \(\sigmaf\), \(\ell\) and \(\sigman\) by optimizing the marginal log-likelihood of the data within neighboring school districts 18, 19, 23, 24, 25, 26, 27, 28, and 29.
 We hold \(\sigmamu\) fixed to 20 to give the district means \(m_j\) a weak prior.
-% The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.20\), \(\widehat{\sigmabeta}=0.15\), and \(\widehat{\ell}=1.4~\text{km}\). % Squared Exponential kernel
+% numestim %
 The fitted hyperparameters were \(\widehat{\sigman}=0.40\), \(\widehat{\sigmaf}=0.29\), \(\widehat{\sigmabeta}=0.14\), and \(\widehat{\ell}=5.7~\text{km}\). % Matern kernel
 
 We seek to estimate the treatment effect function \(\tau\) on the border between the two districts, adjusting for measured building and site characteristics.
@@ -714,13 +718,15 @@ However, the credible envelope is fairly wide, especially in the southern sectio
 
 \subsection{Average Log-Price Increase}
 The cliff height \autoref{fig:NYC_cliff_height} shows a negative treatment effect everywhere along the border, which can be averaged by the estimators we developed in \autoref{sec:ate}.
+% numestim %
 Our two recommended estimators, based on inverse-variance weighting and finite-population projection of units within \(\buffer=\ell\) of the border, yield LATE estimates of \(-0.22\) and \(-0.18\) respectively, which corresponds to a roughly 20\% increase in property prices going from district 19 to district 27.
+% numestim %
 By contrast, treating each district and building class as a fixed effect in an OLS model yields a treatment effect estimate (the difference between the district 19 and 27 coefficients) of -0.12. 
 This smaller estimate could be explained by an overall East to West positive spatial trend in prices, visible between districts 29 and 15 in \autoref{fig:sales_map}, which would confound the OLS estimate of the treatment effect.
 All LATE estimators from \autoref{sec:ate} applied to this setting are shown in \autoref{table:NYC_ate}.
 In this example the different estimators yield similar answers, as the border is fairly straight and short relative to the fitted lengthscale.
 
-
+% numestim %
 \begin{table}
     \centering
     \begin{tabular}{lrrr}
@@ -746,6 +752,7 @@ Negative LATEs correspond to district 27 being more expensive.
 \subsection{Significant Difference in Price?}
 The estimated inverse-variance weighted mean treatment effect is suggestive of a significant treatment effect.
 But the posterior tail probability cannot be interpreted as a \(p\)-value.
+% numestim %
 For this, we turn to the test developed in \autoref{sec:hypothesis_testing}, which yields a \(p\)-value of \(p^{\mathrm{INV}}=0.003\), thus rejecting the null hypothesis that there is no difference in house prices at the border between districts 19 and 27.
 
 %	\begin{figure}[tb]
@@ -776,19 +783,20 @@ Significant effects are found between many districts, but interpreting the resul
 We have already mentioned the issue of compound treatments for borders between school districts that overlap with the border between boroughs.
 In particular, school districts 19, 32, and 14 are in Brooklyn, while districts 30, 24, and 27 are in Queens.
 
-
 Some school districts are separated by parks (or other non-residential zones), for example districts 15 \& 17 or 19 \& 24, so that house sales do not extend all the way to the border on one or both sides.
 A significant treatment effect between these pairs cannot be interpreted as the detection of a discontinuity in prices at the border, let alone any kind of causal interpretation, but rather it means that the difference in prices between the two sides of the park exceeds the typical spatial variation of house prices expected over the same distance.
 This is not surprising, and one may speculate that physical barriers like parks, rivers, railways and major roads can separate neighborhoods with distinct character, demographics and thus house prices.
 This in turn challenges the stationarity assumption of the spatial model \autorefexternal{eq:spec2gp}.
 The higher distance between data and the border also stretches the spatial model's ability to extrapolate, which makes it more vulnerable to model misspecification.
 
+% numestim %
 Other pairs of district (e.g., 13 \& 14, 13 \& 17, and 25 \& 28) have clusters of missing data (condo sales with unknown square footage) near the border that cast doubt on the interpretation of the estimated effect.
 Nonetheless, significant effects are also found between pairs of school districts without issues due to compound treatments, physical barriers, or missing data.
 House prices increase going across the border from districts 23 to 17, 28 to 29, 29 to 26.
 The results also show an increase in price at the border from 24 to 28, but this could be confounded by gaps in the sales data due to Forest Park, St.~John Cemetery and condos near Queens Blvd.
 Also note that we report comparisons between 40 pairs of districts, so some false positives would be expected at the 5\% significance level.
 Overall, it seems that school district borders in Brooklyn and Queens can correspond to measurable jumps in house prices per square foot.
+% numestim %
 The estimated size of this effect varies: zero or negligible in some cases, such as between districts 15, 20, 21, and 22; and quite pronounced in others, such as a 17\% price increase from 29 to 26.
 
 
@@ -822,6 +830,7 @@ Our approach yields a multivariate normal posterior distribution of the treatmen
 %While this relates to the literature on valuing school quality through house prices, we focus on inferring the discontinuity in house prices at the border, without attempting to attribute it to a difference in various metrics of school quality.
 %In our application, 
 We investigated, using a publicly available dataset of one year of New York City property sales, whether school districts can explain systematic differences in property prices.
+% numestim %
 Initially focusing on a single border, we estimated a roughly 20\% average increase in house prices per square foot when crossing the border from district 19 to district 27.
 In contrast to the literature on valuing school quality through house prices, our focus is on inferring the discontinuity in house prices at the border, without attempting to attribute it to a difference in a measured metrics of school quality.
 In our case, the border between these two districts is also the border between the NYC boroughs of Brooklyn and Queens, so we cannot attribute this difference to the causal effect of the school districts.
